@@ -53,6 +53,7 @@ public final class 日本の祝休日 {
      * ロジックベースの祝休日を追加。当該日が祝休日であれば名称を返す関数を指定する
      *
      * @param logic ロジック
+     * @return このインスタンス
      */
     public 日本の祝休日 add祝休日(Function<LocalDate, String> logic) {
         custom祝休日Logic.add(logic);
@@ -64,6 +65,7 @@ public final class 日本の祝休日 {
      *
      * @param 日付 日付
      * @param 名称 名称
+     * @return このインスタンス
      */
     public 日本の祝休日 add祝休日(LocalDate 日付, String 名称) {
         custom祝休日Map.put(日付, new 祝休日(日付, 名称));

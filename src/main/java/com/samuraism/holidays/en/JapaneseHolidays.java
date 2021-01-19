@@ -33,6 +33,7 @@ public class JapaneseHolidays {
      * Add logic based holiday.
      *
      * @param logic ロジック
+     * @return This instance
      */
     public JapaneseHolidays addHoliday(Function<LocalDate, String> logic) {
         holidays.add祝休日(logic);
@@ -44,6 +45,7 @@ public class JapaneseHolidays {
      *
      * @param date date
      * @param name name
+     * @return This instance
      */
     public JapaneseHolidays addHoliday(LocalDate date, String name) {
         holidays.add祝休日(date, name);
