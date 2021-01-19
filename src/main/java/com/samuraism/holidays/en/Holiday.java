@@ -24,16 +24,10 @@ public final class Holiday implements Comparable<Holiday> {
     public final LocalDate date;
     public final String name;
 
-    public Holiday(祝休日 holiday){
+    Holiday(祝休日 holiday){
         this.date = holiday.日付;
         this.name = holiday.名称;
     }
-
-    public Holiday(LocalDate date, String name) {
-        this.date = date;
-        this.name = name;
-    }
-
 
     @Override
     public boolean equals(Object o) {

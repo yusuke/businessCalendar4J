@@ -23,7 +23,7 @@ public final class 祝休日 implements Comparable<祝休日> {
     public final LocalDate 日付;
     public final String 名称;
 
-    public 祝休日(LocalDate 日付, String 名称) {
+    祝休日(LocalDate 日付, String 名称) {
         this.日付 = 日付;
         this.名称 = 名称;
     }
