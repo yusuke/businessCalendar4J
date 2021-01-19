@@ -1,10 +1,11 @@
 # 日本の祝休日
 1955年以降の日本の祝日、休日の判定や名称取得を行えるライブラリです。依存がないので気軽に利用できます。
-
-# 動作要件
+## ハッシュタグ
+ご意見、ご感想などは [&#35;Java祝休日](https://twitter.com/intent/tweet?text=https://github.com/yusuke/japan-holidays/+%23Java祝休日) を使ってツイートしていただければ幸いです。
+## 動作要件
 Java 8以降
 
-# 利用方法
+## 利用方法
 ```java
 package com.samuraism.exmaple;
 
@@ -54,7 +55,7 @@ public class Example {
 }
 
 ```
-# カスタム祝日
+## カスタム祝日
 add祝休日()メソッドにより独自に固定の、またはアルゴリズムベースの祝日を追加できます。
 コード例にあるとおり、メソッドチェーンで続けて指定ができるので、特に定数としてコード中に定義するのに便利です。
 メソッドチェーンで連ねて書く際、オリジナルのインスタンスに変更が加わっていることに注意してください。
@@ -68,7 +69,7 @@ public class Example {
 }
 ```
 
-# 祝日情報取得の仕組み
+## 祝日情報取得の仕組み
 祝日の情報は[内閣府の祝日情報](https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html) に掲載されている [syukujitsu.csv](https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv) を利用しています。
 起動時に読み込んだあと、負荷をかけないよう毎31日±5分毎(±5分の部分はランダム)に再読み込みを行います。
 
