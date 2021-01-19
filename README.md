@@ -14,18 +14,13 @@ Maven Central Repositoryにリリースされているため、以下のよう�
 
 ### Mavenの場合
 ```xml
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-    <dependencies>
-        <dependency>
-            <groupId>com.samuraism</groupId>
-            <artifactId>japan-holidays</artifactId>
-            <version>1.0</version>
-        </dependency>
-    </dependencies>
-</project>
+<dependencies>
+    <dependency>
+        <groupId>com.samuraism</groupId>
+        <artifactId>japan-holidays</artifactId>
+        <version>1.0</version>
+    </dependency>
+</dependencies>
 ```
 ### Gradleの場合
 ```text
