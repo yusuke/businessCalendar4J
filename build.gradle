@@ -1,6 +1,7 @@
 plugins {
     id 'java'
-    id("maven-publish")
+    id 'signing'
+    id 'maven-publish'
 }
 
 group 'com.samuraism'
@@ -8,6 +9,11 @@ version '1.0'
 
 repositories {
     mavenCentral()
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 compileJava   {
@@ -25,19 +31,48 @@ test {
 }
 
 publishing {
-    repositories {
-        maven {
-            name = "github-japan-holidays"
-            url = uri("https://maven.pkg.github.com/yusuke/japan-holidays")
-            credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'java-holidays'
+            from components.java
+            pom {
+                name = 'java-holidays'
+                description = 'java-holidays'
+                url = 'https://github.com/yusuke/japan-holidays'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'yusuke'
+                        name = 'Yusuke Yamamoto'
+                        email = 'yusuke@mac.com'
+                    }
+                }
+                scm {
+                    url = 'https://github.com/XXXXX'
+                    connection = 'scm:git:git://github.com/yusuke/japan-holidays.git'
+                    developerConnection = 'scm:git:git@github.com:yusuke/japan-holidays.git'
+                }
             }
         }
     }
-    publications {
-        gpr(MavenPublication) {
-            from(components.java)
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = "${sonatypeUsername}"
+                password = "${sonatypePassword}"
+            }
         }
     }
+}
+
+signing {
+    sign publishing.publications.mavenJava
 }

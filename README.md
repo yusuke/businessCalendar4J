@@ -9,22 +9,14 @@
 ## 動作要件
 Java 8以降
 
-## 依存の指定方法
-repositoriesとdependenciesにエントリを追加して依存を指定してください。
+## 利用方法
+Maven Central Repositoryにリリースされているため、以下のように依存を指定するだけで利用出来るようになります。
+
+### Mavenの場合
 ```xml
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <repositories>
-        <repository>
-            <id>samuraism-japan-holidays</id>
-            <name>samuraism-japan-holidays</name>
-            <url>https://maven.pkg.github.com/yusuke/japan-holidays</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-    </repositories>
 
     <dependencies>
         <dependency>
@@ -35,8 +27,14 @@ repositoriesとdependenciesにエントリを追加して依存を指定して�
     </dependencies>
 </project>
 ```
-
+### Gradleの場合
+```text
+dependencies {
+    compile 'com.samuraism:japan-holidays:1.0'
+}
+```
 ## 利用方法
+サンプルコードを見れば使い方が一通り分かるようになっています。[com.samuraism.holidays.exmaple.Example](https://github.com/yusuke/japan-holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/Example.java) は日本語API、[com.samuraism.holidays.exmaple.en.Example](https://github.com/yusuke/japan-holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/en/Example.java) は英語版APIのサンプルとなっています。
 ```java
 package com.samuraism.holidays.exmaple;
 
