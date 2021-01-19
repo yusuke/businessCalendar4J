@@ -13,10 +13,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package com.samuraism.exmaple;
+package com.samuraism.holidays.exmaple;
 
-import com.samuraism.日本の祝休日;
-import com.samuraism.祝休日;
+import com.samuraism.holidays.日本の祝休日;
+import com.samuraism.holidays.祝休日;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;

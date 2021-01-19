@@ -13,8 +13,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package com.samuraism;
+package com.samuraism.holidays;
 
+import com.samuraism.holidays.日本の祝休日;
+import com.samuraism.holidays.祝休日;
 import org.junit.jupiter.api.Test;
 
 import java.time.DayOfWeek;
