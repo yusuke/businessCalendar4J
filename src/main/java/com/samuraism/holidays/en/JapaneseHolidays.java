@@ -42,10 +42,11 @@ public class JapaneseHolidays {
     /**
      * Add fixed holiday
      *
-     * @param holiday Holiday
+     * @param date date
+     * @param name name
      */
-    public JapaneseHolidays addHoliday(Holiday holiday) {
-        holidays.add祝休日(new 祝休日(holiday.date, holiday.name));
+    public JapaneseHolidays addHoliday(LocalDate date, String name) {
+        holidays.add祝休日(date, name);
         return this;
     }
 

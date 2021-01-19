@@ -15,8 +15,6 @@
  */
 package com.samuraism.holidays;
 
-import com.samuraism.holidays.日本の祝休日;
-import com.samuraism.holidays.祝休日;
 import org.junit.jupiter.api.Test;
 
 import java.time.DayOfWeek;
@@ -76,7 +74,7 @@ class 日本の祝休日Test {
     @Test
     void add祝休日() {
         日本の祝休日 holidays = new 日本の祝休日()
-                .add祝休日(new 祝休日(LocalDate.of(1977, 6, 17), "休みたいから休む"));
+                .add祝休日(LocalDate.of(1977, 6, 17), "休みたいから休む");
         assertTrue(holidays.is祝休日(LocalDate.of(1977, 6, 17)));
         assertEquals("休みたいから休む", holidays.get祝休日(LocalDate.of(1977, 6, 17)).get().名称);
     }

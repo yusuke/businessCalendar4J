@@ -42,6 +42,7 @@ public final class 日本の祝休日 {
             // 毎31日±5分毎に再ロードする。
             while (true) {
                 try {
+                    //noinspection BusyWait
                     Thread.sleep(約一ヶ月);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -67,13 +68,13 @@ public final class 日本の祝休日 {
     /**
      * 固定の祝休日を追加
      *
-     * @param holiday 祝休日
+     * @param 日付 日付
+     * @param 名称 名称
      */
-    public 日本の祝休日 add祝休日(祝休日 holiday) {
-        custom祝休日Map.put(holiday.日付, holiday);
+    public 日本の祝休日 add祝休日(LocalDate 日付, String 名称) {
+        custom祝休日Map.put(日付, new 祝休日(日付, 名称));
         return this;
     }
-
 
     /**
      * 指定した日が祝休日かどうかを判定する

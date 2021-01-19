@@ -43,7 +43,7 @@ public class Example {
 
         // sets a fixed custom Holiday
         // You can specify custom holidays using method chain. Note that JapneseHolidays is mutated upon each method call.
-        holidays.addHoliday(new Holiday(LocalDate.of(2013, 3, 29), "Samuraism Inc. Foundation Day"))
+        holidays.addHoliday(LocalDate.of(2013, 3, 29), "Samuraism Inc. Foundation Day")
                 // Specify logic based custom holidays. returns a string if the day is a holiday
                 .addHoliday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "Saturday" : null)
                 .addHoliday(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "Sunday" : null)

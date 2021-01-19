@@ -43,7 +43,7 @@ public class Example {
 
         // 固定のカスタム祝休日を設定
         // メソッドチェーンで続けて書けるが、ミュータブルではなくオリジナルのインスタンスに変更が加わっていることに注意
-        holidays.add祝休日(new 祝休日(LocalDate.of(2013, 3, 29), "株式会社サムライズム設立"))
+        holidays.add祝休日(LocalDate.of(2013, 3, 29), "株式会社サムライズム設立")
                 // ロジックベーのカスタム祝休日を設定。当該日が祝日ならば名称を、そうでなければnullを返す関数を指定する
                 .add祝休日(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "土曜日" : null)
                 .add祝休日(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "日曜日" : null)
