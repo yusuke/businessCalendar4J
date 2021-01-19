@@ -5,8 +5,34 @@
 ## 動作要件
 Java 8以降
 
-## 利用方法
+## 依存の指定方法
+repositoriesとdependenciesにエントリを追加して依存を指定してください。
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <repositories>
+        <repository>
+            <id>samuraism-japan-holidays</id>
+            <name>samuraism-japan-holidays</name>
+            <url>https://maven.pkg.github.com/yusuke/japan-holidays</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.samuraism</groupId>
+            <artifactId>japan-holidays</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
+</project>
+```
+
+## 利用方法
 ```java
 package com.samuraism.holidays.exmaple;
 
