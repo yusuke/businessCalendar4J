@@ -33,13 +33,29 @@ public final class 日本の祝休日 {
     private final TreeMap<LocalDate, 祝休日> 祝休日Map = new TreeMap<>();
     private final TreeMap<LocalDate, 祝休日> custom祝休日Map = new TreeMap<>();
     private final List<Function<LocalDate, String>> custom祝休日Logic = new ArrayList<>();
+    private final long 約一ヶ月 = 1000L * 60 * 60 * 24 * 31 + new Random(System.currentTimeMillis()).nextLong() % (1000L * 60 * 60 * 10);
 
     public 日本の祝休日() {
         祝休日情報をロード();
+        Thread thread = new Thread(() -> {
+            // 毎31日±5分毎に再ロードする。
+            while (true) {
+                try {
+                    this.wait(約一ヶ月);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                祝休日情報をロード();
+            }
+        });
+        thread.setName("日本の祝休日更新スレッド");
+        thread.setDaemon(true);
+        thread.start();
     }
 
     /**
      * ロジックベースの祝休日を追加。当該日が祝休日であれば名称を返す関数を指定する
+     *
      * @param logic ロジック
      */
     public 日本の祝休日 add祝休日(Function<LocalDate, String> logic) {
@@ -49,6 +65,7 @@ public final class 日本の祝休日 {
 
     /**
      * 固定の祝休日を追加
+     *
      * @param holiday 祝休日
      */
     public 日本の祝休日 add祝休日(祝休日 holiday) {
@@ -59,16 +76,17 @@ public final class 日本の祝休日 {
 
     /**
      * 指定した日が祝休日かどうかを判定する
+     *
      * @param date 日付
      * @return 指定した日が祝休日であればtrue
      */
     public boolean is祝休日(LocalDate date) {
-        祝休日情報をロード();
         return 祝休日Map.containsKey(date) || custom祝休日Map.containsKey(date) || custom祝休日Logic.stream().anyMatch(e -> e.apply(date) != null);
     }
 
     /**
      * 指定した日が営業日かどうかを判定する
+     *
      * @param date 日付
      * @return 指定した日が営業日であればtrue
      */
@@ -83,7 +101,6 @@ public final class 日本の祝休日 {
      * @return 祝日・休日
      */
     public Optional<祝休日> get祝休日(LocalDate date) {
-        祝休日情報をロード();
         祝休日 祝休日 = 祝休日Map.getOrDefault(date, custom祝休日Map.get(date));
         if (祝休日 == null) {
             final Optional<Function<LocalDate, String>> first = custom祝休日Logic.stream().filter(e -> e.apply(date) != null).findFirst();
@@ -101,7 +118,6 @@ public final class 日本の祝休日 {
      * @return 指定した日以前の営業日
      */
     public LocalDate 以前の営業日(LocalDate date) {
-        祝休日情報をロード();
         LocalDate check = date;
         while (is祝休日(check)) {
             check = check.minus(1, ChronoUnit.DAYS);
@@ -116,7 +132,6 @@ public final class 日本の祝休日 {
      * @return 指定した日以降の営業日
      */
     public LocalDate 以降の営業日(LocalDate date) {
-        祝休日情報をロード();
         LocalDate check = date;
         while (is祝休日(check)) {
             check = check.plus(1, ChronoUnit.DAYS);
@@ -131,7 +146,6 @@ public final class 日本の祝休日 {
      * @return 指定した日以前の祝休日
      */
     public 祝休日 以前の祝休日(LocalDate date) {
-        祝休日情報をロード();
         LocalDate check = date;
         while (!is祝休日(check)) {
             check = check.minus(1, ChronoUnit.DAYS);
@@ -147,7 +161,6 @@ public final class 日本の祝休日 {
      * @return 指定した日以前の祝休日
      */
     public 祝休日 以降の祝休日(LocalDate date) {
-        祝休日情報をロード();
         LocalDate check = date;
         while (!is祝休日(check)) {
             check = check.plus(1, ChronoUnit.DAYS);
@@ -164,7 +177,6 @@ public final class 日本の祝休日 {
      * @return 指定期間内の祝休日のリスト。
      */
     public List<祝休日> get指定期間内の祝休日️(LocalDate 開始日, LocalDate 終了日) {
-        祝休日情報をロード();
         List<祝休日> list = new ArrayList<>();
         LocalDate from = 開始日.isBefore(終了日) ? 開始日 : 終了日;
         LocalDate to = (終了日.isAfter(開始日) ? 終了日 : 開始日).plus(1, ChronoUnit.DAYS);
@@ -176,49 +188,44 @@ public final class 日本の祝休日 {
         return list;
     }
 
-    private long lastUpdate = 0L;
-    private final long 約一ヶ月 = 1000L * 60 * 60 * 24 * 31 + new Random(System.currentTimeMillis()).nextLong() % (1000L * 60 * 60 * 10);
-
     /**
-     * 祝日情報を読み込む。初期化時、並びに毎31日±5分毎に再ロードする。
+     * 祝日情報を読み込む。
      */
     private void 祝休日情報をロード() {
-        if (約一ヶ月 < (System.currentTimeMillis() - lastUpdate)) {
-            // 最後の読み込みより約1ヶ月経過していたら再読み込み
-            synchronized (祝休日Map) {
-                try {
-                    final URLConnection con = new URL(System.getProperty("SYUKUJITSU_URL", "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv")).openConnection();
-                    con.setConnectTimeout(30000);
-                    con.setReadTimeout(5000);
-                    load(con.getInputStream());
-                } catch (IOException ignored) {
-                    // www8.cao.go.jpの読み込みに失敗している
-                    load(日本の祝休日.class.getResourceAsStream("/syukujitsu.csv"));
-                }
+        try {
+            final URLConnection con = new URL(System.getProperty("SYUKUJITSU_URL", "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv")).openConnection();
+            con.setConnectTimeout(30000);
+            con.setReadTimeout(5000);
+            load(con.getInputStream());
+        } catch (IOException ignored) {
+            // www8.cao.go.jpの読み込みに失敗している
+            try {
+                load(日本の祝休日.class.getResourceAsStream("/syukujitsu.csv"));
+            } catch (IOException ignored1) {
             }
         }
     }
 
-    private void load(InputStream is) {
-        祝休日Map.clear();
-        try {
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream(20000);
-            byte[] buf = new byte[1024];
-            int length;
-            while (-1 != (length = is.read(buf))) {
-                baos.write(buf, 0, length);
+    private void load(InputStream is) throws IOException {
+        final TreeMap<LocalDate, 祝休日> holidayMap = new TreeMap<>();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream(20000);
+        byte[] buf = new byte[1024];
+        int length;
+        while (-1 != (length = is.read(buf))) {
+            baos.write(buf, 0, length);
+        }
+        //noinspection StringOperationCanBeSimplified
+        String result = new String(baos.toByteArray(), Charset.forName("Shift_JIS"));
+        Arrays.stream(result.split("\n")).forEach(line -> {
+            if (!line.contains("国民の祝日・休日名称")) {
+                final String[] split = line.split(",");
+                final LocalDate date = LocalDate.parse(split[0], DateTimeFormatter.ofPattern("yyyy/M/d"));
+                holidayMap.put(date, new 祝休日((date), split[1].trim()));
             }
-            //noinspection StringOperationCanBeSimplified
-            String result = new String(baos.toByteArray(), Charset.forName("Shift_JIS"));
-            Arrays.stream(result.split("\n")).forEach(line -> {
-                if (!line.contains("国民の祝日・休日名称")) {
-                    final String[] split = line.split(",");
-                    final LocalDate date = LocalDate.parse(split[0], DateTimeFormatter.ofPattern("yyyy/M/d"));
-                    祝休日Map.put(date, new 祝休日((date), split[1].trim()));
-                }
-            });
-            lastUpdate = System.currentTimeMillis();
-        } catch (IOException ignored) {
+        });
+        synchronized (祝休日Map) {
+            祝休日Map.clear();
+            祝休日Map.putAll(holidayMap);
         }
     }
 
