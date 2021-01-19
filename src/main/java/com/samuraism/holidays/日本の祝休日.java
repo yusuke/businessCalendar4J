@@ -37,6 +37,7 @@ public final class 日本の祝休日 {
 
     public 日本の祝休日() {
         祝休日情報をロード();
+        custom祝休日Logic.add(e -> e.getMonthValue() == 1 && e.getDayOfMonth() == 1 ? "元日" : null);
         Thread thread = new Thread(() -> {
             // 毎31日±5分毎に再ロードする。
             while (true) {

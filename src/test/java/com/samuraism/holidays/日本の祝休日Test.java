@@ -66,7 +66,7 @@ class 日本の祝休日Test {
     @Test
     void get名称() {
         日本の祝休日 holidays = new 日本の祝休日();
-        assertFalse(holidays.get祝休日(LocalDate.of(1954, 1, 1)).isPresent());
+        assertFalse(holidays.get祝休日(LocalDate.of(1954, 1, 15)).isPresent());
         assertEquals("元日", holidays.get祝休日(LocalDate.of(1955, 1, 1)).get().名称);
         assertEquals("成人の日", holidays.get祝休日(LocalDate.of(2021, 1, 11)).get().名称);
         assertFalse(holidays.get祝休日(LocalDate.of(2021, 1, 13)).isPresent());
@@ -121,7 +121,7 @@ class 日本の祝休日Test {
                 () -> {
                     // 全期間
                     日本の祝休日 holidays = new 日本の祝休日();
-                    final List<祝休日> 祝休日List = holidays.get指定期間内の祝休日️(LocalDate.of(1940, 1, 1),
+                    final List<祝休日> 祝休日List = holidays.get指定期間内の祝休日️(LocalDate.of(1955, 1, 1),
                             LocalDate.of(2021, 12, 31));
                     assertEquals(959, 祝休日List.size());
                     assertEquals("元日", 祝休日List.get(0).名称);
@@ -187,5 +187,18 @@ class 日本の祝休日Test {
                 () -> assertEquals(LocalDate.of(2021, 1, 9),
                         holidays.以降の祝休日(LocalDate.of(2021, 1, 6)).日付)
         );
+    }
+    @Test
+    void 範囲外(){
+        日本の祝休日 holidays = new 日本の祝休日();
+        assertAll(
+                // 内閣府でとれるデータの範囲より前
+                () -> assertEquals(LocalDate.of(1954, 1, 1),
+                        holidays.以前の祝休日(LocalDate.of(1954, 6, 17)).日付),
+                // 内閣府でとれるデータの範囲より後
+                () -> assertEquals(LocalDate.of(2051, 1, 1),
+                        holidays.以降の祝休日(LocalDate.of(2050, 6, 17)).日付)
+        );
+
     }
 }
