@@ -37,7 +37,7 @@ public class Example {
 
         System.out.println("List of holidays in May 2021: ");
         // shows 2021-05-03:憲法記念日、2021-05-04:みどりの日、2021-05-05:こどもの日
-        holidays.getHolidaysBetween️(LocalDate.of(2021, 5, 1)
+        holidays.getHolidaysBetween(LocalDate.of(2021, 5, 1)
                 , LocalDate.of(2021, 5, 31))
                 .forEach(e -> System.out.println(e.date + ": " + e.name));
 

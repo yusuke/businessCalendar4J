@@ -127,7 +127,7 @@ public class JapaneseHolidays {
      * @param to to date (inclusive)
      * @return List of holidays between the specified period
      */
-    public List<Holiday> getHolidaysBetween️(LocalDate from, LocalDate to) {
+    public List<Holiday> getHolidaysBetween(LocalDate from, LocalDate to) {
         return holidays.get指定期間内の祝休日️(from, to).stream().map(Holiday::new).collect(Collectors.toList());
     }
 }
