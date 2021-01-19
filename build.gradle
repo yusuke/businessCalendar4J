@@ -1,9 +1,10 @@
 plugins {
     id 'java'
+    id("maven-publish")
 }
 
 group 'com.samuraism'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 repositories {
     mavenCentral()
@@ -21,4 +22,22 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "github-japan-holidays"
+            url = uri("https://maven.pkg.github.com/yusuke/japan-holidays")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
 }
