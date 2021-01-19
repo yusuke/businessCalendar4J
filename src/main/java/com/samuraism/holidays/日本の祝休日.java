@@ -30,29 +30,23 @@ import java.util.function.Function;
 
 @SuppressWarnings("NonAsciiCharacters")
 public final class 日本の祝休日 {
-    private final TreeMap<LocalDate, 祝休日> 祝休日Map = new TreeMap<>();
+    private static TreeMap<LocalDate, 祝休日> 祝休日Map;
     private final TreeMap<LocalDate, 祝休日> custom祝休日Map = new TreeMap<>();
     private final List<Function<LocalDate, String>> custom祝休日Logic = new ArrayList<>();
-    private final long 約一ヶ月 = 1000L * 60 * 60 * 24 * 31 + new Random(System.currentTimeMillis()).nextLong() % (1000L * 60 * 60 * 10);
 
-    public 日本の祝休日() {
+    private static final long 約一ヶ月 = 1000L * 60 * 60 * 24 * 31 + new Random(System.currentTimeMillis()).nextLong() % (1000L * 60 * 60 * 10);
+    static{
         祝休日情報をロード();
-        custom祝休日Logic.add(e -> e.getMonthValue() == 1 && e.getDayOfMonth() == 1 ? "元日" : null);
-        Thread thread = new Thread(() -> {
-            // 毎31日±5分毎に再ロードする。
-            while (true) {
-                try {
-                    //noinspection BusyWait
-                    Thread.sleep(約一ヶ月);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        new Timer(true).schedule(new TimerTask() {
+            @Override
+            public void run() {
                 祝休日情報をロード();
             }
-        });
-        thread.setName("日本の祝休日更新スレッド");
-        thread.setDaemon(true);
-        thread.start();
+        }, 0, 約一ヶ月);
+    }
+
+    public 日本の祝休日() {
+        custom祝休日Logic.add(e -> e.getMonthValue() == 1 && e.getDayOfMonth() == 1 ? "元日" : null);
     }
 
     /**
@@ -193,7 +187,7 @@ public final class 日本の祝休日 {
     /**
      * 祝日情報を読み込む。
      */
-    private void 祝休日情報をロード() {
+    private static void 祝休日情報をロード() {
         try {
             final URLConnection con = new URL(System.getProperty("SYUKUJITSU_URL", "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv")).openConnection();
             con.setConnectTimeout(30000);
@@ -208,7 +202,7 @@ public final class 日本の祝休日 {
         }
     }
 
-    private void load(InputStream is) throws IOException {
+    private static void load(InputStream is) throws IOException {
         final TreeMap<LocalDate, 祝休日> holidayMap = new TreeMap<>();
         final ByteArrayOutputStream baos = new ByteArrayOutputStream(20000);
         byte[] buf = new byte[1024];
@@ -225,10 +219,7 @@ public final class 日本の祝休日 {
                 holidayMap.put(date, new 祝休日((date), split[1].trim()));
             }
         });
-        synchronized (祝休日Map) {
-            祝休日Map.clear();
-            祝休日Map.putAll(holidayMap);
-        }
+        祝休日Map = holidayMap;
     }
 
 }
