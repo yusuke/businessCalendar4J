@@ -30,20 +30,8 @@ import java.util.function.Function;
 
 @SuppressWarnings("NonAsciiCharacters")
 public final class 日本の祝休日 {
-    private static TreeMap<LocalDate, 祝休日> 祝休日Map;
     private final TreeMap<LocalDate, 祝休日> custom祝休日Map = new TreeMap<>();
     private final List<Function<LocalDate, String>> custom祝休日Logic = new ArrayList<>();
-
-    private static final long 約一ヶ月 = 1000L * 60 * 60 * 24 * 31 + new Random(System.currentTimeMillis()).nextLong() % (1000L * 60 * 60 * 10);
-    static{
-        祝休日情報をロード();
-        new Timer(true).schedule(new TimerTask() {
-            @Override
-            public void run() {
-                祝休日情報をロード();
-            }
-        }, 0, 約一ヶ月);
-    }
 
     public 日本の祝休日() {
         custom祝休日Logic.add(e -> e.getMonthValue() == 1 && e.getDayOfMonth() == 1 ? "元日" : null);
@@ -184,6 +172,19 @@ public final class 日本の祝休日 {
             from = from.plus(1, ChronoUnit.DAYS);
         }
         return list;
+    }
+
+    private static TreeMap<LocalDate, 祝休日> 祝休日Map;
+    private static final long 約一ヶ月 = 1000L * 60 * 60 * 24 * 31 + new Random(System.currentTimeMillis()).nextLong() % (1000L * 60 * 60 * 10);
+
+    static {
+        祝休日情報をロード();
+        new Timer(true).schedule(new TimerTask() {
+            @Override
+            public void run() {
+                祝休日情報をロード();
+            }
+        }, 0, 約一ヶ月);
     }
 
     /**
