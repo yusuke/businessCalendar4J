@@ -12,8 +12,8 @@ on:
 jobs:
   build:
     env:
-      ORG_GRADLE_PROJECT_SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-      ORG_GRADLE_PROJECT_SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+      ORG_GRADLE_PROJECT_SONATYPE_USERNAME: "dummy"
+      ORG_GRADLE_PROJECT_SONATYPE_PASSWORD: "dummy"
 
     runs-on: ubuntu-latest
 
