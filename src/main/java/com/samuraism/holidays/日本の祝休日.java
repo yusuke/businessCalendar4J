@@ -87,14 +87,13 @@ public final class 日本の祝休日 {
      * @return 祝日・休日
      */
     public Optional<祝休日> get祝休日(LocalDate date) {
-        祝休日 祝休日 = 祝休日Map.getOrDefault(date, custom祝休日Map.get(date));
-        if (祝休日 == null) {
-            final Optional<Function<LocalDate, String>> first = custom祝休日Logic.stream().filter(e -> e.apply(date) != null).findFirst();
-            if (first.isPresent()) {
-                祝休日 = new 祝休日(date, first.get().apply(date));
-            }
+        祝休日 holiday = 祝休日Map.getOrDefault(date, custom祝休日Map.get(date));
+        if (holiday != null) {
+            return Optional.of(holiday);
         }
-        return Optional.ofNullable(祝休日);
+        return custom祝休日Logic.stream()
+                .map(e -> e.apply(date)).filter(Objects::nonNull).findFirst()
+                .flatMap(e -> Optional.of(new 祝休日(date, e)));
     }
 
     /**
