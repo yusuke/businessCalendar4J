@@ -33,11 +33,11 @@ test {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = 'java-holidays'
+            artifactId = 'japan-holidays'
             from components.java
             pom {
-                name = 'java-holidays'
-                description = 'java-holidays'
+                name = 'japan-holidays'
+                description = 'japan-holidays'
                 url = 'https://github.com/yusuke/japan-holidays'
                 licenses {
                     license {
@@ -66,8 +66,8 @@ publishing {
             def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
             credentials {
-                username = "${sonatypeUsername}"
-                password = "${sonatypePassword}"
+                username = "${SONATYPE_USERNAME}"
+                password = "${SONATYPE_PASSWORD}"
             }
         }
     }
