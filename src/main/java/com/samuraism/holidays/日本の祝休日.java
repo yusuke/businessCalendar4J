@@ -105,12 +105,12 @@ public final class 日本の祝休日 {
     }
 
     /**
-     * 指定した日以前で営業日(祝休日ではない日)を返す
+     * 指定した日(指定した日を含む)以前で最初の営業日(祝休日ではない日)を返す
      *
      * @param date 指定日
      * @return 指定した日以前の営業日
      */
-    public LocalDate 以前の営業日(LocalDate date) {
+    public LocalDate 最後の営業日(LocalDate date) {
         LocalDate check = date;
         while (is祝休日(check)) {
             check = check.minus(1, ChronoUnit.DAYS);
@@ -119,12 +119,12 @@ public final class 日本の祝休日 {
     }
 
     /**
-     * 指定した日以降で営業日(祝休日ではない日)を返す
+     * 指定した日以降(指定した日を含む)で最初の営業日(祝休日ではない日)を返す
      *
      * @param date 指定日
      * @return 指定した日以降の営業日
      */
-    public LocalDate 以降の営業日(LocalDate date) {
+    public LocalDate 最初の営業日(LocalDate date) {
         LocalDate check = date;
         while (is祝休日(check)) {
             check = check.plus(1, ChronoUnit.DAYS);
@@ -133,12 +133,12 @@ public final class 日本の祝休日 {
     }
 
     /**
-     * 指定した日以前の祝休日を返す
+     * 指定した日以前(指定した日を含む)の最後の祝休日を返す
      *
      * @param date 指定日
      * @return 指定した日以前の祝休日
      */
-    public 祝休日 以前の祝休日(LocalDate date) {
+    public 祝休日 最後の祝休日(LocalDate date) {
         LocalDate check = date;
         while (!is祝休日(check)) {
             check = check.minus(1, ChronoUnit.DAYS);
@@ -148,12 +148,12 @@ public final class 日本の祝休日 {
     }
 
     /**
-     * 指定した日以降の祝休日を返す
+     * 指定した日(指定した日を含む)以降の最初の祝休日を返す
      *
      * @param date 指定日
      * @return 指定した日以前の祝休日
      */
-    public 祝休日 以降の祝休日(LocalDate date) {
+    public 祝休日 最初の祝休日(LocalDate date) {
         LocalDate check = date;
         while (!is祝休日(check)) {
             check = check.plus(1, ChronoUnit.DAYS);

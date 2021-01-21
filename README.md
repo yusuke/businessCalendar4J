@@ -70,13 +70,13 @@ public class Example {
                 .add祝休日(e -> e.getMonthValue() == 12 && e.getDayOfMonth() == 31 ? "大晦日" : null);
 
         // 2021年1月最終営業日を取得→ 1月30日、31日が土日なので1月29日金曜日
-        System.out.println("2021年最終営業日: " + holidays.以前の営業日(LocalDate.of(2021, 1, 31)));
+        System.out.println("2021年最終営業日: " + holidays.最後の営業日(LocalDate.of(2021, 1, 31)));
         // 2020年大晦日以降最初の営業日を取得→ 1月1日は元日、1月2,3日はカスタム祝日(土日)なので1月4日月曜日
-        System.out.println("2020年大晦日以降最初の営業日: " + holidays.以降の営業日(LocalDate.of(2020, 12, 31)));
+        System.out.println("2020年大晦日以降最初の営業日: " + holidays.最初の営業日(LocalDate.of(2020, 12, 31)));
         // 2021年2月22日以降最初の祝日を取得→ 2月23日 天皇誕生日
-        System.out.println(holidays.以降の祝休日(LocalDate.of(2021, 2, 22)));
+        System.out.println(holidays.最初の祝休日(LocalDate.of(2021, 2, 22)));
         // 2021年2月26日以前最初の祝日を取得→ 2月23日 天皇誕生日
-        System.out.println(holidays.以前の祝休日(LocalDate.of(2021, 2, 26)));
+        System.out.println(holidays.最後の祝休日(LocalDate.of(2021, 2, 26)));
     }
 }
 

@@ -158,14 +158,14 @@ class 日本の祝休日Test {
         assertAll(
                 // 祝休日中
                 () -> assertEquals(LocalDate.of(2020, 12, 31),
-                        holidays.以前の営業日(LocalDate.of(2021, 1, 2))),
+                        holidays.最後の営業日(LocalDate.of(2021, 1, 2))),
                 () -> assertEquals(LocalDate.of(2021, 1, 4),
-                        holidays.以降の営業日(LocalDate.of(2021, 1, 2))),
+                        holidays.最初の営業日(LocalDate.of(2021, 1, 2))),
                 // 営業日中
                 () -> assertEquals(LocalDate.of(2021, 1, 6),
-                        holidays.以前の営業日(LocalDate.of(2021, 1, 6))),
+                        holidays.最後の営業日(LocalDate.of(2021, 1, 6))),
                 () -> assertEquals(LocalDate.of(2021, 1, 6),
-                        holidays.以降の営業日(LocalDate.of(2021, 1, 6))));
+                        holidays.最初の営業日(LocalDate.of(2021, 1, 6))));
     }
 
     @Test
@@ -176,14 +176,14 @@ class 日本の祝休日Test {
         assertAll(
                 // 祝休日中
                 () -> assertEquals(LocalDate.of(2021, 1, 2),
-                        holidays.以前の祝休日(LocalDate.of(2021, 1, 2)).日付),
+                        holidays.最後の祝休日(LocalDate.of(2021, 1, 2)).日付),
                 () -> assertEquals(LocalDate.of(2021, 1, 2),
-                        holidays.以降の祝休日(LocalDate.of(2021, 1, 2)).日付),
+                        holidays.最初の祝休日(LocalDate.of(2021, 1, 2)).日付),
                 // 営業日中
                 () -> assertEquals(LocalDate.of(2021, 1, 3),
-                        holidays.以前の祝休日(LocalDate.of(2021, 1, 6)).日付),
+                        holidays.最後の祝休日(LocalDate.of(2021, 1, 6)).日付),
                 () -> assertEquals(LocalDate.of(2021, 1, 9),
-                        holidays.以降の祝休日(LocalDate.of(2021, 1, 6)).日付)
+                        holidays.最初の祝休日(LocalDate.of(2021, 1, 6)).日付)
         );
     }
     @Test
@@ -192,10 +192,10 @@ class 日本の祝休日Test {
         assertAll(
                 // 内閣府でとれるデータの範囲より前
                 () -> assertEquals(LocalDate.of(1954, 1, 1),
-                        holidays.以前の祝休日(LocalDate.of(1954, 6, 17)).日付),
+                        holidays.最後の祝休日(LocalDate.of(1954, 6, 17)).日付),
                 // 内閣府でとれるデータの範囲より後
                 () -> assertEquals(LocalDate.of(2051, 1, 1),
-                        holidays.以降の祝休日(LocalDate.of(2050, 12, 31)).日付)
+                        holidays.最初の祝休日(LocalDate.of(2050, 12, 31)).日付)
         );
     }
 }

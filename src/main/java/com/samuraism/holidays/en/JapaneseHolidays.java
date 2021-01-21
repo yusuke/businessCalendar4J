@@ -85,43 +85,43 @@ public class JapaneseHolidays {
     }
 
     /**
-     * Returns a business day by a specific date
+     * Returns the last business day by a specific date
      *
      * @param date specific date
      * @return last business day by the specified date
      */
     public LocalDate lastBusinessDay(LocalDate date) {
-        return holidays.以前の営業日(date);
+        return holidays.最後の営業日(date);
     }
 
     /**
-     * Returns a business day on and after a specific date
+     * Returns the first business day on or after a specific date
      *
      * @param date specific date
      * @return first business day on and after the specified date
      */
     public LocalDate firstBusinessDay(LocalDate date) {
-        return holidays.以降の営業日(date);
+        return holidays.最初の営業日(date);
     }
 
     /**
-     * Returns a holiday by a specific date
+     * Returns the last holiday by a specific date
      *
      * @param date specific date
      * @return last holiday by the specified date
      */
     public Holiday lastHoliday(LocalDate date) {
-        return new Holiday(holidays.以前の祝休日(date));
+        return new Holiday(holidays.最後の祝休日(date));
     }
 
     /**
-     * Returns a holiday on or after a specific date
+     * Returns the first holiday on or after a specific date
      *
      * @param date specific date
      * @return first holiday on or after the specified date
      */
     public Holiday firstHoliday(LocalDate date) {
-        return new Holiday(holidays.以降の祝休日(date));
+        return new Holiday(holidays.最初の祝休日(date));
     }
     /**
      * Returns holidays between specified period
