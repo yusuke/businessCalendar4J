@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -30,290 +31,133 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 public class 日本の祝休日アルゴリズムTest {
-    static TreeMap<LocalDate, 祝休日> testCases;
+    static TreeMap<LocalDate, String> testCases;
     final static 日本の祝休日 holidays = new 日本の祝休日();
 
-    static TreeMap<LocalDate, 祝休日> 祝休日Map待避;
+    static TreeMap<LocalDate, String> 祝休日Map待避;
 
     @BeforeAll
     static void init() throws IOException {
         // テスト用のデータセット
         // 内閣府のデータにはない2022年以降の未来の春分の日、秋分の日、スポーツの日を含む
-        //noinspection SpellCheckingInspection
-        testCases = 日本の祝休日.load(日本の祝休日アルゴリズムTest.class.getResourceAsStream("/syukujitsu-testcase.csv"));
-        祝休日Map待避 = 日本の祝休日.祝休日Map;
+        testCases = CSV祝休日.load(日本の祝休日アルゴリズムTest.class.getResourceAsStream("/syukujitsu-testcase.csv"));
+        祝休日Map待避 = 日本の祝休日.csv.祝休日Map;
         // 1970年1月1日元日(特にこの日付に意味は無い)まで残して、以降はアルゴリズムで答え合わせする
-        日本の祝休日.祝休日Map = new TreeMap<>(祝休日Map待避.subMap(LocalDate.of(1955, 1, 1), LocalDate.of(1970, 1, 1)));
+        日本の祝休日.csv.祝休日Map = new TreeMap<>(祝休日Map待避.subMap(LocalDate.of(1955, 1, 1), LocalDate.of(1970, 1, 1)));
     }
 
 
     @AfterAll
     static void afterAll() {
         // 他のテストに影響を与えないよう、戻しておく
-        日本の祝休日.祝休日Map = 祝休日Map待避;
+        日本の祝休日.csv.祝休日Map = 祝休日Map待避;
     }
 
     @Test
-    void 元日() {
-        // 1月1日	年のはじめを祝う。
-        final List<祝休日> list = testCases.values().stream().filter(holiday -> holiday.名称.equals("元日")).collect(Collectors.toList());
-        for (祝休日 holiday : list) {
-            try {
-                assertEquals("元日", holidays.get祝休日(holiday.日付).get().名称, holiday.日付.toString());
-            } catch (NoSuchElementException e) {
-                fail(holiday.日付.toString());
-            }
-
-        }
-    }
-
-    @Test
-    void 成人の日() {
-        // 1月の第2月曜日	おとなになったことを自覚し、みずから生き抜こうとする青年を祝いはげます。
-        final List<祝休日> list = testCases.values().stream().filter(holiday -> holiday.名称.equals("成人の日")).collect(Collectors.toList());
-        for (祝休日 holiday : list) {
-            // 2000年より第二月曜日が成人の日
-            if (holiday.日付.isAfter(LocalDate.of(2000, 1, 1))) {
-                try {
-                    assertEquals("成人の日", holidays.get祝休日(holiday.日付).get().名称, holiday.日付.toString());
-                } catch (NoSuchElementException e) {
-                    fail(holiday.日付.toString());
-                }
-
-            }
-        }
-    }
-
-    @Test
-    void 建国記念の日() {
-        // 2月11日 政令で定める日	建国をしのび、国を愛する心を養う。
-        // https://ja.wikipedia.org/wiki/建国記念の日
-        // 紀元節復活の動きが高まり、「建国記念の日」として、1966年（昭和41年）に国民の祝日となり翌年から適用された。
-        final List<祝休日> list = testCases.values().stream().filter(holiday -> holiday.名称.equals("建国記念の日")).collect(Collectors.toList());
-        for (祝休日 holiday : list) {
-            if (holiday.日付.isAfter(LocalDate.of(1967, 1, 1))) {
-                try {
-                    assertEquals("建国記念の日", holidays.get祝休日(holiday.日付).get().名称, holiday.日付.toString());
-                } catch (NoSuchElementException e) {
-                    fail(holiday.日付.toString());
-                }
-            }
-
-        }
-    }
-
-    @Test
-    void 天皇誕生日() {
-        // 2月23日	天皇の誕生日を祝う。
-        final List<祝休日> list = testCases.values().stream().filter(holiday -> holiday.名称.equals("天皇誕生日")).collect(Collectors.toList());
-        for (祝休日 holiday : list) {
-            // 2020年より2月23日が天皇誕生日
-            if (holiday.日付.isAfter(LocalDate.of(2020, 1, 1))) {
-                try {
-                    assertEquals("天皇誕生日", holidays.get祝休日(holiday.日付).get().名称, holiday.日付.toString());
-                } catch (NoSuchElementException e) {
-                    fail(holiday.日付.toString());
-                }
-
-            }
-        }
-    }
-
-    @Test
-    void 春分の日() {
-        // 春分日	自然をたたえ、生物をいつくしむ。
-        final List<祝休日> list = testCases.values().stream().filter(holiday -> holiday.名称.equals("春分の日")).collect(Collectors.toList());
-        for (祝休日 holiday : list) {
-            // アルゴリズムではなく、国立天文台の予想ベース
-            // https://www.nao.ac.jp/faq/a0301.html
-            if (holiday.日付.isAfter(LocalDate.of(2000, 1, 1))) {
-                try {
-                    assertEquals("春分の日", holidays.get祝休日(holiday.日付).get().名称, holiday.日付.toString());
-                } catch (NoSuchElementException e) {
-                    fail(holiday.日付.toString());
-                }
-
-            }
-        }
-    }
-
-    @Test
-    void 昭和の日() {
-        // 4月29日	激動の日々を経て、復興を遂げた昭和の時代を顧み、国の将来に思いをいたす。
-        final List<祝休日> list = testCases.values().stream().filter(holiday -> holiday.名称.equals("昭和の日")).collect(Collectors.toList());
-        for (祝休日 holiday : list) {
-            try {
-                assertEquals("昭和の日", holidays.get祝休日(holiday.日付).get().名称, holiday.日付.toString());
-            } catch (NoSuchElementException e) {
-                fail(holiday.日付.toString());
-            }
-
-        }
-    }
-
-    @Test
-    void 憲法記念日() {
-        // 5月3日	日本国憲法の施行を記念し、国の成長を期する。
-        final List<祝休日> list = testCases.values().stream().filter(holiday -> holiday.名称.equals("憲法記念日")).collect(Collectors.toList());
-        for (祝休日 holiday : list) {
-            try {
-                assertEquals("憲法記念日", holidays.get祝休日(holiday.日付).get().名称, holiday.日付.toString());
-            } catch (NoSuchElementException e) {
-                fail(holiday.日付.toString());
-            }
-
-        }
-    }
-
-    @Test
-    void みどりの日() {
-        // 5月4日	自然に親しむとともにその恩恵に感謝し、豊かな心をはぐくむ。
-        // https://ja.wikipedia.org/wiki/みどりの日
-        // 1989年（平成元年）から2006年（平成18年）までは4月29日であった
-        final List<祝休日> list = testCases.values().stream().filter(holiday -> holiday.名称.equals("みどりの日")).collect(Collectors.toList());
-        for (祝休日 holiday : list) {
-            if (holiday.日付.isAfter(LocalDate.of(2007, 1, 1))) {
-                try {
-                    assertEquals("みどりの日", holidays.get祝休日(holiday.日付).get().名称, holiday.日付.toString());
-                } catch (NoSuchElementException e) {
-                    fail(holiday.日付.toString());
-                }
-            }
-
-        }
-    }
-
-    @Test
-    void こどもの日() {
-        // 5月5日	こどもの人格を重んじ、こどもの幸福をはかるとともに、母に感謝する。
-        final List<祝休日> list = testCases.values().stream().filter(holiday -> holiday.名称.equals("こどもの日")).collect(Collectors.toList());
-        for (祝休日 holiday : list) {
-            try {
-                assertEquals("こどもの日", holidays.get祝休日(holiday.日付).get().名称, holiday.日付.toString());
-            } catch (NoSuchElementException e) {
-                fail(holiday.日付.toString());
-            }
-
-        }
-    }
-
-    @Test
-    void 海の日() {
-        // 7月の第3月曜日	海の恩恵に感謝するとともに、海洋国日本の繁栄を願う。
-        // https://ja.wikipedia.org/wiki/海の日
-        // 制定当初は7月20日であったが、2003年（平成15年）に改正された祝日法のハッピーマンデー制度により、7月の第3月曜日となった。
-        final List<祝休日> list = testCases.values().stream().filter(holiday -> holiday.名称.equals("海の日")).collect(Collectors.toList());
-        for (祝休日 holiday : list) {
-            if (holiday.日付.isAfter(LocalDate.of(2003, 1, 1))
-                    && holiday.日付.isBefore(LocalDate.of(2019, 1, 1))) {
-                try {
-                    assertEquals("海の日", holidays.get祝休日(holiday.日付).get().名称, holiday.日付.toString());
-                } catch (NoSuchElementException e) {
-                    fail(holiday.日付.toString());
-                }
-            }
-
-        }
-    }
-
-    @Test
-    void 山の日() {
-        // 8月11日	山に親しむ機会を得て、山の恩恵に感謝する。
-        // https://ja.wikipedia.org/wiki/山の日
-        // 2016年（平成28年）1月1日施行の改正祝日法で新設された。
-        final List<祝休日> list = testCases.values().stream().filter(holiday -> holiday.名称.equals("山の日")).collect(Collectors.toList());
-        for (祝休日 holiday : list) {
-            if (holiday.日付.isAfter(LocalDate.of(2016, 1, 1))
+    void 祝日() {
+        assertAll(
+                () -> {
+                    // 1月1日	年のはじめを祝う。
+                    check("元日");
+                },
+                () -> {
+                    // 1月の第2月曜日	おとなになったことを自覚し、みずから生き抜こうとする青年を祝いはげます。
+                    // 2000年より第二月曜日が成人の日
+                    check("成人の日", LocalDate.of(2000, 1, 1));
+                },
+                () -> {
+                    // 2月11日 政令で定める日	建国をしのび、国を愛する心を養う。
+                    // https://ja.wikipedia.org/wiki/建国記念の日
+                    // 紀元節復活の動きが高まり、「建国記念の日」として、1966年（昭和41年）に国民の祝日となり翌年から適用された。
+                    check("建国記念の日", LocalDate.of(1967, 1, 1));
+                },
+                () -> {
+                    // 2月23日	天皇の誕生日を祝う。
+                    check("天皇誕生日", LocalDate.of(2020, 1, 1));
+                },
+                () -> {
+                    // 春分日	自然をたたえ、生物をいつくしむ。
+                    check("春分の日", LocalDate.of(2000, 1, 1));
+                },
+                () -> {
+                    // 4月29日	激動の日々を経て、復興を遂げた昭和の時代を顧み、国の将来に思いをいたす。
+                    check("昭和の日");
+                },
+                () -> {
+                    // 5月3日	日本国憲法の施行を記念し、国の成長を期する。
+                    check("憲法記念日");
+                },
+                () -> {
+                    // 5月4日	自然に親しむとともにその恩恵に感謝し、豊かな心をはぐくむ。
+                    // https://ja.wikipedia.org/wiki/みどりの日
+                    // 1989年（平成元年）から2006年（平成18年）までは4月29日であった
+                    check("みどりの日", LocalDate.of(2007, 1, 1));
+                },
+                () -> {
+                    // 5月5日	こどもの人格を重んじ、こどもの幸福をはかるとともに、母に感謝する。
+                    check("こどもの日");
+                },
+                () -> {
+                    // 7月の第3月曜日	海の恩恵に感謝するとともに、海洋国日本の繁栄を願う。
+                    // https://ja.wikipedia.org/wiki/海の日
+                    // 制定当初は7月20日であったが、2003年（平成15年）に改正された祝日法のハッピーマンデー制度により、7月の第3月曜日となった。
+                    check("海の日", LocalDate.of(2003, 1, 1), LocalDate.of(2019, 1, 1));
+                },
+                () -> {
+                    // 8月11日	山に親しむ機会を得て、山の恩恵に感謝する。
+                    // https://ja.wikipedia.org/wiki/山の日
+                    // 2016年（平成28年）1月1日施行の改正祝日法で新設された。
                     // 2019年、2020年はオリンピックの関係で移動しているのでアルゴリズムでは算出できない
-                    && holiday.日付.isBefore(LocalDate.of(2019, 1, 1))) {
-                try {
-                    assertEquals("山の日", holidays.get祝休日(holiday.日付).get().名称, holiday.日付.toString());
-                } catch (NoSuchElementException e) {
-                    fail(holiday.日付.toString());
-                }
-
-            }
-        }
+                    check("山の日", LocalDate.of(2016, 1, 1), LocalDate.of(2019, 1, 1));
+                },
+                () -> {
+                    // 9月の第3月曜日	多年にわたり社会につくしてきた老人を敬愛し、長寿を祝う。
+                    // https://ja.wikipedia.org/wiki/敬老の日
+                    check("敬老の日", LocalDate.of(2003, 1, 1));
+                },
+                () -> {
+                    // 秋分日	祖先をうやまい、なくなった人々をしのぶ。
+                    check("秋分の日", LocalDate.of(2000, 1, 1));
+                },
+                () -> {
+                    // 10月の第2月曜日	スポーツにしたしみ、健康な心身をつちかう。
+                    check("スポーツの日", LocalDate.of(2022, 1, 1));
+                },
+                () -> {
+                    // 11月3日	自由と平和を愛し、文化をすすめる。
+                    check("文化の日");
+                },
+                () -> {
+                    // 11月23日	勤労をたっとび、生産を祝い、国民たがいに感謝しあう。
+                    check("勤労感謝の日");
+                });
     }
 
-    @Test
-    void 敬老の日() {
-        // 9月の第3月曜日	多年にわたり社会につくしてきた老人を敬愛し、長寿を祝う。
-        // https://ja.wikipedia.org/wiki/敬老の日
-        final List<祝休日> list = testCases.values().stream().filter(holiday -> holiday.名称.equals("敬老の日")).collect(Collectors.toList());
-        for (祝休日 holiday : list) {
-            if (holiday.日付.isAfter(LocalDate.of(2003, 1, 1))) {
-                try {
-                    assertEquals("敬老の日", holidays.get祝休日(holiday.日付).get().名称, holiday.日付.toString());
-                } catch (NoSuchElementException e) {
-                    fail(holiday.日付.toString());
-                }
-            }
-
-        }
-
+    void check(String 祝日名) {
+        check(祝日名, LocalDate.of(1955, 1, 1));
     }
 
-    @Test
-    void 秋分の日() {
-        // 秋分日	祖先をうやまい、なくなった人々をしのぶ。
-        final List<祝休日> list = testCases.values().stream().filter(holiday -> holiday.名称.equals("秋分の日")).collect(Collectors.toList());
-        for (祝休日 holiday : list) {
-            // アルゴリズムではなく、国立天文台の予想ベース
-            // https://www.nao.ac.jp/faq/a0301.html
-            if (holiday.日付.isAfter(LocalDate.of(2000, 1, 1))) {
-                try {
-                    assertEquals("秋分の日", holidays.get祝休日(holiday.日付).get().名称, holiday.日付.toString());
-                } catch (NoSuchElementException e) {
-                    fail(holiday.日付.toString());
-                }
-
-            }
-        }
+    void check(String 祝日名, LocalDate from) {
+        check(祝日名, from, LocalDate.of(2030, 12, 31));
     }
 
-    @Test
-    void スポーツの日() {
-        // 10月の第2月曜日	スポーツにしたしみ、健康な心身をつちかう。
-        final List<祝休日> list = testCases.values().stream().filter(holiday -> holiday.名称.equals("スポーツの日")).collect(Collectors.toList());
-        for (祝休日 holiday : list) {
-            if (holiday.日付.isAfter(LocalDate.of(2022, 1, 1))) {
+    void check(String 祝日名, LocalDate from, LocalDate to) {
+        final List<LocalDate> list = testCases.entrySet().stream()
+                .filter(localDateStringEntry -> localDateStringEntry.getValue().equals(祝日名))
+                .map(Map.Entry::getKey).collect(Collectors.toList());
+        for (LocalDate holiday : list) {
+            if (holiday.isAfter(from)
+                    && holiday.isBefore(to)) {
                 try {
-                    assertEquals("スポーツの日", holidays.get祝休日(holiday.日付).get().名称, holiday.日付.toString());
+                    assertEquals(祝日名, holidays.get祝休日(holiday).get().名称, holiday.toString());
                 } catch (NoSuchElementException e) {
-                    fail(holiday.日付.toString());
+                    fail(holiday.toString());
                 }
             }
-        }
-    }
-
-    @Test
-    void 文化の日() {
-        // 11月3日	自由と平和を愛し、文化をすすめる。
-        final List<祝休日> list = testCases.values().stream().filter(holiday -> holiday.名称.equals("文化の日")).collect(Collectors.toList());
-        for (祝休日 holiday : list) {
-            try {
-                assertEquals("文化の日", holidays.get祝休日(holiday.日付).get().名称, holiday.日付.toString());
-            } catch (NoSuchElementException e) {
-                fail(holiday.日付.toString());
-            }
 
         }
     }
 
-    @Test
-    void 勤労感謝の日() {
-        // 11月23日	勤労をたっとび、生産を祝い、国民たがいに感謝しあう。
-        final List<祝休日> list = testCases.values().stream().filter(holiday -> holiday.名称.equals("勤労感謝の日")).collect(Collectors.toList());
-        for (祝休日 holiday : list) {
-            try {
-                assertEquals("勤労感謝の日", holidays.get祝休日(holiday.日付).get().名称, holiday.日付.toString());
-            } catch (NoSuchElementException e) {
-                fail(holiday.日付.toString());
-            }
-
-        }
-    }
 
     @Test
     void 休日() {
@@ -327,26 +171,28 @@ public class 日本の祝休日アルゴリズムTest {
         //「敬老の日」は「9月の第3月曜日」であるため9月15日から21日の間で移動します。
         //「秋分の日」は「秋分日」が9月22日か23日のいずれかで移動します。
         // このことにより数年に一度、不定期に現れる休日です。
-        final List<祝休日> list = testCases.values().stream().filter(holiday -> holiday.名称.equals("休日")).collect(Collectors.toList());
-        for (祝休日 holiday : list) {
-            if (holiday.日付.isAfter(LocalDate.of(2007, 1, 1))) {
+        final List<LocalDate> list = testCases.entrySet().stream()
+                .filter(localDateStringEntry -> localDateStringEntry.getValue().equals("休日"))
+                .map(Map.Entry::getKey).collect(Collectors.toList());
+        for (LocalDate holiday : list) {
+            if (holiday.isAfter(LocalDate.of(2007, 1, 1))) {
                 try {
-                    assertEquals("休日", holidays.get祝休日(holiday.日付).get().名称, holiday.日付.toString());
+                    assertEquals("休日", holidays.get祝休日(holiday).get().名称, holiday.toString());
                 } catch (NoSuchElementException e) {
                     if (
                         // 以前の天皇誕生日の振替休日
-                            !holiday.日付.equals(LocalDate.of(2007, 12, 24)) &&
-                                    !holiday.日付.equals(LocalDate.of(2012, 12, 24)) &&
-                                    !holiday.日付.equals(LocalDate.of(2018, 12, 24)) &&
+                            !holiday.equals(LocalDate.of(2007, 12, 24)) &&
+                                    !holiday.equals(LocalDate.of(2012, 12, 24)) &&
+                                    !holiday.equals(LocalDate.of(2018, 12, 24)) &&
                                     // 即位礼正殿の儀前日
-                                    !holiday.日付.equals(LocalDate.of(2019, 4, 30)) &&
+                                    !holiday.equals(LocalDate.of(2019, 4, 30)) &&
                                     // 即位礼正殿の儀翌日
-                                    !holiday.日付.equals(LocalDate.of(2019, 5, 2)) &&
+                                    !holiday.equals(LocalDate.of(2019, 5, 2)) &&
                                     // オリンピックの関係で山の日が前日日曜日に移動しているため振替休日
-                                    !holiday.日付.equals(LocalDate.of(2021, 8, 9))
+                                    !holiday.equals(LocalDate.of(2021, 8, 9))
 
                     ) {
-                        fail(holiday.日付.toString());
+                        fail(holiday.toString());
                     }
                 }
             }

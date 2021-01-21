@@ -32,7 +32,7 @@ final class 日本の祝休日アルゴリズム implements Function<LocalDate, 
             return "元日";
         }
 
-        if (日本の祝休日.祝休日Map.lastKey().isAfter(e)) {
+        if (日本の祝休日.csv.祝休日Map.lastKey().isAfter(e)) {
             // 内閣府の公表しているデータの範囲内なのでアルゴリズムでは算出しない
             return null;
         }
@@ -146,7 +146,7 @@ final class 日本の祝休日アルゴリズム implements Function<LocalDate, 
         while (test.getDayOfWeek() != DayOfWeek.SATURDAY) {
             // is祝休日で調べるとカスタム祝休日も含めて振替休日を算出してしまうので注意
             final String 導出休祝日 = this.apply(test);
-            if (!日本の祝休日.祝休日Map.containsKey(test) && (導出休祝日 == null || "休日".equals(導出休祝日))) {
+            if (!日本の祝休日.csv.祝休日Map.containsKey(test) && (導出休祝日 == null || "休日".equals(導出休祝日))) {
                 break;
             }
             if (test.getDayOfWeek() == DayOfWeek.SUNDAY) {
