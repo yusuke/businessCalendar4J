@@ -223,7 +223,6 @@ public final class 日本の祝休日 {
         while (-1 != (length = is.read(buf))) {
             outputStream.write(buf, 0, length);
         }
-        //noinspection StringOperationCanBeSimplified
         String result = new String(outputStream.toByteArray(), Charset.forName("Shift_JIS"));
         Arrays.stream(result.split("\n")).forEach(line -> {
             if (!line.contains("国民の祝日・休日名称")) {
