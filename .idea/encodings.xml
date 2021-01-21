@@ -2,5 +2,6 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/src/main/resources/syukujitsu.csv" charset="Shift_JIS" />
+    <file url="file://$PROJECT_DIR$/src/test/resources/syukujitsu-testcase.csv" charset="Shift_JIS" />
   </component>
 </project>

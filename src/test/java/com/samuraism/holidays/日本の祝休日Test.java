@@ -195,8 +195,7 @@ class 日本の祝休日Test {
                         holidays.以前の祝休日(LocalDate.of(1954, 6, 17)).日付),
                 // 内閣府でとれるデータの範囲より後
                 () -> assertEquals(LocalDate.of(2051, 1, 1),
-                        holidays.以降の祝休日(LocalDate.of(2050, 6, 17)).日付)
+                        holidays.以降の祝休日(LocalDate.of(2050, 12, 31)).日付)
         );
-
     }
 }
