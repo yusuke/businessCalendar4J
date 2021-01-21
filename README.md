@@ -2,7 +2,9 @@
 1955年以降の日本の祝日、休日の判定や名称取得を行えるライブラリです。依存がないので気軽に利用できます。
 「指定したの日の祝日の名称を取得する」「指定した日以降の最初の営業日を取得する」「指定した期間の祝日のリストを取得する」といったことが簡単に行えます。
 
-内閣府の公開している情報を直接取得して、かつ定期的に更新してるため正確です。 また「土日を祝日扱いにする」、「特定の日を祝日扱いにする」、などの定義も簡単に行えます。
+内閣府の公開している情報を直接取得して、かつ定期的に更新してるため正確です。内閣府で公開している確定情報の範囲よりも後の日付については現行の法律をベースにしたアルゴリズムと国立天文台の情報を元に休祝日を推定します。
+
+また「土日を祝日扱いにする」、「特定の日を休祝日扱いにする」、などの定義も簡単に行えるので事業等の実態に合わせた営業日の導出が行えます。
 
 ## ハッシュタグ
 ご意見、ご感想などは [&#35;Java祝休日](https://twitter.com/intent/tweet?text=https://github.com/yusuke/japan-holidays/+%23Java祝休日) を使ってツイートしていただければ幸いです。
@@ -18,14 +20,14 @@ Maven Central Repositoryにリリースされているため、以下のよう�
     <dependency>
         <groupId>com.samuraism</groupId>
         <artifactId>japan-holidays</artifactId>
-        <version>1.0</version>
+        <version>1.1</version>
     </dependency>
 </dependencies>
 ```
 ### Gradleの場合
 ```text
 dependencies {
-    compile 'com.samuraism:japan-holidays:1.0'
+    compile 'com.samuraism:japan-holidays:1.1'
 }
 ```
 ## 利用方法
