@@ -42,7 +42,7 @@ public class Example {
                 .forEach(e -> System.out.println(e.date + ": " + e.name));
 
         // sets a fixed custom Holiday
-        // You can specify custom holidays using method chain. Note that JapneseHolidays is mutated upon each method call.
+        // You can specify custom holidays using method chain. Note that the JapaneseHolidays instance is mutated upon each method call.
         holidays.addHoliday(LocalDate.of(2013, 3, 29), "Samuraism Inc. Foundation Day")
                 // Specify logic based custom holidays. returns a string if the day is a holiday
                 .addHoliday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "Saturday" : null)
