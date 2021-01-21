@@ -18,7 +18,6 @@ package com.samuraism.holidays;
 import java.time.LocalDate;
 import java.util.Objects;
 
-@SuppressWarnings("NonAsciiCharacters")
 public final class 祝休日 implements Comparable<祝休日> {
     public final LocalDate 日付;
     public final String 名称;

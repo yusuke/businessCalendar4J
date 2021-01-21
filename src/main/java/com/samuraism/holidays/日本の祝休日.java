@@ -28,7 +28,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Function;
 
-@SuppressWarnings("NonAsciiCharacters")
 public final class 日本の祝休日 {
     private final TreeMap<LocalDate, 祝休日> custom祝休日Map = new TreeMap<>();
     private final List<Function<LocalDate, String>> custom祝休日Logic = new ArrayList<>();
@@ -190,7 +189,7 @@ public final class 日本の祝休日 {
         new Timer(true).schedule(new TimerTask() {
             @Override
             public void run() {
-                祝休日情報をロード();
+                    祝休日情報をロード();
             }
         }, 約一ヶ月, 約一ヶ月);
     }

@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SuppressWarnings({"NonAsciiCharacters", "OptionalGetWithoutIsPresent"})
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 public class 日本の祝休日アルゴリズムTest {
     static TreeMap<LocalDate, 祝休日> testCases;
     final static 日本の祝休日 holidays = new 日本の祝休日();

@@ -21,7 +21,6 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.function.Function;
 
-@SuppressWarnings("NonAsciiCharacters")
 final class 日本の祝休日アルゴリズム implements Function<LocalDate, String> {
     @Override
     public String apply(LocalDate e) {
