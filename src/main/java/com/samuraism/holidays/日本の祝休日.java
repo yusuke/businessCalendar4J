@@ -17,18 +17,18 @@ package com.samuraism.holidays;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 
 public final class 日本の祝休日 {
     private final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
-    private static final long 約一ヶ月 = 1000L * 60 * 60 * 24 * 31 + new Random(System.currentTimeMillis()).nextLong() % (1000L * 60 * 60 * 10);
-
-    static final CSV祝休日 csv = new CSV祝休日(約一ヶ月,System.getProperty("SYUKUJITSU_URL", "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"));
+    private static final 日本の祝休日アルゴリズム algorithm = new 日本の祝休日アルゴリズム();
     private final Map祝休日 custom祝休日Map = new Map祝休日();
     public 日本の祝休日() {
-        holidayLogics.add(csv);
-        holidayLogics.add(new 日本の祝休日アルゴリズム());
+        holidayLogics.add(algorithm);
         holidayLogics.add(custom祝休日Map);
     }
 
@@ -163,6 +163,4 @@ public final class 日本の祝休日 {
         }
         return list;
     }
-
-
 }

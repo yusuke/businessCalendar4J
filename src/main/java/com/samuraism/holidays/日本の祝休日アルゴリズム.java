@@ -19,11 +19,19 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Random;
 import java.util.function.Function;
 
 final class 日本の祝休日アルゴリズム implements Function<LocalDate, String> {
+    private static final long 約一ヶ月 = 1000L * 60 * 60 * 24 * 31 + new Random(System.currentTimeMillis()).nextLong() % (1000L * 60 * 60 * 10);
+    static final CSV祝休日 csv = new CSV祝休日(約一ヶ月,System.getProperty("SYUKUJITSU_URL", "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"));
+
     @Override
     public String apply(LocalDate e) {
+        final String name = csv.apply(e);
+        if (name != null) {
+            return name;
+        }
         final int year = e.getYear();
         final int month = e.getMonthValue();
         final int day = e.getDayOfMonth();
@@ -32,7 +40,7 @@ final class 日本の祝休日アルゴリズム implements Function<LocalDate, 
             return "元日";
         }
 
-        if (日本の祝休日.csv.祝休日Map.lastKey().isAfter(e)) {
+        if (csv.祝休日Map.lastKey().isAfter(e)) {
             // 内閣府の公表しているデータの範囲内なのでアルゴリズムでは算出しない
             return null;
         }
@@ -146,7 +154,7 @@ final class 日本の祝休日アルゴリズム implements Function<LocalDate, 
         while (test.getDayOfWeek() != DayOfWeek.SATURDAY) {
             // is祝休日で調べるとカスタム祝休日も含めて振替休日を算出してしまうので注意
             final String 導出休祝日 = this.apply(test);
-            if (!日本の祝休日.csv.祝休日Map.containsKey(test) && (導出休祝日 == null || "休日".equals(導出休祝日))) {
+            if (!csv.祝休日Map.containsKey(test) && (導出休祝日 == null || "休日".equals(導出休祝日))) {
                 break;
             }
             if (test.getDayOfWeek() == DayOfWeek.SUNDAY) {
