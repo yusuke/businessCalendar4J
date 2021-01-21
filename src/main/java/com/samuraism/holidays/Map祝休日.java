@@ -20,6 +20,8 @@ import java.util.TreeMap;
 import java.util.function.Function;
 
 class Map祝休日 implements Function<LocalDate, String> {
+    /* アルゴリズムのテストで空にするので package private */
+    TreeMap<LocalDate, String> 祝休日Map;
 
     Map祝休日(){
         // リソースURLから読み込まない場合
@@ -30,10 +32,6 @@ class Map祝休日 implements Function<LocalDate, String> {
     public String apply(LocalDate localDate) {
         return 祝休日Map.get(localDate);
     }
-
-    /* アルゴリズムのテストで空にするので package private */
-    TreeMap<LocalDate, String> 祝休日Map;
-
 
     void add祝休日(LocalDate date, String 名称) {
         祝休日Map.put(date, 名称);
