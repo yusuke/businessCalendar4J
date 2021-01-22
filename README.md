@@ -154,3 +154,5 @@ public class Example {
 
 # ライセンス
 Apache License Version 2.0
+
+![Java CI with Gradle](https://github.com/yusuke/japan-holidays/workflows/Java%20CI%20with%20Gradle/badge.svg)
