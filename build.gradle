@@ -53,7 +53,7 @@ publishing {
                     }
                 }
                 scm {
-                    url = 'https://github.com/XXXXX'
+                    url = 'https://github.com/yusuke/japan-holidays'
                     connection = 'scm:git:git://github.com/yusuke/japan-holidays.git'
                     developerConnection = 'scm:git:git@github.com:yusuke/japan-holidays.git'
                 }
