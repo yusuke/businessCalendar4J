@@ -66,6 +66,16 @@ public final class 日本の祝休日 {
     }
 
     /**
+     * 今日が祝休日かどうかを判定する
+     *
+     * @return 今日が祝休日であればtrue
+     */
+    public boolean is祝休日() {
+        final LocalDate today = LocalDate.now();
+        return holidayLogics.stream().anyMatch(e -> e.apply(today) != null);
+    }
+
+    /**
      * 指定した日が営業日かどうかを判定する
      *
      * @param date 日付
@@ -73,6 +83,15 @@ public final class 日本の祝休日 {
      */
     public boolean is営業日(LocalDate date) {
         return !is祝休日(date);
+    }
+
+    /**
+     * 今日が営業日かどうかを判定する
+     *
+     * @return 今日が営業日であればtrue
+     */
+    public boolean is営業日() {
+        return !is祝休日(LocalDate.now());
     }
 
     /**

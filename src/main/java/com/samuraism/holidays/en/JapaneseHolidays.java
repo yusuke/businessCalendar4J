@@ -19,7 +19,8 @@ import com.samuraism.holidays.日本の祝休日;
 import com.samuraism.holidays.祝休日;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,7 @@ public class JapaneseHolidays {
     /**
      * Add logic based holiday.
      *
-     * @param logic ロジック
+     * @param logic logic
      * @return This instance
      */
     public JapaneseHolidays addHoliday(Function<LocalDate, String> logic) {
@@ -64,6 +65,15 @@ public class JapaneseHolidays {
     }
 
     /**
+     * Test if today is a holiday
+     *
+     * @return true if the specified date is a holiday
+     */
+    public boolean isHoliday() {
+        return holidays.is祝休日();
+    }
+
+    /**
      * Test if the specified date is a business day
      *
      * @param date date
@@ -71,6 +81,15 @@ public class JapaneseHolidays {
      */
     public boolean isBusinessDay(LocalDate date) {
         return holidays.is営業日(date);
+    }
+
+    /**
+     * Test if today is a business day
+     *
+     * @return true if the specified date is a business day
+     */
+    public boolean isBusinessDay() {
+        return holidays.is営業日();
     }
 
     /**
