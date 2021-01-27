@@ -40,7 +40,7 @@ class 日本の祝休日Test {
                 // 大晦日は普通の日
                 () -> assertFalse(holidays.is祝休日(LocalDate.of(2021, 12, 31)))
 
-                );
+        );
     }
 
     @Test
@@ -186,8 +186,9 @@ class 日本の祝休日Test {
                         holidays.最初の祝休日(LocalDate.of(2021, 1, 6)).日付)
         );
     }
+
     @Test
-    void 範囲外(){
+    void 範囲外() {
         日本の祝休日 holidays = new 日本の祝休日();
         assertAll(
                 // 内閣府でとれるデータの範囲より前
@@ -198,10 +199,14 @@ class 日本の祝休日Test {
                         holidays.最初の祝休日(LocalDate.of(2050, 12, 31)).日付)
         );
     }
+
     @Test
-    void get内閣府公式公表期間(){
+    void get内閣府公式公表期間() {
         日本の祝休日 holidays = new 日本の祝休日();
         assertEquals(LocalDate.of(1955, 1, 1), holidays.get内閣府公表祝休日初日());
         assertEquals(LocalDate.of(2021, 11, 23), holidays.get内閣府公表祝休日最終日());
+        if (LocalDate.now().isAfter(LocalDate.of(2021, 12, 10))) {
+            fail("2021年12月には公式の祝休日情報は更新されており2021年11月23日以降の祝休日情報がとれるはず");
+        }
     }
 }
