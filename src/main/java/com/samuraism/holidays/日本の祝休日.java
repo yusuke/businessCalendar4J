@@ -27,6 +27,7 @@ public final class 日本の祝休日 {
     private final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
     private static final 日本の祝休日アルゴリズム algorithm = new 日本の祝休日アルゴリズム();
     private final Map祝休日 custom祝休日Map = new Map祝休日();
+
     public 日本の祝休日() {
         holidayLogics.add(algorithm);
         holidayLogics.add(custom祝休日Map);
@@ -224,5 +225,25 @@ public final class 日本の祝休日 {
             from = from.plus(1, ChronoUnit.DAYS);
         }
         return list;
+    }
+
+    /**
+     * <a href="https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html">内閣府で公表されている祝休日情報</a>の初日を返します。この日より前の祝休日は現行の法律、国立天文台の情報を元にアルゴリズムで求められた祝休日になります。
+     *
+     * @return 内閣府で公表されている祝休日情報の初日
+     * @since 1.4
+     */
+    public LocalDate get内閣府公表祝休日初日() {
+        return 日本の祝休日アルゴリズム.csv.祝休日Map.firstKey();
+    }
+
+    /**
+     * <a href="https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html">内閣府で公表されている祝休日情報</a>の最終日を返します。この日より後の祝休日は現行の法律、国立天文台の情報を元にアルゴリズムで求められた祝休日になります。
+     *
+     * @return 内閣府で公表されている祝休日情報の最終日
+     * @since 1.4
+     */
+    public LocalDate get内閣府公表祝休日最終日() {
+        return 日本の祝休日アルゴリズム.csv.祝休日Map.lastKey();
     }
 }

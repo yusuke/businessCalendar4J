@@ -194,4 +194,22 @@ public class JapaneseHolidays {
     public List<Holiday> getHolidaysBetween(LocalDate from, LocalDate to) {
         return holidays.get指定期間内の祝休日️(from, to).stream().map(Holiday::new).collect(Collectors.toList());
     }
+
+    /**
+     * Returns the first day of <a href="https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html">cabinet's official holiday data</a>.
+     * @return the first day of <a href="https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html">cabinet's official holiday data</a>
+     * @since 1.4
+     */
+    public LocalDate getCabinetOfficialHolidayDataFirstDay(){
+        return  holidays.get内閣府公表祝休日初日();
+    }
+
+    /**
+     * Returns the last day of <a href="https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html">cabinet's official holiday data</a>.
+     * @return the last day of <a href="https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html">cabinet's official holiday data</a>
+     * @since 1.4
+     */
+    public LocalDate getCabinetOfficialHolidayDataLastDay(){
+        return holidays.get内閣府公表祝休日最終日();
+    }
 }
