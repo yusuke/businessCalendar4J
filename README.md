@@ -1,7 +1,6 @@
 # [&#35;japanHolidays](https://twitter.com/search?q=%23japanHolidays&src=typed_query&f=live)
 1955年以降の日本の祝日、休日の判定や名称取得を行えるライブラリです。依存がないので気軽に利用できます。
 「指定したの日の祝日の名称を取得する」「指定した日以降の最初の営業日を取得する」「指定した期間の祝日のリストを取得する」といったことが簡単に行えます。
-[![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/HolidaysJava.svg?style=social&label=Follow%20%40HolidaysJava)](https://twitter.com/HolidaysJava)
 
 内閣府の公開している情報を直接取得して、かつ定期的に更新してるため正確です。内閣府で公開している確定情報の範囲よりも後の日付については現行の法律をベースにしたアルゴリズムと国立天文台の情報を元に休祝日を推定します。
 
@@ -9,11 +8,15 @@
 
 ## ハッシュタグ
 ご意見、ご感想などは [&#35;japanHolidays](https://twitter.com/intent/tweet?text=https://github.com/yusuke/japan-holidays/+%23japanHolidays) を使ってツイートしていただければ幸いです。
+
+[![@HolidaysJava](https://img.shields.io/twitter/url/https/twitter.com/HolidaysJava.svg?style=social&label=Follow%20%40HolidaysJava)](https://twitter.com/HolidaysJava)
 ## 動作要件
 Java 8以降
 
 ## 利用方法
 Maven Central Repositoryにリリースされているため、以下のように依存を指定するだけで利用出来るようになります。
+
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.samuraism/japan-holidays/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.samuraism/japan-holidays)
 
 ### Mavenの場合
 ```xml
@@ -21,14 +24,14 @@ Maven Central Repositoryにリリースされているため、以下のよう�
     <dependency>
         <groupId>com.samuraism</groupId>
         <artifactId>japan-holidays</artifactId>
-        <version>1.3</version>
+        <version>1.4</version>
     </dependency>
 </dependencies>
 ```
 ### Gradleの場合
 ```text
 dependencies {
-    compile 'com.samuraism:japan-holidays:1.3'
+    compile 'com.samuraism:japan-holidays:1.4'
 }
 ```
 ## 利用方法
