@@ -68,6 +68,7 @@ public class JapaneseHolidays {
      * Test if today is a holiday
      *
      * @return true if the specified date is a holiday
+     * @since 1.3
      */
     public boolean isHoliday() {
         return holidays.is祝休日();
@@ -87,6 +88,7 @@ public class JapaneseHolidays {
      * Test if today is a business day
      *
      * @return true if the specified date is a business day
+     * @since 1.3
      */
     public boolean isBusinessDay() {
         return holidays.is営業日();
@@ -114,6 +116,16 @@ public class JapaneseHolidays {
     }
 
     /**
+     * Returns the last business day by today
+     *
+     * @return last business day by the specified date
+     * @since 1.4
+     */
+    public LocalDate lastBusinessDay() {
+        return holidays.最後の営業日();
+    }
+
+    /**
      * Returns the first business day on or after a specific date
      *
      * @param date specific date
@@ -121,6 +133,16 @@ public class JapaneseHolidays {
      */
     public LocalDate firstBusinessDay(LocalDate date) {
         return holidays.最初の営業日(date);
+    }
+
+    /**
+     * Returns the first business day after today
+     *
+     * @return first business day after today
+     * @since 1.4
+     */
+    public LocalDate firstBusinessDay() {
+        return holidays.最初の営業日();
     }
 
     /**
@@ -134,6 +156,16 @@ public class JapaneseHolidays {
     }
 
     /**
+     * Returns the last holiday by today
+     *
+     * @return last holiday by today
+     * @since 1.4
+     */
+    public Holiday lastHoliday() {
+        return new Holiday(holidays.最後の祝休日());
+    }
+
+    /**
      * Returns the first holiday on or after a specific date
      *
      * @param date specific date
@@ -142,6 +174,16 @@ public class JapaneseHolidays {
     public Holiday firstHoliday(LocalDate date) {
         return new Holiday(holidays.最初の祝休日(date));
     }
+
+    /**
+     * Returns the first holiday after today
+     *
+     * @return first holiday on or after the specified date
+     */
+    public Holiday firstHoliday() {
+        return new Holiday(holidays.最初の祝休日());
+    }
+
     /**
      * Returns holidays between specified period
      *

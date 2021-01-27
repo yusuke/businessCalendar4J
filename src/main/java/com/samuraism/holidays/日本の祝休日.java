@@ -69,6 +69,7 @@ public final class 日本の祝休日 {
      * 今日が祝休日かどうかを判定する
      *
      * @return 今日が祝休日であればtrue
+     * @since 1.3
      */
     public boolean is祝休日() {
         final LocalDate today = LocalDate.now();
@@ -89,6 +90,7 @@ public final class 日本の祝休日 {
      * 今日が営業日かどうかを判定する
      *
      * @return 今日が営業日であればtrue
+     * @since 1.3
      */
     public boolean is営業日() {
         return !is祝休日(LocalDate.now());
@@ -107,7 +109,7 @@ public final class 日本の祝休日 {
     }
 
     /**
-     * 指定した日(指定した日を含む)以前で最初の営業日(祝休日ではない日)を返す
+     * 指定した日(指定した日を含む)以前で最後の営業日(祝休日ではない日)を返す
      *
      * @param date 指定日
      * @return 指定した日以前の営業日
@@ -121,6 +123,17 @@ public final class 日本の祝休日 {
     }
 
     /**
+     * 今日以前(今日を含む)で最後の営業日(祝休日ではない日)を返す
+     *
+     * @return 今日以前の営業日
+     * @since 1.4
+     */
+    public LocalDate 最後の営業日() {
+        return 最後の営業日(LocalDate.now());
+    }
+
+
+    /**
      * 指定した日以降(指定した日を含む)で最初の営業日(祝休日ではない日)を返す
      *
      * @param date 指定日
@@ -132,6 +145,16 @@ public final class 日本の祝休日 {
             check = check.plus(1, ChronoUnit.DAYS);
         }
         return check;
+    }
+
+    /**
+     * 今日以降(今日を含む)で最初の営業日(祝休日ではない日)を返す
+     *
+     * @return 今日以降の営業日
+     * @since 1.4
+     */
+    public LocalDate 最初の営業日() {
+        return 最初の営業日(LocalDate.now());
     }
 
     /**
@@ -150,6 +173,16 @@ public final class 日本の祝休日 {
     }
 
     /**
+     * 今日以前(今日を含む)の最後の祝休日を返す
+     *
+     * @return 今日以前の祝休日
+     * @since 1.4
+     */
+    public 祝休日 最後の祝休日() {
+        return 最後の祝休日(LocalDate.now());
+    }
+
+    /**
      * 指定した日(指定した日を含む)以降の最初の祝休日を返す
      *
      * @param date 指定日
@@ -162,6 +195,16 @@ public final class 日本の祝休日 {
         }
         //noinspection OptionalGetWithoutIsPresent
         return get祝休日(check).get();
+    }
+
+    /**
+     * 今日(今日を含む)以降の最初の祝休日を返す
+     *
+     * @return 今日以降の祝休日
+     * @since 1.4
+     */
+    public 祝休日 最初の祝休日() {
+        return 最初の祝休日(LocalDate.now());
     }
 
     /**
