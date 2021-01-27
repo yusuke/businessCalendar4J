@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/calculated/japan-holidays1955-1-1-2030-12-31-Shift_JIS.csv" charset="Shift_JIS" />
     <file url="file://$PROJECT_DIR$/src/main/resources/syukujitsu.csv" charset="Shift_JIS" />
     <file url="file://$PROJECT_DIR$/src/test/resources/syukujitsu-testcase.csv" charset="Shift_JIS" />
   </component>
