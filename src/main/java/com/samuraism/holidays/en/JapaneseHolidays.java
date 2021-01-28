@@ -27,6 +27,28 @@ import java.util.stream.Collectors;
 public class JapaneseHolidays {
     private final 日本の祝休日 holidays = new 日本の祝休日();
 
+    /**
+     * Fixed algorithm to close from New Year's Day to Jan 3.
+     *
+     * @since 1.5
+     */
+    public static final Function<LocalDate, String> CLOSED_ON_NEW_YEARS_HOLIDAYS = 日本の祝休日.正月三が日休業;
+
+
+    /**
+     * Fixed algorithm to close on New Year's Eve.
+     *
+     * @since 1.5
+     */
+    public static final Function<LocalDate, String> CLOSED_ON_NEW_YEARS_EVE = 日本の祝休日.大晦日休業;
+
+    /**
+     * Fixed algorithm to close on Saturdays and Sundays
+     * @since 1.5
+     */
+    public static final Function<LocalDate, String> CLOSED_ON_SATURDAYS_AND_SUNDAYS = 日本の祝休日.土日休業;
+
+
     public JapaneseHolidays() {
     }
 

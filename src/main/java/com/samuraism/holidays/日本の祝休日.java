@@ -28,6 +28,35 @@ public final class 日本の祝休日 {
     private static final 日本の祝休日アルゴリズム algorithm = new 日本の祝休日アルゴリズム();
     private final Map祝休日 custom祝休日Map = new Map祝休日();
 
+    /**
+     * 正月三が日を休業とするアルゴリズム
+     *
+     * @since 1.5
+     */
+    public static final Function<LocalDate, String> 正月三が日休業 = e -> e.getMonthValue() == 1 && e.getDayOfMonth() <= 3 ? "三が日" : null;
+
+    /**
+     * 大晦日を休業とするアルゴリズム
+     *
+     * @since 1.5
+     */
+    public static final Function<LocalDate, String> 大晦日休業 = e -> e.getMonthValue() == 12 && e.getDayOfMonth() == 31 ? "大晦日" : null;
+
+    /**
+     * 土日を休業とするアルゴリズム
+     * @since 1.5
+     */
+    public static final Function<LocalDate, String> 土日休業 = localDate -> {
+        switch(localDate.getDayOfWeek()) {
+            case SATURDAY:
+                return "土曜日";
+            case SUNDAY:
+                return "日曜日";
+            default:
+                return null;
+        }
+    };
+
     public 日本の祝休日() {
         holidayLogics.add(algorithm);
         holidayLogics.add(custom祝休日Map);

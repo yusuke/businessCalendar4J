@@ -209,4 +209,28 @@ class 日本の祝休日Test {
             fail("2021年12月には公式の祝休日情報は更新されており2021年11月23日以降の祝休日情報がとれるはず");
         }
     }
+
+    @Test
+    void 正月三が日休業(){
+        assertNull(日本の祝休日.正月三が日休業.apply(LocalDate.of(2020, 12, 31)));
+        assertNotNull(日本の祝休日.正月三が日休業.apply(LocalDate.of(2021, 1, 1)));
+        assertNotNull(日本の祝休日.正月三が日休業.apply(LocalDate.of(2021, 1, 2)));
+        assertNotNull(日本の祝休日.正月三が日休業.apply(LocalDate.of(2022, 1, 3)));
+        assertNull(日本の祝休日.正月三が日休業.apply(LocalDate.of(2022, 1, 4)));
+    }
+
+    @Test
+    void 大晦日休業(){
+        assertNull(日本の祝休日.大晦日休業.apply(LocalDate.of(2021, 12, 30)));
+        assertNotNull(日本の祝休日.大晦日休業.apply(LocalDate.of(2021, 12, 31)));
+        assertNull(日本の祝休日.大晦日休業.apply(LocalDate.of(2022, 1, 1)));
+    }
+
+    @Test
+    void 土日休業(){
+        assertNull(日本の祝休日.土日休業.apply(LocalDate.of(2021, 1, 1)));
+        assertNotNull(日本の祝休日.土日休業.apply(LocalDate.of(2021, 1, 2)));
+        assertNotNull(日本の祝休日.土日休業.apply(LocalDate.of(2021, 1, 3)));
+        assertNull(日本の祝休日.土日休業.apply(LocalDate.of(2021, 1, 4)));
+    }
 }
