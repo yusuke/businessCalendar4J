@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.samuraism'
-version '1.4'
+version '1.5'
 
 repositories {
     mavenCentral()
@@ -22,7 +22,7 @@ compileJava   {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
 
