@@ -16,22 +16,24 @@
 package com.samuraism.holidays.ja;
 
 import com.samuraism.holidays.Holiday;
+import com.samuraism.holidays.JapaneseHolidays;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class 日本の祝休日 {
-    private final com.samuraism.holidays.JapaneseHolidays holidays = new com.samuraism.holidays.JapaneseHolidays();
+    private final JapaneseHolidays holidays;
 
     /**
      * 正月三が日を休業とするアルゴリズム
      *
      * @since 1.5
      */
-    public static final Function<LocalDate, String> 正月三が日休業 = com.samuraism.holidays.JapaneseHolidays.CLOSED_ON_NEW_YEARS_HOLIDAYS;
+    public static final Function<LocalDate, String> 正月三が日休業 = JapaneseHolidays.CLOSED_ON_NEW_YEARS_HOLIDAYS;
 
 
     /**
@@ -39,16 +41,21 @@ public class 日本の祝休日 {
      *
      * @since 1.5
      */
-    public static final Function<LocalDate, String> 大晦日休業 = com.samuraism.holidays.JapaneseHolidays.CLOSED_ON_NEW_YEARS_EVE;
+    public static final Function<LocalDate, String> 大晦日休業 = JapaneseHolidays.CLOSED_ON_NEW_YEARS_EVE;
 
     /**
      * 大晦日を休業とするアルゴリズム
      * @since 1.5
      */
-    public static final Function<LocalDate, String> 土日休業 = com.samuraism.holidays.JapaneseHolidays.CLOSED_ON_SATURDAYS_AND_SUNDAYS;
+    public static final Function<LocalDate, String> 土日休業 = JapaneseHolidays.CLOSED_ON_SATURDAYS_AND_SUNDAYS;
 
 
     public 日本の祝休日() {
+        holidays = new JapaneseHolidays();
+    }
+
+    public 日本の祝休日(Locale locale) {
+        holidays = new JapaneseHolidays(locale);
     }
 
     /**
