@@ -32,8 +32,8 @@ public class Holidays {
     /**
      * Add logic based holiday.
      *
-     * @param logic ロジック
-     * @return このインスタンス
+     * @param logic logic
+     * @return This instance
      */
     public Holidays addHoliday(Function<LocalDate, String> logic) {
         holidayLogics.add(0, logic);

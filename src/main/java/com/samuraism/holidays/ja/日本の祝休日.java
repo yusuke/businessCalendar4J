@@ -54,8 +54,8 @@ public class 日本の祝休日 {
     /**
      * ロジックベースの祝休日を追加。当該日が祝休日であれば名称を返す関数を指定する
      *
-     * @param logic logic
-     * @return This instance
+     * @param logic ロジック
+     * @return このインスタンス
      */
     public 日本の祝休日 add祝休日(Function<LocalDate, String> logic) {
         holidays.addHoliday(logic);
