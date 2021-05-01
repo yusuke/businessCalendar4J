@@ -13,9 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package com.samuraism.holidays.en;
-
-import com.samuraism.holidays.祝休日;
+package com.samuraism.holidays;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -24,10 +22,11 @@ public final class Holiday implements Comparable<Holiday> {
     public final LocalDate date;
     public final String name;
 
-    Holiday(祝休日 holiday){
-        this.date = holiday.日付;
-        this.name = holiday.名称;
+    Holiday(LocalDate date, String name) {
+        this.date = date;
+        this.name = name;
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -44,7 +43,7 @@ public final class Holiday implements Comparable<Holiday> {
 
     @Override
     public String toString() {
-        return "祝休日{" +
+        return "Holiday{" +
                 "date=" + date +
                 ", name='" + name + '\'' +
                 '}';

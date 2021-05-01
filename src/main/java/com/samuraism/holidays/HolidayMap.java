@@ -19,21 +19,21 @@ import java.time.LocalDate;
 import java.util.TreeMap;
 import java.util.function.Function;
 
-class Map祝休日 implements Function<LocalDate, String> {
+class HolidayMap implements Function<LocalDate, String> {
     /* アルゴリズムのテストで空にするので package private */
-    TreeMap<LocalDate, String> 祝休日Map;
+    TreeMap<LocalDate, String> holidayMap;
 
-    Map祝休日(){
+    HolidayMap(){
         // リソースURLから読み込まない場合
-        祝休日Map = new TreeMap<>();
+        holidayMap = new TreeMap<>();
     }
 
     @Override
     public String apply(LocalDate localDate) {
-        return 祝休日Map.get(localDate);
+        return holidayMap.get(localDate);
     }
 
-    void add祝休日(LocalDate date, String 名称) {
-        祝休日Map.put(date, 名称);
+    void addHoliday(LocalDate date, String name) {
+        holidayMap.put(date, name);
     }
 }

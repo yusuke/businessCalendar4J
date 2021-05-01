@@ -21,10 +21,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 public class 日本の祝休日アルゴリズムTest {
     static TreeMap<LocalDate, String> testCases;
-    final static 日本の祝休日 holidays = new 日本の祝休日();
+    final static JapaneseHolidays holidays = new JapaneseHolidays(Locale.JAPANESE);
 
     static TreeMap<LocalDate, String> 祝休日Map待避;
 
@@ -40,17 +37,19 @@ public class 日本の祝休日アルゴリズムTest {
     static void init() throws IOException {
         // テスト用のデータセット
         // 内閣府のデータにはない2022年以降の未来の春分の日、秋分の日、スポーツの日を含む
-        testCases = CSV祝休日.load(日本の祝休日アルゴリズムTest.class.getResourceAsStream("/syukujitsu-testcase.csv"));
-        祝休日Map待避 = 日本の祝休日アルゴリズム.csv.祝休日Map;
+        //noinspection ConstantConditions
+        testCases = CSVHolidays.load(日本の祝休日アルゴリズムTest.class.getResourceAsStream("/syukujitsu-testcase.csv"),
+                ResourceBundle.getBundle("holidays", Locale.JAPANESE));
+        祝休日Map待避 = holidays.holidayAlgorithm.csv.holidayMap;
         // 1970年1月1日元日(特にこの日付に意味は無い)まで残して、以降はアルゴリズムで答え合わせする
-        日本の祝休日アルゴリズム.csv.祝休日Map = new TreeMap<>(祝休日Map待避.subMap(LocalDate.of(1955, 1, 1), LocalDate.of(1970, 1, 1)));
+        holidays.holidayAlgorithm.csv.holidayMap = new TreeMap<>(祝休日Map待避.subMap(LocalDate.of(1955, 1, 1), LocalDate.of(1970, 1, 1)));
     }
 
 
     @AfterAll
     static void afterAll() {
         // 他のテストに影響を与えないよう、戻しておく
-        日本の祝休日アルゴリズム.csv.祝休日Map = 祝休日Map待避;
+        holidays.holidayAlgorithm.csv.holidayMap = 祝休日Map待避;
     }
 
     @Test
@@ -149,7 +148,7 @@ public class 日本の祝休日アルゴリズムTest {
             if (holiday.isAfter(from)
                     && holiday.isBefore(to)) {
                 try {
-                    assertEquals(祝日名, holidays.get祝休日(holiday).get().名称, holiday.toString());
+                    assertEquals(祝日名, holidays.getHoliday(holiday).get().name, holiday.toString());
                 } catch (NoSuchElementException e) {
                     fail(holiday.toString());
                 }
@@ -177,7 +176,7 @@ public class 日本の祝休日アルゴリズムTest {
         for (LocalDate holiday : list) {
             if (holiday.isAfter(LocalDate.of(2007, 1, 1))) {
                 try {
-                    assertEquals("休日", holidays.get祝休日(holiday).get().名称, holiday.toString());
+                    assertEquals("休日", holidays.getHoliday(holiday).get().name, holiday.toString());
                 } catch (NoSuchElementException e) {
                     if (
                         // 以前の天皇誕生日の振替休日
@@ -201,16 +200,16 @@ public class 日本の祝休日アルゴリズムTest {
 
     @Test
     void カスタム休日を指定しても休日算出が正しい() {
-        日本の祝休日 holidays = new 日本の祝休日()
-                .add祝休日(LocalDate.of(2022, 1, 2), "休みたいから休む")
-                .add祝休日(LocalDate.of(2007, 2, 12), "休みたいから休む");
+        JapaneseHolidays holidays = new JapaneseHolidays()
+                .addHoliday(LocalDate.of(2022, 1, 2), "休みたいから休む")
+                .addHoliday(LocalDate.of(2007, 2, 12), "休みたいから休む");
         // 2022/1/1が元旦、かつ日曜日なので2022/1/2が休日
         // カスタム休日を2022/1/2に設定しても振替休日は2022/1/3にはならない
-        assertFalse(holidays.is祝休日(LocalDate.of(2022, 1, 3)));
+        assertFalse(holidays.isHoliday(LocalDate.of(2022, 1, 3)));
 
         // 2007/2/11日が建国記念の日で日曜日なので2007/年2月12日は振替休日。カスタム祝休日の名称は出てこない
-        assertEquals("休日", holidays.get祝休日(LocalDate.of(2007, 2, 12)).get().名称);
-        assertFalse(holidays.is祝休日(LocalDate.of(2007, 2, 13)));
+        assertEquals("休日", holidays.getHoliday(LocalDate.of(2007, 2, 12)).get().name);
+        assertFalse(holidays.isHoliday(LocalDate.of(2007, 2, 13)));
 
     }
 }

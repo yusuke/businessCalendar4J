@@ -35,12 +35,10 @@ dependencies {
 }
 ```
 ## 利用方法
-サンプルコードを見れば使い方が一通り分かるようになっています。[com.samuraism.holidays.exmaple.Example](https://github.com/yusuke/japan-holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/Example.java) は日本語API、[com.samuraism.holidays.exmaple.en.Example](https://github.com/yusuke/japan-holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/en/Example.java) は英語版APIのサンプルとなっています。
+サンプルコードを見れば使い方が一通り分かるようになっています。[com.samuraism.holidays.exmaple.Example](https://github.com/yusuke/japan-holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/en/Example.java) は日本語API、[com.samuraism.holidays.exmaple.ja.Example](https://github.com/yusuke/japan-holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/Example.java) は英語版APIのサンプルとなっています。
 ```java
-package com.samuraism.holidays.exmaple;
-
-import com.samuraism.holidays.日本の祝休日;
-import com.samuraism.holidays.祝休日;
+import com.samuraism.holidays.ja.日本の祝休日;
+import com.samuraism.holidays.ja.祝休日;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -61,7 +59,7 @@ public class Example {
 
         System.out.println("2021年5月の祝休日一覧: ");
         // 2021-05-03:憲法記念日、2021-05-04:みどりの日、2021-05-05:こどもの日 を表示
-        holidays.get指定期間内の祝休日️(LocalDate.of(2021, 5, 1)
+        holidays.get指定期間内の祝休日(LocalDate.of(2021, 5, 1)
                 , LocalDate.of(2021, 5, 31))
                 .forEach(e -> System.out.println(e.日付 + ": " + e.名称));
 
@@ -83,22 +81,20 @@ public class Example {
         System.out.println(holidays.最後の祝休日(LocalDate.of(2021, 2, 26)));
     }
 }
-
 ```
 
 ```java
-package com.samuraism.holidays.exmaple.en;
-
-import com.samuraism.holidays.en.JapaneseHolidays;
-import com.samuraism.holidays.en.Holiday;
+import com.samuraism.holidays.JapaneseHolidays;
+import com.samuraism.holidays.Holiday;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.Locale;
 import java.util.Optional;
 
 public class Example {
     public static void main(String[] args) {
-        JapaneseHolidays holidays = new JapaneseHolidays();
+        JapaneseHolidays holidays = new JapaneseHolidays(Locale.ENGLISH);
 
         // prints true, because it's New Year's Day
         System.out.println("Is Jan, 1 2021 a holiday?: " + holidays.isHoliday(LocalDate.of(2021, 1, 1)));

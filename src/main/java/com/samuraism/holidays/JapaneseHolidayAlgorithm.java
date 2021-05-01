@@ -15,16 +15,26 @@
  */
 package com.samuraism.holidays;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Random;
+import java.util.ResourceBundle;
 import java.util.function.Function;
 
-final class 日本の祝休日アルゴリズム implements Function<LocalDate, String> {
-    private static final long 約一ヶ月 = 1000L * 60 * 60 * 24 * 31 + new Random(System.currentTimeMillis()).nextLong() % (1000L * 60 * 60 * 10);
-    static final CSV祝休日 csv = new CSV祝休日(約一ヶ月,System.getProperty("SYUKUJITSU_URL", "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"));
+final class JapaneseHolidayAlgorithm implements Function<LocalDate, String> {
+    private static final long aboutOneMonth = 1000L * 60 * 60 * 24 * 31 + new Random(System.currentTimeMillis()).nextLong() % (1000L * 60 * 60 * 10);
+    final CSVHolidays csv;
+    private final ResourceBundle resource;
+
+    JapaneseHolidayAlgorithm(@NotNull ResourceBundle resource){
+        this.resource = resource;
+        this.csv = new CSVHolidays(aboutOneMonth,System.getProperty("SYUKUJITSU_URL",
+                "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"), resource);
+    }
 
     @Override
     public String apply(LocalDate e) {
@@ -37,10 +47,10 @@ final class 日本の祝休日アルゴリズム implements Function<LocalDate, 
         final int day = e.getDayOfMonth();
         if(month == 1 && day == 1){
             // 1955年1月1日以前を指定して以前の祝休日()を呼び出しても無限ループしないよう、元日だけは決め打ちで返す
-            return "元日";
+            return resource.getString("元日");
         }
 
-        if (csv.祝休日Map.lastKey().isAfter(e)) {
+        if (csv.holidayMap.lastKey().isAfter(e)) {
             // 内閣府の公表しているデータの範囲内なのでアルゴリズムでは算出しない
             return null;
         }
@@ -51,15 +61,15 @@ final class 日本の祝休日アルゴリズム implements Function<LocalDate, 
                 break;
             case 1:
                 if (day == e.with(TemporalAdjusters.dayOfWeekInMonth(2, DayOfWeek.MONDAY)).getDayOfMonth()) {
-                    return "成人の日";
+                    return resource.getString("成人の日");
                 }
                 break;
             case 2:
                 if (day == 11) {
-                    return "建国記念の日";
+                    return resource.getString("建国記念の日");
                 }
                 if (day == 23) {
-                    return "天皇誕生日";
+                    return resource.getString("天皇誕生日");
                 }
                 break;
             case 3:
@@ -72,39 +82,39 @@ final class 日本の祝休日アルゴリズム implements Function<LocalDate, 
                                 return null;
                             }
                         }
-                        return "春分の日";
+                        return resource.getString("春分の日");
                     case 21:
                         for (int 二十一日year : 二十一日が春分の日の年) {
                             if (year == 二十一日year) {
-                                return "春分の日";
+                                return resource.getString("春分の日");
                             }
                         }
                 }
                 break;
             case 4:
                 if (day == 29) {
-                    return "昭和の日";
+                    return resource.getString("昭和の日");
                 }
                 break;
             case 5:
                 if (day == 3) {
-                    return "憲法記念日";
+                    return resource.getString("憲法記念日");
                 }
                 if (day == 4) {
-                    return "みどりの日";
+                    return resource.getString("みどりの日");
                 }
                 if (day == 5) {
-                    return "こどもの日";
+                    return resource.getString("こどもの日");
                 }
                 break;
             case 7:
                 if (day == e.with(TemporalAdjusters.dayOfWeekInMonth(3, DayOfWeek.MONDAY)).getDayOfMonth()) {
-                    return "海の日";
+                    return resource.getString("海の日");
                 }
                 break;
             case 8:
                 if (day == 11) {
-                    return "山の日";
+                    return resource.getString("山の日");
                 }
                 break;
             case 9:
@@ -112,7 +122,7 @@ final class 日本の祝休日アルゴリズム implements Function<LocalDate, 
 
                 final int 敬老の日 = e.with(TemporalAdjusters.dayOfWeekInMonth(3, DayOfWeek.MONDAY)).getDayOfMonth();
                 if (day == 敬老の日) {
-                    return "敬老の日";
+                    return resource.getString("敬老の日");
                 }
                 int 秋分の日 = 23;
                 for (int 二十二日year : 二十二日が秋分の日の年) {
@@ -127,23 +137,23 @@ final class 日本の祝休日アルゴリズム implements Function<LocalDate, 
                 //「秋分の日」は「秋分日」が9月22日か23日のいずれかで移動します。
                 // このことにより数年に一度、不定期に現れる休日です。
                 if (((day - 1) == 敬老の日) && ((day + 1) == 秋分の日)) {
-                    return "休日";
+                    return resource.getString("休日");
                 }
                 if (day == 秋分の日) {
-                    return "秋分の日";
+                    return resource.getString("秋分の日");
                 }
                 break;
             case 10:
                 if (day == e.with(TemporalAdjusters.dayOfWeekInMonth(2, DayOfWeek.MONDAY)).getDayOfMonth()) {
-                    return "スポーツの日";
+                    return resource.getString("スポーツの日");
                 }
                 break;
             case 11:
                 if (day == 3) {
-                    return "文化の日";
+                    return resource.getString("文化の日");
                 }
                 if (day == 23) {
-                    return "勤労感謝の日";
+                    return resource.getString("勤労感謝の日");
                 }
                 break;
         }
@@ -154,11 +164,11 @@ final class 日本の祝休日アルゴリズム implements Function<LocalDate, 
         while (test.getDayOfWeek() != DayOfWeek.SATURDAY) {
             // is祝休日で調べるとカスタム祝休日も含めて振替休日を算出してしまうので注意
             final String 導出祝休日 = this.apply(test);
-            if (!csv.祝休日Map.containsKey(test) && (導出祝休日 == null || "休日".equals(導出祝休日))) {
+            if (!csv.holidayMap.containsKey(test) && (導出祝休日 == null || resource.getString("休日").equals(導出祝休日))) {
                 break;
             }
             if (test.getDayOfWeek() == DayOfWeek.SUNDAY) {
-                return "休日";
+                return resource.getString("休日");
             }
             test = test.minus(1, ChronoUnit.DAYS);
         }

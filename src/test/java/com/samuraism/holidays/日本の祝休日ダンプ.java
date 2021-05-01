@@ -41,8 +41,8 @@ public class 日本の祝休日ダンプ {
             final String header = "国民の祝日・休日月日,国民の祝日・休日名称\n";
             shiftJIS.write(header);
             utf8.write(header);
-            for (祝休日 holiday : new 日本の祝休日().get指定期間内の祝休日️(start, end)) {
-                final String line = String.format("%s,%s\n", holiday.日付.format(dateTimeFormatter), holiday.名称);
+            for (Holiday holiday : new JapaneseHolidays().getHolidaysBetween️(start, end)) {
+                final String line = String.format("%s,%s\n", holiday.date.format(dateTimeFormatter), holiday.name);
                 System.out.print(line);
                 shiftJIS.write(line);
                 utf8.write(line);

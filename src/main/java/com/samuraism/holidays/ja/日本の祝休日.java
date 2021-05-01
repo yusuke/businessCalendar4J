@@ -13,63 +13,52 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package com.samuraism.holidays;
+package com.samuraism.holidays.ja;
+
+import com.samuraism.holidays.Holiday;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
-public final class 日本の祝休日 {
-    private final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
-    private static final 日本の祝休日アルゴリズム algorithm = new 日本の祝休日アルゴリズム();
-    private final Map祝休日 custom祝休日Map = new Map祝休日();
+public class 日本の祝休日 {
+    private final com.samuraism.holidays.JapaneseHolidays holidays = new com.samuraism.holidays.JapaneseHolidays();
 
     /**
      * 正月三が日を休業とするアルゴリズム
      *
      * @since 1.5
      */
-    public static final Function<LocalDate, String> 正月三が日休業 = e -> e.getMonthValue() == 1 && e.getDayOfMonth() <= 3 ? "三が日" : null;
+    public static final Function<LocalDate, String> 正月三が日休業 = com.samuraism.holidays.JapaneseHolidays.CLOSED_ON_NEW_YEARS_HOLIDAYS;
+
 
     /**
      * 大晦日を休業とするアルゴリズム
      *
      * @since 1.5
      */
-    public static final Function<LocalDate, String> 大晦日休業 = e -> e.getMonthValue() == 12 && e.getDayOfMonth() == 31 ? "大晦日" : null;
+    public static final Function<LocalDate, String> 大晦日休業 = com.samuraism.holidays.JapaneseHolidays.CLOSED_ON_NEW_YEARS_EVE;
 
     /**
-     * 土日を休業とするアルゴリズム
+     * 大晦日を休業とするアルゴリズム
      * @since 1.5
      */
-    public static final Function<LocalDate, String> 土日休業 = localDate -> {
-        switch(localDate.getDayOfWeek()) {
-            case SATURDAY:
-                return "土曜日";
-            case SUNDAY:
-                return "日曜日";
-            default:
-                return null;
-        }
-    };
+    public static final Function<LocalDate, String> 土日休業 = com.samuraism.holidays.JapaneseHolidays.CLOSED_ON_SATURDAYS_AND_SUNDAYS;
+
 
     public 日本の祝休日() {
-        holidayLogics.add(algorithm);
-        holidayLogics.add(custom祝休日Map);
     }
 
     /**
      * ロジックベースの祝休日を追加。当該日が祝休日であれば名称を返す関数を指定する
      *
-     * @param logic ロジック
-     * @return このインスタンス
+     * @param logic logic
+     * @return This instance
      */
     public 日本の祝休日 add祝休日(Function<LocalDate, String> logic) {
-        holidayLogics.add(logic);
+        holidays.addHoliday(logic);
         return this;
     }
 
@@ -81,9 +70,10 @@ public final class 日本の祝休日 {
      * @return このインスタンス
      */
     public 日本の祝休日 add祝休日(LocalDate 日付, String 名称) {
-        custom祝休日Map.add祝休日(日付, 名称);
+        holidays.addHoliday(日付, 名称);
         return this;
     }
+
 
     /**
      * 指定した日が祝休日かどうかを判定する
@@ -92,7 +82,7 @@ public final class 日本の祝休日 {
      * @return 指定した日が祝休日であればtrue
      */
     public boolean is祝休日(LocalDate date) {
-        return holidayLogics.stream().anyMatch(e -> e.apply(date) != null);
+        return holidays.isHoliday(date);
     }
 
     /**
@@ -102,8 +92,7 @@ public final class 日本の祝休日 {
      * @since 1.3
      */
     public boolean is祝休日() {
-        final LocalDate today = LocalDate.now();
-        return holidayLogics.stream().anyMatch(e -> e.apply(today) != null);
+        return holidays.isHoliday();
     }
 
     /**
@@ -113,7 +102,7 @@ public final class 日本の祝休日 {
      * @return 指定した日が営業日であればtrue
      */
     public boolean is営業日(LocalDate date) {
-        return !is祝休日(date);
+        return holidays.isBusinessDay(date);
     }
 
     /**
@@ -123,7 +112,7 @@ public final class 日本の祝休日 {
      * @since 1.3
      */
     public boolean is営業日() {
-        return !is祝休日(LocalDate.now());
+        return holidays.isBusinessDay();
     }
 
     /**
@@ -133,23 +122,18 @@ public final class 日本の祝休日 {
      * @return 祝日・休日
      */
     public Optional<祝休日> get祝休日(LocalDate date) {
-        final Optional<String> first = holidayLogics.stream()
-                .map(e -> e.apply(date)).filter(Objects::nonNull).findFirst();
-        return first.map(s -> new 祝休日(date, s));
+        final Optional<Holiday> holiday = holidays.getHoliday(date);
+        return holiday.map(祝休日::new);
     }
 
     /**
-     * 指定した日(指定した日を含む)以前で最後の営業日(祝休日ではない日)を返す
+     * 今日以前(今日を含む)で最後の営業日(祝休日ではない日)を返す
      *
-     * @param date 指定日
-     * @return 指定した日以前の営業日
+     * @return 今日以前の営業日
+     * @since 1.4
      */
     public LocalDate 最後の営業日(LocalDate date) {
-        LocalDate check = date;
-        while (is祝休日(check)) {
-            check = check.minus(1, ChronoUnit.DAYS);
-        }
-        return check;
+        return holidays.lastBusinessDay(date);
     }
 
     /**
@@ -159,9 +143,8 @@ public final class 日本の祝休日 {
      * @since 1.4
      */
     public LocalDate 最後の営業日() {
-        return 最後の営業日(LocalDate.now());
+        return holidays.lastBusinessDay();
     }
-
 
     /**
      * 指定した日以降(指定した日を含む)で最初の営業日(祝休日ではない日)を返す
@@ -170,11 +153,7 @@ public final class 日本の祝休日 {
      * @return 指定した日以降の営業日
      */
     public LocalDate 最初の営業日(LocalDate date) {
-        LocalDate check = date;
-        while (is祝休日(check)) {
-            check = check.plus(1, ChronoUnit.DAYS);
-        }
-        return check;
+        return holidays.firstBusinessDay(date);
     }
 
     /**
@@ -184,7 +163,7 @@ public final class 日本の祝休日 {
      * @since 1.4
      */
     public LocalDate 最初の営業日() {
-        return 最初の営業日(LocalDate.now());
+        return holidays.firstBusinessDay();
     }
 
     /**
@@ -194,12 +173,7 @@ public final class 日本の祝休日 {
      * @return 指定した日以前の祝休日
      */
     public 祝休日 最後の祝休日(LocalDate date) {
-        LocalDate check = date;
-        while (!is祝休日(check)) {
-            check = check.minus(1, ChronoUnit.DAYS);
-        }
-        //noinspection OptionalGetWithoutIsPresent
-        return get祝休日(check).get();
+        return new 祝休日(holidays.lastHoliday(date));
     }
 
     /**
@@ -209,7 +183,7 @@ public final class 日本の祝休日 {
      * @since 1.4
      */
     public 祝休日 最後の祝休日() {
-        return 最後の祝休日(LocalDate.now());
+        return new 祝休日(holidays.lastHoliday());
     }
 
     /**
@@ -219,12 +193,7 @@ public final class 日本の祝休日 {
      * @return 指定した日以前の祝休日
      */
     public 祝休日 最初の祝休日(LocalDate date) {
-        LocalDate check = date;
-        while (!is祝休日(check)) {
-            check = check.plus(1, ChronoUnit.DAYS);
-        }
-        //noinspection OptionalGetWithoutIsPresent
-        return get祝休日(check).get();
+        return new 祝休日(holidays.firstHoliday(date));
     }
 
     /**
@@ -234,7 +203,7 @@ public final class 日本の祝休日 {
      * @since 1.4
      */
     public 祝休日 最初の祝休日() {
-        return 最初の祝休日(LocalDate.now());
+        return new 祝休日(holidays.firstHoliday());
     }
 
     /**
@@ -244,16 +213,8 @@ public final class 日本の祝休日 {
      * @param 終了日 指定終了日。この日も含む。
      * @return 指定期間内の祝休日のリスト。
      */
-    public List<祝休日> get指定期間内の祝休日️(LocalDate 開始日, LocalDate 終了日) {
-        List<祝休日> list = new ArrayList<>();
-        LocalDate from = 開始日.isBefore(終了日) ? 開始日 : 終了日;
-        LocalDate to = (終了日.isAfter(開始日) ? 終了日 : 開始日).plus(1, ChronoUnit.DAYS);
-        while (from.isBefore(to)) {
-            final Optional<祝休日> holiday = get祝休日(from);
-            holiday.ifPresent(list::add);
-            from = from.plus(1, ChronoUnit.DAYS);
-        }
-        return list;
+    public List<祝休日> get指定期間内の祝休日(LocalDate 開始日, LocalDate 終了日) {
+        return holidays.getHolidaysBetween️(開始日, 終了日).stream().map(祝休日::new).collect(Collectors.toList());
     }
 
     /**
@@ -262,8 +223,8 @@ public final class 日本の祝休日 {
      * @return 内閣府で公表されている祝休日情報の初日
      * @since 1.4
      */
-    public LocalDate get内閣府公表祝休日初日() {
-        return 日本の祝休日アルゴリズム.csv.祝休日Map.firstKey();
+    public LocalDate get内閣府公表祝休日初日(){
+        return  holidays.getCabinetOfficialHolidayDataFirstDay();
     }
 
     /**
@@ -272,7 +233,7 @@ public final class 日本の祝休日 {
      * @return 内閣府で公表されている祝休日情報の最終日
      * @since 1.4
      */
-    public LocalDate get内閣府公表祝休日最終日() {
-        return 日本の祝休日アルゴリズム.csv.祝休日Map.lastKey();
+    public LocalDate get内閣府公表祝休日最終日(){
+        return holidays.getCabinetOfficialHolidayDataLastDay();
     }
 }

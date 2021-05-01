@@ -15,47 +15,48 @@
  */
 package com.samuraism.holidays.exmaple;
 
-import com.samuraism.holidays.日本の祝休日;
-import com.samuraism.holidays.祝休日;
+import com.samuraism.holidays.Holiday;
+import com.samuraism.holidays.JapaneseHolidays;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.Locale;
 import java.util.Optional;
 
 public class Example {
     public static void main(String[] args) {
-        日本の祝休日 holidays = new 日本の祝休日();
+        JapaneseHolidays holidays = new JapaneseHolidays(Locale.ENGLISH);
 
-        // 元日なのでtrueが表示される
-        System.out.println("2021年1月1日は祝日？: " + holidays.is祝休日(LocalDate.of(2021, 1, 1)));
-        // 元日なのでfalseが表示される
-        System.out.println("2021年1月1日は営業日？: " + holidays.is営業日(LocalDate.of(2021, 1, 1)));
+        // prints true, because it's New Year's Day
+        System.out.println("Is Jan, 1 2021 a holiday?: " + holidays.isHoliday(LocalDate.of(2021, 1, 1)));
+        // prints false, because it's New Year's Day
+        System.out.println("Is Jan, 1 2021 a business day?: " + holidays.isBusinessDay(LocalDate.of(2021, 1, 1)));
 
-        // 成人の日を取得
-        Optional<祝休日> holiday = holidays.get祝休日(LocalDate.of(2021, 1, 11));
-        holiday.ifPresent(e -> System.out.println("2021年1月11日は何の日？: " + e.名称));
+        // get 成人の日
+        Optional<Holiday> holiday = holidays.getHoliday(LocalDate.of(2021, 1, 11));
+        holiday.ifPresent(e -> System.out.println("What is Jan, 11 2021?: " + e.name));
 
-        System.out.println("2021年5月の祝休日一覧: ");
-        // 2021-05-03:憲法記念日、2021-05-04:みどりの日、2021-05-05:こどもの日 を表示
-        holidays.get指定期間内の祝休日️(LocalDate.of(2021, 5, 1)
+        System.out.println("List of holidays in May 2021: ");
+        // shows 2021-05-03:憲法記念日、2021-05-04:みどりの日、2021-05-05:こどもの日
+        holidays.getHolidaysBetween️(LocalDate.of(2021, 5, 1)
                 , LocalDate.of(2021, 5, 31))
-                .forEach(e -> System.out.println(e.日付 + ": " + e.名称));
+                .forEach(e -> System.out.println(e.date + ": " + e.name));
 
-        // 固定のカスタム祝休日を設定
-        // メソッドチェーンで続けて書けるが、ミュータブルではなくオリジナルのインスタンスに変更が加わっていることに注意
-        holidays.add祝休日(LocalDate.of(2013, 3, 29), "株式会社サムライズム設立")
-                // ロジックベーのカスタム祝休日を設定。当該日が祝日ならば名称を、そうでなければnullを返す関数を指定する
-                .add祝休日(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "土曜日" : null)
-                .add祝休日(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "日曜日" : null)
-                .add祝休日(e -> e.getMonthValue() == 12 && e.getDayOfMonth() == 31 ? "大晦日" : null);
+        // sets a fixed custom Holiday
+        // You can specify custom holidays using method chain. Note that the JapaneseHolidays instance is mutated upon each method call.
+        holidays.addHoliday(LocalDate.of(2013, 3, 29), "Samuraism Inc. Foundation Day")
+                // Specify logic based custom holidays. returns a string if the day is a holiday
+                .addHoliday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "Saturday" : null)
+                .addHoliday(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "Sunday" : null)
+                .addHoliday(e -> e.getMonthValue() == 12 && e.getDayOfMonth() == 31 ? "New Year's Eve" : null);
 
-        // 2021年1月最終営業日を取得→ 1月30日、31日が土日なので1月29日金曜日
-        System.out.println("2021年最終営業日: " + holidays.最後の営業日(LocalDate.of(2021, 1, 31)));
-        // 2020年大晦日以降最初の営業日を取得→ 1月1日は元日、1月2,3日はカスタム祝日(土日)なので1月4日月曜日
-        System.out.println("2020年大晦日以降最初の営業日: " + holidays.最初の営業日(LocalDate.of(2020, 12, 31)));
-        // 2021年2月22日以降最初の祝日を取得→ 2月23日 天皇誕生日
-        System.out.println(holidays.最初の祝休日(LocalDate.of(2021, 2, 22)));
-        // 2021年2月26日以前最初の祝日を取得→ 2月23日 天皇誕生日
-        System.out.println(holidays.最後の祝休日(LocalDate.of(2021, 2, 26)));
+        // Gets the last business day of Jan, 2021 → the answer is Jan 29 since Jan 30, 31 are weekend
+        System.out.println("Last business day of Jan 2021: " + holidays.lastBusinessDay(LocalDate.of(2021, 1, 31)));
+        // Gets the first business day on and after New Year's Eve 2020 → the answer is Jan 4 as Jan 1 is New Year's Day, Jan 2,3 are custom holidays
+        System.out.println("First business day on or after Dec, 2020: " + holidays.firstBusinessDay(LocalDate.of(2020, 12, 31)));
+        // First holiday on and after Feb 22, 2021 →  Feb 23 (Emperor's Birthday)
+        System.out.println(holidays.firstHoliday(LocalDate.of(2021, 2, 22)));
+        // Last holiday by Feb 26, 2021 →  Feb 23 (Emperor's Birthday)
+        System.out.println(holidays.lastHoliday(LocalDate.of(2021, 2, 26)));
     }
 }

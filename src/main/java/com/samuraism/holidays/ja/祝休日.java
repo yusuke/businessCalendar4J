@@ -13,7 +13,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package com.samuraism.holidays;
+package com.samuraism.holidays.ja;
+
+import com.samuraism.holidays.Holiday;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -22,16 +24,16 @@ public final class 祝休日 implements Comparable<祝休日> {
     public final LocalDate 日付;
     public final String 名称;
 
-    祝休日(LocalDate 日付, String 名称) {
-        this.日付 = 日付;
-        this.名称 = 名称;
+    祝休日(Holiday holiday){
+        this.日付 = holiday.date;
+        this.名称 = holiday.name;
     }
-
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+     
         祝休日 祝休日 = (祝休日) o;
         return 日付.equals(祝休日.日付) && 名称.equals(祝休日.名称);
     }
