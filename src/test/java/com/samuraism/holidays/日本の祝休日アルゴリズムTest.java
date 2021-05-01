@@ -200,7 +200,7 @@ public class 日本の祝休日アルゴリズムTest {
 
     @Test
     void カスタム休日を指定しても休日算出が正しい() {
-        JapaneseHolidays holidays = new JapaneseHolidays(Locale.JAPANESE)
+        Holidays holidays = new JapaneseHolidays(Locale.JAPANESE)
                 .addHoliday(LocalDate.of(2022, 1, 2), "休みたいから休む")
                 .addHoliday(LocalDate.of(2007, 2, 12), "休みたいから休む");
         // 2022/1/1が元旦、かつ日曜日なので2022/1/2が休日

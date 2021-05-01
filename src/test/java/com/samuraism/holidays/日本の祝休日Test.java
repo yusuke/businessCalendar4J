@@ -74,7 +74,7 @@ class 日本の祝休日Test {
 
     @Test
     void add祝休日() {
-        JapaneseHolidays holidays = new JapaneseHolidays(Locale.JAPANESE)
+        Holidays holidays = new JapaneseHolidays(Locale.JAPANESE)
                 .addHoliday(LocalDate.of(1977, 6, 17), "休みたいから休む");
         assertTrue(holidays.isHoliday(LocalDate.of(1977, 6, 17)));
         assertEquals("休みたいから休む", holidays.getHoliday(LocalDate.of(1977, 6, 17)).get().name);
