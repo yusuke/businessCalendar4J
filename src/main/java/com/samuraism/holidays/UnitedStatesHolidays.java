@@ -63,13 +63,16 @@ public class UnitedStatesHolidays extends Holidays {
         if (apply != null) {
             return apply;
         }
+        LocalDate movedFrom = null;
         if (date.getDayOfWeek() == DayOfWeek.MONDAY) {
-            if (logic.apply(date.minus(1, ChronoUnit.DAYS)) != null) {
-                return "Substitution";
-            }
+            movedFrom = date.minus(1, ChronoUnit.DAYS);
         } else if (date.getDayOfWeek() == DayOfWeek.FRIDAY) {
-            if (logic.apply(date.plus(1, ChronoUnit.DAYS)) != null) {
-                return "Substitution";
+            movedFrom = date.plus(1, ChronoUnit.DAYS);
+        }
+        if (movedFrom != null) {
+            final String originalHoliday = logic.apply(movedFrom);
+            if (originalHoliday != null) {
+                return "${" + originalHoliday + "} (observed)";
             }
         }
         return null;

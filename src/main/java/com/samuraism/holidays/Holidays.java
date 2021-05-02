@@ -19,16 +19,20 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Holidays {
     private final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
     private final HolidayMap customHolidayMap = new HolidayMap();
 
     protected final ResourceBundle resource;
-    Holidays(ResourceBundle resource){
+
+    Holidays(ResourceBundle resource) {
         this.holidayLogics.add(customHolidayMap);
         this.resource = resource;
     }
+
     /**
      * Add logic based holiday.
      *
@@ -36,7 +40,7 @@ public class Holidays {
      * @return This instance
      */
     public Holidays addHoliday(Function<LocalDate, String> logic) {
-        holidayLogics.add(holidayLogics.size()-1, logic);
+        holidayLogics.add(holidayLogics.size() - 1, logic);
         return this;
     }
 
@@ -102,7 +106,26 @@ public class Holidays {
     public Optional<Holiday> getHoliday(LocalDate date) {
         final Optional<String> first = holidayLogics.stream()
                 .map(e -> e.apply(date)).filter(Objects::nonNull).findFirst();
-        return first.map(s -> new Holiday(date, resource.containsKey(s) ? resource.getString(s) : s));
+        return first.map(s -> new Holiday(date, toHolidayString(s)));
+    }
+
+    Pattern p = Pattern.compile("\\$\\{([a-zA-Z]+)}");
+
+    private String toHolidayString(String key) {
+        if (resource.containsKey(key)) {
+            return resource.getString(key);
+        }
+        final Matcher matcher = p.matcher(key);
+        StringBuilder b = new StringBuilder();
+        int start = 0;
+        while (matcher.find()) {
+            b.append(key, start, matcher.start());
+            final String group = matcher.group(1);
+            b.append(resource.getString(group));
+            start = matcher.end();
+        }
+        b.append(key, start, key.length());
+        return b.toString();
     }
 
     /**
@@ -206,7 +229,7 @@ public class Holidays {
      * Returns holidays between specified period
      *
      * @param from from date (inclusive)
-     * @param to to date (inclusive)
+     * @param to   to date (inclusive)
      * @return List of holidays between the specified period
      */
     public List<Holiday> getHolidaysBetween️(LocalDate from, LocalDate to) {
