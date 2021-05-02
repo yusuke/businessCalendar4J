@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 public class UnitedStatesHolidays extends Holidays {
     @SafeVarargs
-    public UnitedStatesHolidays(Locale locale, Function<LocalDate, String>... logics) {
+    public UnitedStatesHolidays (Locale locale, Function<LocalDate, String>... logics) {
         super(ResourceBundle.getBundle("unitedStates/holidays", locale));
         for (Function<LocalDate, String> logic : logics) {
             addHoliday(logic);
@@ -24,10 +24,6 @@ public class UnitedStatesHolidays extends Holidays {
         this(Locale.getDefault(), logics);
     }
 
-    @SuppressWarnings("unused")
-    public UnitedStatesHolidays() {
-        this(Locale.getDefault());
-    }
 
     /**
      * Fixed algorithm to close on Saturdays and Sundays
@@ -72,7 +68,7 @@ public class UnitedStatesHolidays extends Holidays {
         if (movedFrom != null) {
             final String originalHoliday = logic.apply(movedFrom);
             if (originalHoliday != null) {
-                return "${" + originalHoliday + "} (observed)";
+                return "${" + originalHoliday + "} (${observed})";
             }
         }
         return null;

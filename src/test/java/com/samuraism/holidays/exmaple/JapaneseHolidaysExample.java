@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package com.samuraism.holidays.exmaple.ja;
+package com.samuraism.holidays.exmaple;
 
 import com.samuraism.holidays.ja.日本の祝休日;
 import com.samuraism.holidays.ja.祝休日;
@@ -21,7 +21,7 @@ import com.samuraism.holidays.ja.祝休日;
 import java.time.LocalDate;
 import java.util.Optional;
 
-public class Example {
+public class JapaneseHolidaysExample {
     public static void main(String[] args) {
         日本の祝休日 holidays = new 日本の祝休日();
 
