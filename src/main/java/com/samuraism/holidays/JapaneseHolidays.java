@@ -62,12 +62,7 @@ public final class JapaneseHolidays extends Holidays {
 
     public JapaneseHolidays(Locale locale) {
         super();
-        resource = ResourceBundle.getBundle("holidays", locale, new ResourceBundle.Control() {
-            @Override
-            public Locale getFallbackLocale(String baseName, Locale locale) {
-                return Locale.ENGLISH;
-            }
-        });
+        resource = ResourceBundle.getBundle("holidays", locale);
         csv = new CSVHolidays(aboutOneMonth,System.getProperty("SYUKUJITSU_URL",
                 "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"), resource);
         addHoliday(csv);

@@ -11,9 +11,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class LocalizedHolidayName {
     @Test
     void localized() {
+        final boolean isLocaleJapanese = Locale.getDefault().getLanguage().equals("ja");
         assertEquals("Constitution Memorial Day",
                 new JapaneseHolidays(Locale.ENGLISH).getHoliday(LocalDate.of(2040, 5, 3)).get().name);
-        assertEquals("Constitution Memorial Day",
+        assertEquals(isLocaleJapanese ? "憲法記念日": "Constitution Memorial Day",
                 new JapaneseHolidays(Locale.FRANCE).getHoliday(LocalDate.of(2040, 5, 3)).get().name);
         assertEquals("憲法記念日",
                 new JapaneseHolidays(Locale.JAPANESE).getHoliday(LocalDate.of(2040, 5, 3)).get().name);
@@ -21,7 +22,7 @@ public class LocalizedHolidayName {
         
         assertEquals("Constitution Memorial Day", 
                 new JapaneseHolidays(Locale.ENGLISH).getHoliday(LocalDate.of(2021, 5, 3)).get().name);
-        assertEquals("Constitution Memorial Day", 
+        assertEquals(isLocaleJapanese ? "憲法記念日": "Constitution Memorial Day", 
                 new JapaneseHolidays(Locale.FRANCE).getHoliday(LocalDate.of(2021, 5, 3)).get().name);
         assertEquals("憲法記念日", 
                 new JapaneseHolidays(Locale.JAPANESE).getHoliday(LocalDate.of(2021, 5, 3)).get().name);
