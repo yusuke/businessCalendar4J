@@ -35,12 +35,11 @@ dependencies {
 }
 ```
 ## 利用方法
-サンプルコードを見れば使い方が一通り分かるようになっています。[com.samuraism.holidays.exmaple.Example](https://github.com/yusuke/japan-holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/en/Example.java) は日本語API、[com.samuraism.holidays.exmaple.ja.Example](https://github.com/yusuke/japan-holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/Example.java) は英語版APIのサンプルとなっています。
+サンプルコードを見れば使い方が一通り分かるようになっています。[com.samuraism.holidays.exmaple.ja.Example](https://github.com/yusuke/japan-holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/ja/Example.java) は日本語API、[com.samuraism.holidays.exmaple.Example](https://github.com/yusuke/japan-holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/Example.java) は英語APIのサンプルとなっています。
 ```java
 import com.samuraism.holidays.ja.日本の祝休日;
 import com.samuraism.holidays.ja.祝休日;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -66,9 +65,8 @@ public class Example {
         // 固定のカスタム祝休日を設定
         // メソッドチェーンで続けて書けるが、ミュータブルではなくオリジナルのインスタンスに変更が加わっていることに注意
         holidays.add祝休日(LocalDate.of(2013, 3, 29), "株式会社サムライズム設立")
+                .add祝休日(日本の祝休日.土日休業)
                 // ロジックベーのカスタム祝休日を設定。当該日が祝日ならば名称を、そうでなければnullを返す関数を指定する
-                .add祝休日(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "土曜日" : null)
-                .add祝休日(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "日曜日" : null)
                 .add祝休日(e -> e.getMonthValue() == 12 && e.getDayOfMonth() == 31 ? "大晦日" : null);
 
         // 2021年1月最終営業日を取得→ 1月30日、31日が土日なので1月29日金曜日
@@ -84,10 +82,9 @@ public class Example {
 ```
 
 ```java
-import com.samuraism.holidays.JapaneseHolidays;
 import com.samuraism.holidays.Holiday;
+import com.samuraism.holidays.JapaneseHolidays;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Optional;
@@ -114,9 +111,8 @@ public class Example {
         // sets a fixed custom Holiday
         // You can specify custom holidays using method chain. Note that the JapaneseHolidays instance is mutated upon each method call.
         holidays.addHoliday(LocalDate.of(2013, 3, 29), "Samuraism Inc. Foundation Day")
+                .addHoliday(JapaneseHolidays.CLOSED_ON_SATURDAYS_AND_SUNDAYS)
                 // Specify logic based custom holidays. returns a string if the day is a holiday
-                .addHoliday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "Saturday" : null)
-                .addHoliday(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "Sunday" : null)
                 .addHoliday(e -> e.getMonthValue() == 12 && e.getDayOfMonth() == 31 ? "New Year's Eve" : null);
 
         // Gets the last business day of Jan, 2021 → the answer is Jan 29 since Jan 30, 31 are weekend

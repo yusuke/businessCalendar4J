@@ -18,7 +18,6 @@ package com.samuraism.holidays.exmaple;
 import com.samuraism.holidays.Holiday;
 import com.samuraism.holidays.JapaneseHolidays;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Optional;
@@ -45,9 +44,8 @@ public class Example {
         // sets a fixed custom Holiday
         // You can specify custom holidays using method chain. Note that the JapaneseHolidays instance is mutated upon each method call.
         holidays.addHoliday(LocalDate.of(2013, 3, 29), "Samuraism Inc. Foundation Day")
+                .addHoliday(JapaneseHolidays.CLOSED_ON_SATURDAYS_AND_SUNDAYS)
                 // Specify logic based custom holidays. returns a string if the day is a holiday
-                .addHoliday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "Saturday" : null)
-                .addHoliday(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "Sunday" : null)
                 .addHoliday(e -> e.getMonthValue() == 12 && e.getDayOfMonth() == 31 ? "New Year's Eve" : null);
 
         // Gets the last business day of Jan, 2021 → the answer is Jan 29 since Jan 30, 31 are weekend
