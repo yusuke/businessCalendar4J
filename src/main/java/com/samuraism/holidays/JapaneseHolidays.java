@@ -17,6 +17,7 @@ package com.samuraism.holidays;
 
 import java.time.LocalDate;
 import java.util.Locale;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 
@@ -52,6 +53,8 @@ public final class JapaneseHolidays extends Holidays {
 
     final JapaneseHolidayAlgorithm holidayAlgorithm;
     final ResourceBundle resource;
+    private static final long aboutOneMonth = 1000L * 60 * 60 * 24 * 31 + new Random(System.currentTimeMillis()).nextLong() % (1000L * 60 * 60 * 10);
+    final CSVHolidays csv;
 
     public JapaneseHolidays() {
         this(Locale.getDefault());
@@ -65,7 +68,10 @@ public final class JapaneseHolidays extends Holidays {
                 return Locale.ENGLISH;
             }
         });
-        holidayAlgorithm = new JapaneseHolidayAlgorithm(resource);
+        csv = new CSVHolidays(aboutOneMonth,System.getProperty("SYUKUJITSU_URL",
+                "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"), resource);
+        addHoliday(csv);
+        holidayAlgorithm = new JapaneseHolidayAlgorithm(resource,csv);
         addHoliday(holidayAlgorithm);
     }
 
@@ -127,7 +133,7 @@ public final class JapaneseHolidays extends Holidays {
      * @since 1.4
      */
     public LocalDate getCabinetOfficialHolidayDataFirstDay() {
-        return holidayAlgorithm.csv.holidayMap.firstKey();
+        return csv.holidayMap.firstKey();
     }
 
     /**
@@ -136,6 +142,6 @@ public final class JapaneseHolidays extends Holidays {
      * @since 1.4
      */
     public LocalDate getCabinetOfficialHolidayDataLastDay() {
-        return holidayAlgorithm.csv.holidayMap.lastKey();
+        return csv.holidayMap.lastKey();
     }
 }

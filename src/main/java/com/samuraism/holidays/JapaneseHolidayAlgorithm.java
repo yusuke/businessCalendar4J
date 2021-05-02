@@ -21,27 +21,20 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
-import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 
 final class JapaneseHolidayAlgorithm implements Function<LocalDate, String> {
-    private static final long aboutOneMonth = 1000L * 60 * 60 * 24 * 31 + new Random(System.currentTimeMillis()).nextLong() % (1000L * 60 * 60 * 10);
-    final CSVHolidays csv;
     private final ResourceBundle resource;
+    private CSVHolidays csv;
 
-    JapaneseHolidayAlgorithm(@NotNull ResourceBundle resource){
+    JapaneseHolidayAlgorithm(@NotNull ResourceBundle resource, CSVHolidays csv){
         this.resource = resource;
-        this.csv = new CSVHolidays(aboutOneMonth,System.getProperty("SYUKUJITSU_URL",
-                "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"), resource);
+        this.csv = csv;
     }
 
     @Override
     public String apply(LocalDate e) {
-        final String name = csv.apply(e);
-        if (name != null) {
-            return name;
-        }
         final int year = e.getYear();
         final int month = e.getMonthValue();
         final int day = e.getDayOfMonth();

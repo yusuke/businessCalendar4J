@@ -36,7 +36,7 @@ public class Holidays {
      * @return This instance
      */
     public Holidays addHoliday(Function<LocalDate, String> logic) {
-        holidayLogics.add(0, logic);
+        holidayLogics.add(holidayLogics.size()-1, logic);
         return this;
     }
 

@@ -40,16 +40,16 @@ public class 日本の祝休日アルゴリズムTest {
         //noinspection ConstantConditions
         testCases = CSVHolidays.load(日本の祝休日アルゴリズムTest.class.getResourceAsStream("/syukujitsu-testcase.csv"),
                 ResourceBundle.getBundle("holidays", Locale.JAPANESE));
-        祝休日Map待避 = holidays.holidayAlgorithm.csv.holidayMap;
+        祝休日Map待避 = holidays.csv.holidayMap;
         // 1970年1月1日元日(特にこの日付に意味は無い)まで残して、以降はアルゴリズムで答え合わせする
-        holidays.holidayAlgorithm.csv.holidayMap = new TreeMap<>(祝休日Map待避.subMap(LocalDate.of(1955, 1, 1), LocalDate.of(1970, 1, 1)));
+        holidays.csv.holidayMap = new TreeMap<>(祝休日Map待避.subMap(LocalDate.of(1955, 1, 1), LocalDate.of(1970, 1, 1)));
     }
 
 
     @AfterAll
     static void afterAll() {
         // 他のテストに影響を与えないよう、戻しておく
-        holidays.holidayAlgorithm.csv.holidayMap = 祝休日Map待避;
+        holidays.csv.holidayMap = 祝休日Map待避;
     }
 
     @Test
