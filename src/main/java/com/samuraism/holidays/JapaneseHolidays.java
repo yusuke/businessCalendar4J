@@ -30,13 +30,6 @@ public final class JapaneseHolidays extends Holidays {
      */
     public static final Function<LocalDate, String> CLOSED_ON_NEW_YEARS_HOLIDAYS = e -> e.getMonthValue() == 1 && e.getDayOfMonth() <= 3 ? "三が日" : null;
 
-    class Localized正月三が日休業 implements Function<LocalDate, String> {
-        @Override
-        public String apply(LocalDate e) {
-            return e.getMonthValue() == 1 && e.getDayOfMonth() <= 3 ? resource.getString("三が日") : null;
-        }
-    }
-
     /**
      * Fixed algorithm to close on New Year's Eve.
      *
@@ -44,15 +37,7 @@ public final class JapaneseHolidays extends Holidays {
      */
     public static final Function<LocalDate, String> CLOSED_ON_NEW_YEARS_EVE = e -> e.getMonthValue() == 12 && e.getDayOfMonth() == 31 ? "大晦日" : null;
 
-    class Localized大晦日休業 implements Function<LocalDate, String> {
-        @Override
-        public String apply(LocalDate e) {
-            return e.getMonthValue() == 12 && e.getDayOfMonth() == 31 ? resource.getString("大晦日") : null;
-        }
-    }
-
     final JapaneseHolidayAlgorithm holidayAlgorithm;
-    final ResourceBundle resource;
     private static final long aboutOneMonth = 1000L * 60 * 60 * 24 * 31 + new Random(System.currentTimeMillis()).nextLong() % (1000L * 60 * 60 * 10);
     final CSVHolidays csv;
 
@@ -61,12 +46,11 @@ public final class JapaneseHolidays extends Holidays {
     }
 
     public JapaneseHolidays(Locale locale) {
-        super();
-        resource = ResourceBundle.getBundle("japanese/holidays", locale);
-        csv = new CSVHolidays(aboutOneMonth,System.getProperty("SYUKUJITSU_URL",
+        super(ResourceBundle.getBundle("japanese/holidays", locale));
+        csv = new CSVHolidays(aboutOneMonth, System.getProperty("SYUKUJITSU_URL",
                 "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"), resource);
         addHoliday(csv);
-        holidayAlgorithm = new JapaneseHolidayAlgorithm(resource,csv);
+        holidayAlgorithm = new JapaneseHolidayAlgorithm(resource, csv);
         addHoliday(holidayAlgorithm);
     }
 
@@ -86,20 +70,6 @@ public final class JapaneseHolidays extends Holidays {
         }
     };
 
-    class Localized土日休業 implements Function<LocalDate, String> {
-        @Override
-        public String apply(LocalDate localDate) {
-            switch(localDate.getDayOfWeek()) {
-                case SATURDAY:
-                    return resource.getString("土曜日");
-                case SUNDAY:
-                    return resource.getString("日曜日");
-                default:
-                    return null;
-            }
-        }
-    }
-
     /**
      * Add logic based holiday.
      *
@@ -108,20 +78,10 @@ public final class JapaneseHolidays extends Holidays {
      */
     @Override
     public JapaneseHolidays addHoliday(Function<LocalDate, String> logic) {
-        if(logic == CLOSED_ON_SATURDAYS_AND_SUNDAYS){
-            logic = new Localized土日休業();
-        }
-        if(logic == CLOSED_ON_NEW_YEARS_HOLIDAYS){
-            logic = new Localized正月三が日休業();
-        }
-        if(logic == CLOSED_ON_NEW_YEARS_EVE){
-            logic = new Localized大晦日休業();
-        }
         super.addHoliday(logic);
         return this;
     }
 
-   
     /**
      * Returns the first day of <a href="https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html">cabinet's official holiday data</a>.
      * @return the first day of <a href="https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html">cabinet's official holiday data</a>

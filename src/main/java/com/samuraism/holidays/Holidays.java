@@ -17,17 +17,17 @@ package com.samuraism.holidays;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 public class Holidays {
     private final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
     private final HolidayMap customHolidayMap = new HolidayMap();
-    Holidays(){
-        holidayLogics.add(customHolidayMap);
+
+    protected final ResourceBundle resource;
+    Holidays(ResourceBundle resource){
+        this.holidayLogics.add(customHolidayMap);
+        this.resource = resource;
     }
     /**
      * Add logic based holiday.
@@ -102,7 +102,7 @@ public class Holidays {
     public Optional<Holiday> getHoliday(LocalDate date) {
         final Optional<String> first = holidayLogics.stream()
                 .map(e -> e.apply(date)).filter(Objects::nonNull).findFirst();
-        return first.map(s -> new Holiday(date, s));
+        return first.map(s -> new Holiday(date, resource.containsKey(s) ? resource.getString(s) : s));
     }
 
     /**
