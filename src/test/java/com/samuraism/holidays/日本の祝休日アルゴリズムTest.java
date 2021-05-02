@@ -39,7 +39,7 @@ public class 日本の祝休日アルゴリズムTest {
         // 内閣府のデータにはない2022年以降の未来の春分の日、秋分の日、スポーツの日を含む
         //noinspection ConstantConditions
         testCases = CSVHolidays.load(日本の祝休日アルゴリズムTest.class.getResourceAsStream("/syukujitsu-testcase.csv"),
-                ResourceBundle.getBundle("holidays", Locale.JAPANESE));
+                ResourceBundle.getBundle("japanese/holidays", Locale.JAPANESE));
         祝休日Map待避 = holidays.csv.holidayMap;
         // 1970年1月1日元日(特にこの日付に意味は無い)まで残して、以降はアルゴリズムで答え合わせする
         holidays.csv.holidayMap = new TreeMap<>(祝休日Map待避.subMap(LocalDate.of(1955, 1, 1), LocalDate.of(1970, 1, 1)));
