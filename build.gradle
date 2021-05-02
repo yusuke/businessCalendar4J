@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.samuraism'
-version '1.5'
+version '1.6'
 
 repositories {
     mavenCentral()
@@ -34,12 +34,12 @@ test {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = 'japan-holidays'
+            artifactId = 'holidays'
             from components.java
             pom {
-                name = 'japan-holidays'
-                description = 'japan-holidays'
-                url = 'https://github.com/yusuke/japan-holidays'
+                name = 'holidays'
+                description = 'holidays'
+                url = 'https://github.com/yusuke/holidays'
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
@@ -54,9 +54,9 @@ publishing {
                     }
                 }
                 scm {
-                    url = 'https://github.com/yusuke/japan-holidays'
-                    connection = 'scm:git:git://github.com/yusuke/japan-holidays.git'
-                    developerConnection = 'scm:git:git@github.com:yusuke/japan-holidays.git'
+                    url = 'https://github.com/yusuke/holidays'
+                    connection = 'scm:git:git://github.com/yusuke/holidays.git'
+                    developerConnection = 'scm:git:git@github.com:yusuke/holidays.git'
                 }
             }
         }

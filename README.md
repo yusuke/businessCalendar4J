@@ -1,4 +1,4 @@
-# [&#35;japanHolidays](https://twitter.com/search?q=%23japanHolidays&src=typed_query&f=live)
+# [&#35;javaHolidays](https://twitter.com/search?q=%23javaHolidays&src=typed_query&f=live)
 1955年以降の日本の祝日、休日の判定や名称取得を行えるライブラリです。依存がないので気軽に利用できます。
 「指定したの日の祝日の名称を取得する」「指定した日以降の最初の営業日を取得する」「指定した期間の祝日のリストを取得する」といったことが簡単に行えます。
 
@@ -7,7 +7,7 @@
 また「土日を祝日扱いにする」、「特定の日を祝休日扱いにする」、などの定義も簡単に行えるので事業等の実態に合わせた営業日の導出が行えます。
 
 ## ハッシュタグ
-ご意見、ご感想などは [&#35;japanHolidays](https://twitter.com/intent/tweet?text=https://github.com/yusuke/japan-holidays/+%23japanHolidays) を使ってツイートしていただければ幸いです。
+ご意見、ご感想などは [&#35;javaHolidays](https://twitter.com/intent/tweet?text=https://github.com/yusuke/holidays/+%23javaHolidays) を使ってツイートしていただければ幸いです。
 
 [![@HolidaysJava](https://img.shields.io/twitter/url/https/twitter.com/HolidaysJava.svg?style=social&label=Follow%20%40HolidaysJava)](https://twitter.com/HolidaysJava)
 ## 動作要件
@@ -16,26 +16,27 @@ Java 8以降
 ## 利用方法
 Maven Central Repositoryにリリースされているため、以下のように依存を指定するだけで利用出来るようになります。
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.samuraism/japan-holidays/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.samuraism/japan-holidays)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.samuraism/holidays/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.samuraism/holidays)
 
 ### Mavenの場合
 ```xml
 <dependencies>
     <dependency>
         <groupId>com.samuraism</groupId>
-        <artifactId>japan-holidays</artifactId>
-        <version>1.5</version>
+        <artifactId>holidays</artifactId>
+        <version>1.6</version>
     </dependency>
 </dependencies>
 ```
 ### Gradleの場合
 ```text
 dependencies {
-    compile 'com.samuraism:japan-holidays:1.5'
+    compile 'com.samuraism:holidays:1.6'
 }
 ```
 ## 利用方法
-サンプルコードを見れば使い方が一通り分かるようになっています。[com.samuraism.holidays.exmaple.ja.Example](https://github.com/yusuke/japan-holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/ja/Example.java) は日本語API、[com.samuraism.holidays.exmaple.Example](https://github.com/yusuke/japan-holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/Example.java) は英語APIのサンプルとなっています。
+
+###### サンプルコードを見れば使い方が一通り分かるようになっています。[com.samuraism.holidays.exmaple.ja.Example](https://github.com/yusuke/holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/ja/Example.java) は日本語API、[com.samuraism.holidays.exmaple.Example](https://github.com/yusuke/holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/Example.java) は英語APIのサンプルとなっています。
 ```java
 import com.samuraism.holidays.ja.日本の祝休日;
 import com.samuraism.holidays.ja.祝休日;
@@ -151,4 +152,4 @@ public class Example {
 # ライセンス
 Apache License Version 2.0
 
-![Java CI with Gradle](https://github.com/yusuke/japan-holidays/workflows/Java%20CI%20with%20Gradle/badge.svg)
+![Java CI with Gradle](https://github.com/yusuke/holidays/workflows/Java%20CI%20with%20Gradle/badge.svg)
