@@ -14,16 +14,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 class UnitedStatesHolidaysTest {
-    final UnitedStatesHolidays holidays = new UnitedStatesHolidays(Locale.ENGLISH,
-            NEW_YEARS_DAY,
-            MARTIN_LUTHER_KING_JR_DAY,
-            MEMORIAL_DAY,
-            INDEPENDENCE_DAY,
-            LABOR_DAY,
-            VETERANS_DAY,
-            THANKS_GIVING_DAY,
-            CHRISTMAS_DAY
-    );
+    final UnitedStatesHolidays holidays = UnitedStatesHolidays.getInstance(conf -> conf.locale(Locale.ENGLISH)
+            .holiday(
+                    NEW_YEARS_DAY,
+                    MARTIN_LUTHER_KING_JR_DAY,
+                    MEMORIAL_DAY,
+                    INDEPENDENCE_DAY,
+                    LABOR_DAY,
+                    VETERANS_DAY,
+                    THANKS_GIVING_DAY,
+                    CHRISTMAS_DAY
+            ));
 
     @Test
     void newYearsDay() {

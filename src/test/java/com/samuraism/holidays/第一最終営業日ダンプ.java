@@ -44,7 +44,7 @@ public class 第一最終営業日ダンプ {
             shiftJIS.write(header);
             utf8.write(header);
             LocalDate cursor = start;
-            JapaneseHolidays holidays = new JapaneseHolidays().addHoliday(CLOSED_ON_SATURDAYS_AND_SUNDAYS);
+            JapaneseHolidays holidays = JapaneseHolidays.getInstance(conf -> conf.holiday(CLOSED_ON_SATURDAYS_AND_SUNDAYS));
             while (cursor.isBefore(end)) {
                 LocalDate 月末 = cursor.withDayOfMonth(cursor.lengthOfMonth());
                 LocalDate 最初営業日 = holidays.firstBusinessDay(cursor);

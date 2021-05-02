@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class 日本の祝休日Test {
     @Test
     void is祝日() {
-        JapaneseHolidays holidays = new JapaneseHolidays(Locale.JAPAN);
+        JapaneseHolidays holidays = JapaneseHolidays.getInstance(conf->conf.locale(Locale.JAPAN));
         assertAll(
                 // 元日
                 () -> assertTrue(holidays.isHoliday(LocalDate.of(2021, 1, 1))),
@@ -46,7 +46,7 @@ class 日本の祝休日Test {
 
     @Test
     void is営業日() {
-        JapaneseHolidays holidays = new JapaneseHolidays(Locale.JAPANESE);
+        JapaneseHolidays holidays = JapaneseHolidays.getInstance(conf->conf.locale(Locale.JAPANESE));
         assertAll(
                 // 元日
                 () -> assertFalse(holidays.isBusinessDay(LocalDate.of(2021, 1, 1))),
@@ -64,7 +64,7 @@ class 日本の祝休日Test {
 
     @Test
     void get名称() {
-        JapaneseHolidays holidays = new JapaneseHolidays(Locale.JAPANESE);
+        JapaneseHolidays holidays = JapaneseHolidays.getInstance(conf->conf.locale(Locale.JAPANESE));
         assertFalse(holidays.getHoliday(LocalDate.of(1954, 1, 15)).isPresent());
         assertEquals("元日", holidays.getHoliday(LocalDate.of(1955, 1, 1)).get().name);
         assertEquals("成人の日", holidays.getHoliday(LocalDate.of(2021, 1, 11)).get().name);
@@ -74,17 +74,17 @@ class 日本の祝休日Test {
 
     @Test
     void add祝休日() {
-        Holidays holidays = new JapaneseHolidays(Locale.JAPANESE)
-                .addHoliday(LocalDate.of(1977, 6, 17), "休みたいから休む");
+        Holidays holidays = JapaneseHolidays.getInstance(conf -> conf.locale(Locale.JAPANESE)
+                .holiday(LocalDate.of(1977, 6, 17), "休みたいから休む"));
         assertTrue(holidays.isHoliday(LocalDate.of(1977, 6, 17)));
         assertEquals("休みたいから休む", holidays.getHoliday(LocalDate.of(1977, 6, 17)).get().name);
     }
 
     @Test
     void add祝休日ロジックベース() {
-        JapaneseHolidays holidays = new JapaneseHolidays(Locale.JAPANESE)
-                .addHoliday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "土曜日" : null)
-                .addHoliday(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "日曜日" : null);
+        JapaneseHolidays holidays = JapaneseHolidays.getInstance(conf->conf.locale(Locale.JAPANESE)
+                .holiday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "土曜日" : null)
+                .holiday(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "日曜日" : null));
         assertTrue(holidays.isHoliday(LocalDate.of(2021, 1, 23)));
         assertTrue(holidays.isHoliday(LocalDate.of(2021, 1, 24)));
         assertEquals("土曜日", holidays.getHoliday(LocalDate.of(2021, 1, 23)).get().name);
@@ -92,7 +92,10 @@ class 日本の祝休日Test {
         assertEquals("土曜日", holidays.getHoliday(LocalDate.of(2022, 8, 27)).get().name);
         assertEquals("日曜日", holidays.getHoliday(LocalDate.of(2022, 8, 28)).get().name);
 
-        holidays.addHoliday(e -> e.getMonthValue() == 6 && e.getDayOfMonth() == 17 ? "山本裕介誕生日" : null);
+        holidays = JapaneseHolidays.getInstance(conf->conf.locale(Locale.JAPANESE)
+                .holiday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "土曜日" : null)
+                .holiday(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "日曜日" : null)
+                .holiday(e -> e.getMonthValue() == 6 && e.getDayOfMonth() == 17 ? "山本裕介誕生日" : null));
         assertTrue(holidays.isHoliday(LocalDate.of(2011, 6, 17)));
         assertEquals("山本裕介誕生日", holidays.getHoliday(LocalDate.of(2021, 6, 17)).get().name);
     }
@@ -101,7 +104,7 @@ class 日本の祝休日Test {
     void get指定期間内の祝休日️() {
         assertAll(
                 () -> {
-                    JapaneseHolidays holidays = new JapaneseHolidays(Locale.JAPANESE);
+                    JapaneseHolidays holidays = JapaneseHolidays.getInstance(conf->conf.locale(Locale.JAPANESE));
                     final List<Holiday> HolidayList = holidays.getHolidaysBetween️(LocalDate.of(1955, 1, 1),
                             LocalDate.of(1955, 1, 16));
                     assertEquals(2, HolidayList.size());
@@ -109,7 +112,7 @@ class 日本の祝休日Test {
                     assertEquals("成人の日", HolidayList.get(1).name);
                 },
                 () -> {
-                    JapaneseHolidays holidays = new JapaneseHolidays(Locale.JAPANESE);
+                    JapaneseHolidays holidays = JapaneseHolidays.getInstance(conf->conf.locale(Locale.JAPANESE));
                     // from to が逆でも取得できて、順序は古い日付→新しい日付
                     final List<Holiday> HolidayList = holidays.getHolidaysBetween️(LocalDate.of(1955, 1, 16),
                             LocalDate.of(1954, 12, 31));
@@ -119,7 +122,7 @@ class 日本の祝休日Test {
                 },
                 () -> {
                     // 全期間
-                    JapaneseHolidays holidays = new JapaneseHolidays(Locale.JAPANESE);
+                    JapaneseHolidays holidays = JapaneseHolidays.getInstance(conf->conf.locale(Locale.JAPANESE));
                     final List<Holiday> HolidayList = holidays.getHolidaysBetween️(LocalDate.of(1955, 1, 1),
                             LocalDate.of(2021, 12, 31));
                     assertEquals(959, HolidayList.size());
@@ -128,9 +131,9 @@ class 日本の祝休日Test {
                 },
                 () -> {
                     // カスタム祝休日を追加
-                    JapaneseHolidays holidays = new JapaneseHolidays(Locale.JAPANESE);
-                    holidays.addHoliday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "土曜日" : null);
-                    holidays.addHoliday(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "日曜日" : null);
+                    JapaneseHolidays holidays = JapaneseHolidays.getInstance(conf->conf.locale(Locale.JAPANESE)
+                            .holiday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "土曜日" : null)
+                            .holiday(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "日曜日" : null));
                     final List<Holiday> HolidayList = holidays.getHolidaysBetween️(LocalDate.of(1955, 1, 1),
                             LocalDate.of(1955, 1, 16));
                     assertEquals(6, HolidayList.size());
@@ -144,7 +147,7 @@ class 日本の祝休日Test {
                 },
                 () -> {
                     // 指定期間に祝休日がない
-                    JapaneseHolidays holidays = new JapaneseHolidays(Locale.JAPANESE);
+                    JapaneseHolidays holidays = JapaneseHolidays.getInstance(conf->conf.locale(Locale.JAPANESE));
                     final List<Holiday> HolidayList = holidays.getHolidaysBetween️(LocalDate.of(2021, 1, 2),
                             LocalDate.of(2021, 1, 2));
                     assertEquals(0, HolidayList.size());
@@ -153,9 +156,9 @@ class 日本の祝休日Test {
 
     @Test
     void 前後の営業日() {
-        JapaneseHolidays holidays = new JapaneseHolidays(Locale.JAPANESE)
-                .addHoliday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "土曜日" : null)
-                .addHoliday(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "日曜日" : null);
+        JapaneseHolidays holidays = JapaneseHolidays.getInstance(conf -> conf.locale(Locale.JAPANESE)
+                .holiday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "土曜日" : null)
+                .holiday(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "日曜日" : null));
         assertAll(
                 // 祝休日中
                 () -> assertEquals(LocalDate.of(2020, 12, 31),
@@ -171,9 +174,9 @@ class 日本の祝休日Test {
 
     @Test
     void 前後の祝休日() {
-        JapaneseHolidays holidays = new JapaneseHolidays(Locale.JAPANESE)
-                .addHoliday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "土曜日" : null)
-                .addHoliday(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "日曜日" : null);
+        JapaneseHolidays holidays = JapaneseHolidays.getInstance(conf -> conf.locale(Locale.JAPANESE)
+                .holiday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "土曜日" : null)
+                .holiday(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "日曜日" : null));
         assertAll(
                 // 祝休日中
                 () -> assertEquals(LocalDate.of(2021, 1, 2),
@@ -190,7 +193,7 @@ class 日本の祝休日Test {
 
     @Test
     void 範囲外() {
-        JapaneseHolidays holidays = new JapaneseHolidays(Locale.JAPANESE);
+        JapaneseHolidays holidays = JapaneseHolidays.getInstance(conf->conf.locale(Locale.JAPANESE));
         assertAll(
                 // 内閣府でとれるデータの範囲より前
                 () -> assertEquals(LocalDate.of(1954, 1, 1),
@@ -203,7 +206,7 @@ class 日本の祝休日Test {
 
     @Test
     void get内閣府公式公表期間() {
-        JapaneseHolidays holidays = new JapaneseHolidays(Locale.JAPANESE);
+        JapaneseHolidays holidays = JapaneseHolidays.getInstance(conf->conf.locale(Locale.JAPANESE));
         assertEquals(LocalDate.of(1955, 1, 1), holidays.getCabinetOfficialHolidayDataFirstDay());
         assertEquals(LocalDate.of(LocalDate.now().getYear() + 1, 11, 23), holidays.getCabinetOfficialHolidayDataLastDay());
         if (LocalDate.now().isAfter(LocalDate.of(2021, 12, 10))) {

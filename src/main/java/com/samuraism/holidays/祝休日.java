@@ -13,9 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package com.samuraism.holidays.ja;
-
-import com.samuraism.holidays.Holiday;
+package com.samuraism.holidays;
 
 import java.time.LocalDate;
 import java.util.Objects;

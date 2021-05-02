@@ -13,15 +13,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package com.samuraism.holidays.ja;
-
-import com.samuraism.holidays.Holiday;
-import com.samuraism.holidays.JapaneseHolidays;
+package com.samuraism.holidays;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -49,38 +46,26 @@ public class 日本の祝休日 {
      */
     public static final Function<LocalDate, String> 土日休業 = JapaneseHolidays.CLOSED_ON_SATURDAYS_AND_SUNDAYS;
 
-
-    public 日本の祝休日() {
-        holidays = new JapaneseHolidays();
+    private 日本の祝休日 (JapaneseHolidays holidays) {
+        this.holidays = holidays;
     }
 
-    public 日本の祝休日(Locale locale) {
-        holidays = new JapaneseHolidays(locale);
+    public static 日本の祝休日 getInstance() {
+        return new 日本の祝休日(JapaneseHolidays.getInstance());
     }
 
-    /**
-     * ロジックベースの祝休日を追加。当該日が祝休日であれば名称を返す関数を指定する
-     *
-     * @param logic ロジック
-     * @return このインスタンス
-     */
-    public 日本の祝休日 add祝休日(Function<LocalDate, String> logic) {
-        holidays.addHoliday(logic);
-        return this;
+    public static 日本の祝休日 getInstance(Consumer<祝休日設定> func) {
+        final 祝休日設定 conf = new 祝休日設定();
+        func.accept(conf);
+        return new 日本の祝休日(JapaneseHolidays.getInstance(e->{
+            e.locale(conf.locale);
+            conf.holidayLogics.forEach(e::holiday);
+            conf.customHolidayMap.holidayMap.keySet().forEach(
+                    date->
+                    e.holiday(date,conf.customHolidayMap.holidayMap.get(date) )
+            );
+        }));
     }
-
-    /**
-     * 固定の祝休日を追加
-     *
-     * @param 日付 日付
-     * @param 名称 名称
-     * @return このインスタンス
-     */
-    public 日本の祝休日 add祝休日(LocalDate 日付, String 名称) {
-        holidays.addHoliday(日付, 名称);
-        return this;
-    }
-
 
     /**
      * 指定した日が祝休日かどうかを判定する

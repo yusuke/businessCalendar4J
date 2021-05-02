@@ -5,25 +5,19 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class UnitedStatesHolidays extends Holidays {
-    @SafeVarargs
-    public UnitedStatesHolidays (Locale locale, Function<LocalDate, String>... logics) {
-        super(ResourceBundle.getBundle("unitedStates/holidays", locale));
-        for (Function<LocalDate, String> logic : logics) {
-            addHoliday(logic);
-        }
+    private UnitedStatesHolidays (HolidayConfiguration conf) {
+        super("unitedStates/holidays", conf);
     }
 
-    @SuppressWarnings("unused")
-    @SafeVarargs
-    public UnitedStatesHolidays(Function<LocalDate, String>... logics) {
-        this(Locale.getDefault(), logics);
+    public static UnitedStatesHolidays getInstance(Consumer<HolidayConfiguration> func) {
+        final HolidayConfiguration conf = new HolidayConfiguration();
+        func.accept(conf);
+        return new UnitedStatesHolidays(conf);
     }
-
 
     /**
      * Fixed algorithm to close on Saturdays and Sundays

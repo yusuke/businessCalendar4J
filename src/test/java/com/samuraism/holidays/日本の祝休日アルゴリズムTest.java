@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 public class 日本の祝休日アルゴリズムTest {
     static TreeMap<LocalDate, String> testCases;
-    final static JapaneseHolidays holidays = new JapaneseHolidays(Locale.JAPANESE);
+    final static JapaneseHolidays holidays = JapaneseHolidays.getInstance(conf -> conf.locale(Locale.JAPANESE));
 
     static TreeMap<LocalDate, String> 祝休日Map待避;
 
@@ -200,9 +200,9 @@ public class 日本の祝休日アルゴリズムTest {
 
     @Test
     void カスタム休日を指定しても休日算出が正しい() {
-        Holidays holidays = new JapaneseHolidays(Locale.JAPANESE)
-                .addHoliday(LocalDate.of(2022, 1, 2), "休みたいから休む")
-                .addHoliday(LocalDate.of(2007, 2, 12), "休みたいから休む");
+        Holidays holidays = JapaneseHolidays.getInstance(conf -> conf.locale(Locale.JAPANESE)
+                .holiday(LocalDate.of(2022, 1, 2), "休みたいから休む")
+                .holiday(LocalDate.of(2007, 2, 12), "休みたいから休む"));
         // 2022/1/1が元旦、かつ日曜日なので2022/1/2が休日
         // カスタム休日を2022/1/2に設定しても振替休日は2022/1/3にはならない
         assertFalse(holidays.isHoliday(LocalDate.of(2022, 1, 3)));

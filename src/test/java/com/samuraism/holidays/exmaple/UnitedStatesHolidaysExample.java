@@ -26,15 +26,15 @@ import static com.samuraism.holidays.UnitedStatesHolidays.*;
 
 public class UnitedStatesHolidaysExample {
     public static void main(String[] args) {
-        UnitedStatesHolidays holidays = new UnitedStatesHolidays(Locale.ENGLISH,
-                NEW_YEARS_DAY,
-                MARTIN_LUTHER_KING_JR_DAY,
-                MEMORIAL_DAY,
-                INDEPENDENCE_DAY,
-                LABOR_DAY,
-                VETERANS_DAY,
-                THANKS_GIVING_DAY,
-                CHRISTMAS_DAY);
+        UnitedStatesHolidays holidays = UnitedStatesHolidays.getInstance(e -> e.locale(Locale.ENGLISH)
+                .holiday(NEW_YEARS_DAY,
+                        MARTIN_LUTHER_KING_JR_DAY,
+                        MEMORIAL_DAY,
+                        INDEPENDENCE_DAY,
+                        LABOR_DAY,
+                        VETERANS_DAY,
+                        THANKS_GIVING_DAY,
+                        CHRISTMAS_DAY));
 
         // prints true, because it's New Year's Day
         System.out.println("Is Jan, 1 2021 a holiday?: " + holidays.isHoliday(LocalDate.of(2021, 1, 1)));
@@ -52,18 +52,27 @@ public class UnitedStatesHolidaysExample {
 
         // sets a fixed custom Holiday
         // You can specify custom holidays using method chain. Note that the UnitedStatesHolidays instance is mutated upon each method call.
-        holidays.addHoliday(LocalDate.of(1995, 5, 23), "Java public debut")
-                .addHoliday(UnitedStatesHolidays.CLOSED_ON_SATURDAYS_AND_SUNDAYS)
-                // Specify logic based custom holidays. returns a string if the day is a holiday
-                .addHoliday(e -> e.getMonthValue() == 5 && e.getDayOfMonth() == 19 ? "James Gosling's birthday" : null);
+        UnitedStatesHolidays customHolidays = UnitedStatesHolidays.getInstance(conf -> conf.locale(Locale.ENGLISH)
+                .holiday(NEW_YEARS_DAY,
+                        MARTIN_LUTHER_KING_JR_DAY,
+                        MEMORIAL_DAY,
+                        INDEPENDENCE_DAY,
+                        LABOR_DAY,
+                        VETERANS_DAY,
+                        THANKS_GIVING_DAY,
+                        CHRISTMAS_DAY,
+                        CLOSED_ON_SATURDAYS_AND_SUNDAYS,
+                        // Specify logic based custom holidays. returns a string if the day is a holiday
+                        e -> e.getMonthValue() == 5 && e.getDayOfMonth() == 19 ? "James Gosling's birthday" : null)
+                .holiday(LocalDate.of(1995, 5, 23), "Java public debut"));
 
         // Gets the last business day of Jan, 2021 → the answer is Jan 29 since Jan 30, 31 are weekend
-        System.out.println("Last business day of Jan 2021: " + holidays.lastBusinessDay(LocalDate.of(2021, 1, 31)));
+        System.out.println("Last business day of Jan 2021: " + customHolidays.lastBusinessDay(LocalDate.of(2021, 1, 31)));
         // Gets the first business day on and after July 4, 2021 → the answer is July 6, 2021 because July 4 and 5 are the Independence day and it's substitute
-        System.out.println("First business day on or after July 4, 2021: " + holidays.firstBusinessDay(LocalDate.of(2021, 7, 4)));
+        System.out.println("First business day on or after July 4, 2021: " + customHolidays.firstBusinessDay(LocalDate.of(2021, 7, 4)));
         // First holiday on and after Dec 20, 2021 →  Dec 24 (Christmas Day)
-        System.out.println(holidays.firstHoliday(LocalDate.of(2021, 12, 20)));
+        System.out.println(customHolidays.firstHoliday(LocalDate.of(2021, 12, 20)));
         // Last holiday by Nov 12, 2021 →  Nov 11 (Veterans Day)
-        System.out.println(holidays.lastHoliday(LocalDate.of(2021, 11, 12)));
+        System.out.println(customHolidays.lastHoliday(LocalDate.of(2021, 11, 12)));
     }
 }

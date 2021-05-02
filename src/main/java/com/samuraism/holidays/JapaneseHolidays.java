@@ -16,9 +16,8 @@
 package com.samuraism.holidays;
 
 import java.time.LocalDate;
-import java.util.Locale;
 import java.util.Random;
-import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public final class JapaneseHolidays extends Holidays {
@@ -37,30 +36,38 @@ public final class JapaneseHolidays extends Holidays {
      */
     public static final Function<LocalDate, String> CLOSED_ON_NEW_YEARS_EVE = e -> e.getMonthValue() == 12 && e.getDayOfMonth() == 31 ? "大晦日" : null;
 
-    final JapaneseHolidayAlgorithm holidayAlgorithm;
     private static final long aboutOneMonth = 1000L * 60 * 60 * 24 * 31 + new Random(System.currentTimeMillis()).nextLong() % (1000L * 60 * 60 * 10);
     final CSVHolidays csv;
 
-    public JapaneseHolidays() {
-        this(Locale.getDefault());
-    }
+    private JapaneseHolidays(HolidayConfiguration conf) {
 
-    public JapaneseHolidays(Locale locale) {
-        super(ResourceBundle.getBundle("japanese/holidays", locale));
+        super("japanese/holidays", conf);
         csv = new CSVHolidays(aboutOneMonth, System.getProperty("SYUKUJITSU_URL",
                 "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"), resource);
-        addHoliday(csv);
-        holidayAlgorithm = new JapaneseHolidayAlgorithm(resource, csv);
-        addHoliday(holidayAlgorithm);
+        holidayLogics.add(0, csv);
+        final JapaneseHolidayAlgorithm holidayAlgorithm = new JapaneseHolidayAlgorithm(resource, csv);
+        holidayLogics.add(0, holidayAlgorithm);
+
+    }
+
+    public static JapaneseHolidays getInstance(Consumer<HolidayConfiguration> func) {
+        final HolidayConfiguration conf = new HolidayConfiguration();
+        func.accept(conf);
+        return new JapaneseHolidays(conf);
+    }
+    public static JapaneseHolidays getInstance() {
+        final HolidayConfiguration conf = new HolidayConfiguration();
+        return new JapaneseHolidays(conf);
     }
 
 
     /**
      * Fixed algorithm to close on Saturdays and Sundays
+     *
      * @since 1.5
      */
     public static final Function<LocalDate, String> CLOSED_ON_SATURDAYS_AND_SUNDAYS = localDate -> {
-        switch(localDate.getDayOfWeek()) {
+        switch (localDate.getDayOfWeek()) {
             case SATURDAY:
                 return "土曜日";
             case SUNDAY:
@@ -70,20 +77,10 @@ public final class JapaneseHolidays extends Holidays {
         }
     };
 
-    /**
-     * Add logic based holiday.
-     *
-     * @param logic ロジック
-     * @return このインスタンス
-     */
-    @Override
-    public JapaneseHolidays addHoliday(Function<LocalDate, String> logic) {
-        super.addHoliday(logic);
-        return this;
-    }
 
     /**
      * Returns the first day of <a href="https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html">cabinet's official holiday data</a>.
+     *
      * @return the first day of <a href="https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html">cabinet's official holiday data</a>
      * @since 1.4
      */
@@ -93,6 +90,7 @@ public final class JapaneseHolidays extends Holidays {
 
     /**
      * Returns the last day of <a href="https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html">cabinet's official holiday data</a>.
+     *
      * @return the last day of <a href="https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html">cabinet's official holiday data</a>
      * @since 1.4
      */

@@ -1,8 +1,8 @@
 # [&#35;javaHolidays](https://twitter.com/search?q=%23javaHolidays&src=typed_query&f=live)
-1955年以降の日本の祝日、休日の判定や名称取得を行えるライブラリです。依存がないので気軽に利用できます。
+日本やアメリカ合衆国おｎ祝日、休日の判定や名称取得を行えるライブラリです。依存がないので気軽に利用できます。
 「指定したの日の祝日の名称を取得する」「指定した日以降の最初の営業日を取得する」「指定した期間の祝日のリストを取得する」といったことが簡単に行えます。
 
-内閣府の公開している情報を直接取得して、かつ定期的に更新してるため正確です。内閣府で公開している確定情報の範囲よりも後の日付については現行の法律をベースにしたアルゴリズムと国立天文台の情報を元に休祝日を推定します。
+日本の祝日については内閣府の公開している情報を直接取得して、かつ定期的に更新してるため正確です。内閣府で公開している確定情報の範囲よりも後の日付については現行の法律をベースにしたアルゴリズムと国立天文台の情報を元に休祝日を推定します。
 
 また「土日を祝日扱いにする」、「特定の日を祝休日扱いにする」、などの定義も簡単に行えるので事業等の実態に合わせた営業日の導出が行えます。
 
@@ -38,15 +38,15 @@ dependencies {
 
 ###### サンプルコードを見れば使い方が一通り分かるようになっています。[com.samuraism.holidays.exmaple.JapaneseHolidaysExample](https://github.com/yusuke/holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/JapaneseHolidaysExample.java) は日本の休日、[com.samuraism.holidays.exmaple.UnitedStatesHolidaysExample](https://github.com/yusuke/holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/UnitedStatesHolidaysExample.java) はアメリカ合衆国の休日APIのサンプルとなっています。
 ```java
-import com.samuraism.holidays.ja.日本の祝休日;
-import com.samuraism.holidays.ja.祝休日;
+import com.samuraism.holidays.日本の祝休日;
+import com.samuraism.holidays.祝休日;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
-public class Example {
+public class JapaneseHolidaysExample {
     public static void main(String[] args) {
-        日本の祝休日 holidays = new 日本の祝休日();
+        日本の祝休日 holidays = 日本の祝休日.getInstance();
 
         // 元日なのでtrueが表示される
         System.out.println("2021年1月1日は祝日？: " + holidays.is祝休日(LocalDate.of(2021, 1, 1)));
@@ -65,13 +65,14 @@ public class Example {
 
         // 固定のカスタム祝休日を設定
         // メソッドチェーンで続けて書けるが、ミュータブルではなくオリジナルのインスタンスに変更が加わっていることに注意
-        holidays.add祝休日(LocalDate.of(2013, 3, 29), "株式会社サムライズム設立")
-                .add祝休日(日本の祝休日.土日休業)
-                // ロジックベーのカスタム祝休日を設定。当該日が祝日ならば名称を、そうでなければnullを返す関数を指定する
-                .add祝休日(e -> e.getMonthValue() == 12 && e.getDayOfMonth() == 31 ? "大晦日" : null);
+        holidays = 日本の祝休日.getInstance(conf ->
+                conf.祝休日(LocalDate.of(2013, 3, 29), "株式会社サムライズム設立")
+                        .祝休日(日本の祝休日.土日休業)
+                        // ロジックベーのカスタム祝休日を設定。当該日が祝日ならば名称を、そうでなければnullを返す関数を指定する
+                        .祝休日(e -> e.getMonthValue() == 12 && e.getDayOfMonth() == 31 ? "大晦日" : null));
 
         // 2021年1月最終営業日を取得→ 1月30日、31日が土日なので1月29日金曜日
-        System.out.println("2021年最終営業日: " + holidays.最後の営業日(LocalDate.of(2021, 1, 31)));
+        System.out.println("2021年1月最終営業日: " + holidays.最後の営業日(LocalDate.of(2021, 1, 31)));
         // 2020年大晦日以降最初の営業日を取得→ 1月1日は元日、1月2,3日はカスタム祝日(土日)なので1月4日月曜日
         System.out.println("2020年大晦日以降最初の営業日: " + holidays.最初の営業日(LocalDate.of(2020, 12, 31)));
         // 2021年2月22日以降最初の祝日を取得→ 2月23日 天皇誕生日
@@ -92,17 +93,17 @@ import java.util.Optional;
 
 import static com.samuraism.holidays.UnitedStatesHolidays.*;
 
-public class Example {
+public class UnitedStatesHolidaysExample {
     public static void main(String[] args) {
-        UnitedStatesHolidays holidays = new UnitedStatesHolidays(Locale.ENGLISH,
-                NEW_YEARS_DAY,
-                MARTIN_LUTHER_KING_JR_DAY,
-                MEMORIAL_DAY,
-                INDEPENDENCE_DAY,
-                LABOR_DAY,
-                VETERANS_DAY,
-                THANKS_GIVING_DAY,
-                CHRISTMAS_DAY);
+        UnitedStatesHolidays holidays = UnitedStatesHolidays.getInstance(e -> e.locale(Locale.ENGLISH)
+                .holiday(NEW_YEARS_DAY,
+                        MARTIN_LUTHER_KING_JR_DAY,
+                        MEMORIAL_DAY,
+                        INDEPENDENCE_DAY,
+                        LABOR_DAY,
+                        VETERANS_DAY,
+                        THANKS_GIVING_DAY,
+                        CHRISTMAS_DAY));
 
         // prints true, because it's New Year's Day
         System.out.println("Is Jan, 1 2021 a holiday?: " + holidays.isHoliday(LocalDate.of(2021, 1, 1)));
@@ -120,33 +121,40 @@ public class Example {
 
         // sets a fixed custom Holiday
         // You can specify custom holidays using method chain. Note that the UnitedStatesHolidays instance is mutated upon each method call.
-        holidays.addHoliday(LocalDate.of(1995, 5, 23), "Java public debut")
-                .addHoliday(UnitedStatesHolidays.CLOSED_ON_SATURDAYS_AND_SUNDAYS)
-                // Specify logic based custom holidays. returns a string if the day is a holiday
-                .addHoliday(e -> e.getMonthValue() == 5 && e.getDayOfMonth() == 19 ? "James Gosling's birthday" : null);
+        UnitedStatesHolidays customHolidays = UnitedStatesHolidays.getInstance(conf -> conf.locale(Locale.ENGLISH)
+                .holiday(NEW_YEARS_DAY,
+                        MARTIN_LUTHER_KING_JR_DAY,
+                        MEMORIAL_DAY,
+                        INDEPENDENCE_DAY,
+                        LABOR_DAY,
+                        VETERANS_DAY,
+                        THANKS_GIVING_DAY,
+                        CHRISTMAS_DAY,
+                        CLOSED_ON_SATURDAYS_AND_SUNDAYS,
+                        // Specify logic based custom holidays. returns a string if the day is a holiday
+                        e -> e.getMonthValue() == 5 && e.getDayOfMonth() == 19 ? "James Gosling's birthday" : null)
+                .holiday(LocalDate.of(1995, 5, 23), "Java public debut"));
 
         // Gets the last business day of Jan, 2021 → the answer is Jan 29 since Jan 30, 31 are weekend
-        System.out.println("Last business day of Jan 2021: " + holidays.lastBusinessDay(LocalDate.of(2021, 1, 31)));
+        System.out.println("Last business day of Jan 2021: " + customHolidays.lastBusinessDay(LocalDate.of(2021, 1, 31)));
         // Gets the first business day on and after July 4, 2021 → the answer is July 6, 2021 because July 4 and 5 are the Independence day and it's substitute
-        System.out.println("First business day on or after July 4, 2021: " + holidays.firstBusinessDay(LocalDate.of(2021, 7, 4)));
+        System.out.println("First business day on or after July 4, 2021: " + customHolidays.firstBusinessDay(LocalDate.of(2021, 7, 4)));
         // First holiday on and after Dec 20, 2021 →  Dec 24 (Christmas Day)
-        System.out.println(holidays.firstHoliday(LocalDate.of(2021, 12, 20)));
+        System.out.println(customHolidays.firstHoliday(LocalDate.of(2021, 12, 20)));
         // Last holiday by Nov 12, 2021 →  Nov 11 (Veterans Day)
-        System.out.println(holidays.lastHoliday(LocalDate.of(2021, 11, 12)));
+        System.out.println(customHolidays.lastHoliday(LocalDate.of(2021, 11, 12)));
     }
 }
 ```
 ## カスタム祝日
-add祝休日()メソッドにより独自に固定の、またはアルゴリズムベースの祝日を追加できます。
+祝休日()メソッドにより独自に固定の、またはアルゴリズムベースの祝日を追加できます。
 コード例にあるとおり、メソッドチェーンで続けて指定ができるので、特に定数としてコード中に定義するのに便利です。
-メソッドチェーンで連ねて書く際、オリジナルのインスタンスに変更が加わっていることに注意してください。
-場面毎に異なる祝休日セットが必要な場合は別にインスタンスを生成する必要があります。
 ```java
 public class Example {
     // 土日は非営業日
-    private final 日本の祝休日 HOLIDAYS = new 日本の祝休日()
-            .add祝休日(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "土曜日" : null)
-            .add祝休日(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "日曜日" : null);
+    private final 日本の祝休日 holidays = 日本の祝休日.getInstance(conf->conf
+            .祝休日(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "土曜日" : null)
+            .祝休日(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "日曜日" : null));
 }
 ```
 

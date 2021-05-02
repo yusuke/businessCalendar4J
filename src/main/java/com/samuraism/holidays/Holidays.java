@@ -23,37 +23,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Holidays {
-    private final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
-    private final HolidayMap customHolidayMap = new HolidayMap();
+    protected final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
+    private final HolidayMap customHolidayMap;
 
     protected final ResourceBundle resource;
 
-    Holidays(ResourceBundle resource) {
-        this.holidayLogics.add(customHolidayMap);
-        this.resource = resource;
-    }
-
-    /**
-     * Add logic based holiday.
-     *
-     * @param logic logic
-     * @return This instance
-     */
-    public Holidays addHoliday(Function<LocalDate, String> logic) {
-        holidayLogics.add(holidayLogics.size() - 1, logic);
-        return this;
-    }
-
-    /**
-     * Add fixed holiday
-     *
-     * @param date date
-     * @param name name
-     * @return This instance
-     */
-    public Holidays addHoliday(LocalDate date, String name) {
-        customHolidayMap.addHoliday(date, name);
-        return this;
+    Holidays(String baseName, HolidayConfiguration conf) {
+        this.resource = ResourceBundle.getBundle(baseName, conf.locale);
+        holidayLogics.addAll(conf.holidayLogics);
+        this.customHolidayMap = conf.customHolidayMap;
+        this.holidayLogics.add(conf.customHolidayMap);
     }
 
     /**
