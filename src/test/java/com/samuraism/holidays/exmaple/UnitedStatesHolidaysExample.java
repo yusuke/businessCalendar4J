@@ -19,14 +19,13 @@ import com.samuraism.holidays.Holiday;
 import com.samuraism.holidays.UnitedStatesHolidays;
 
 import java.time.LocalDate;
-import java.util.Locale;
 import java.util.Optional;
 
 import static com.samuraism.holidays.UnitedStatesHolidays.*;
 
 public class UnitedStatesHolidaysExample {
     public static void main(String[] args) {
-        UnitedStatesHolidays holidays = UnitedStatesHolidays.getInstance(e -> e.locale(Locale.ENGLISH)
+        UnitedStatesHolidays holidays = UnitedStatesHolidays.getInstance(conf -> conf
                 .holiday(NEW_YEARS_DAY,
                         MARTIN_LUTHER_KING_JR_DAY,
                         MEMORIAL_DAY,
@@ -37,7 +36,7 @@ public class UnitedStatesHolidaysExample {
                         CHRISTMAS_DAY));
 
         // prints true, because it's New Year's Day
-        System.out.println("Is Jan, 1 2021 a holiday?: " 
+        System.out.println("Is Jan, 1 2021 a holiday?: "
                 + holidays.isHoliday(LocalDate.of(2021, 1, 1)));
         // prints false, because it's New Year's Day
         System.out.println("Is Jan, 1 2021 a business day?: "
@@ -56,7 +55,6 @@ public class UnitedStatesHolidaysExample {
         // You can specify custom holidays using method chain. 
         // Note that the UnitedStatesHolidays instance is mutated upon each method call.
         UnitedStatesHolidays customHolidays = UnitedStatesHolidays.getInstance(conf -> conf
-                .locale(Locale.ENGLISH)
                 .holiday(NEW_YEARS_DAY,
                         MARTIN_LUTHER_KING_JR_DAY,
                         MEMORIAL_DAY,
@@ -71,11 +69,11 @@ public class UnitedStatesHolidaysExample {
                 .holiday(LocalDate.of(1995, 5, 23), "Java public debut"));
 
         // Gets the last business day of Jan, 2021 → the answer is Jan 29 since Jan 30, 31 are weekend
-        System.out.println("Last business day of Jan 2021: " 
+        System.out.println("Last business day of Jan 2021: "
                 + customHolidays.lastBusinessDay(LocalDate.of(2021, 1, 31)));
         // Gets the first business day on and after July 4, 2021
         // The answer is July 6, 2021 because July 4 and 5 are the Independence day and it's substitute
-        System.out.println("First business day on or after July 4, 2021: " 
+        System.out.println("First business day on or after July 4, 2021: "
                 + customHolidays.firstBusinessDay(LocalDate.of(2021, 7, 4)));
         // First holiday on and after Dec 20, 2021 →  Dec 24 (Christmas Day)
         System.out.println(customHolidays.firstHoliday(LocalDate.of(2021, 12, 20)));
