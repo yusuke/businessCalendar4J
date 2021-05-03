@@ -67,12 +67,11 @@ public class JapaneseHolidaysExample {
                 .forEach(e -> System.out.println(e.日付 + ": " + e.名称));
 
         // 固定のカスタム祝休日を設定
-        // メソッドチェーンで続けて書けるが、ミュータブルではなくオリジナルのインスタンスに変更が加わっていることに注意
         holidays = 日本の祝休日.getInstance(conf -> conf
-                .祝休日(LocalDate.of(2013, 3, 29), "株式会社サムライズム設立")
+                .祝休日(LocalDate.of(1995, 5, 23), "Java誕生")
                 .祝休日(日本の祝休日.土日休業)
                 // ロジックベーのカスタム祝休日を設定。当該日が祝日ならば名称を、そうでなければnullを返す関数を指定する
-                .祝休日(e -> e.getMonthValue() == 12 && e.getDayOfMonth() == 31 ? "大晦日" : null));
+                .祝休日(e -> e.getMonthValue() == 5 && e.getDayOfMonth() == 19 ? "ジェームズ・ゴスリン誕生日" : null));
 
         // 2021年1月最終営業日を取得→ 1月30日、31日が土日なので1月29日金曜日
         System.out.println("2021年1月最終営業日: "

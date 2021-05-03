@@ -72,8 +72,6 @@ public class UnitedStatesHolidaysExample {
                 .forEach(e -> System.out.println(e.date + ": " + e.name));
 
         // sets a fixed custom Holiday
-        // You can specify custom holidays using method chain. 
-        // Note that the UnitedStatesHolidays instance is mutated upon each method call.
         UnitedStatesHolidays customHolidays = UnitedStatesHolidays.getInstance(conf -> conf
                 .holiday(NEW_YEARS_DAY,
                         MARTIN_LUTHER_KING_JR_DAY,
