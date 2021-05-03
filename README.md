@@ -1,7 +1,7 @@
 # [&#35;javaHolidays](https://twitter.com/search?q=%23javaHolidays&src=typed_query&f=live)
 This library provides information about holidays and observances in the United States and Japan.
 It is also possible to get information like "Name of the holiday on a specified date", "First business day after a specified date", and "List of holidays in a specified period.".
-You can specify non-business dates flexibly with lambda expressions, or specify fixed non-business dates at configuration time.
+With [HolidayConfiguration](https://github.com/yusuke/holidays/blob/main/src/main/java/com/samuraism/holidays/HolidayConfiguration.java), you can specify non-business dates flexibly with lambda expressions, or specify fixed non-business dates at configuration time.
 
 ## Hashtag
 [&#35;javaHolidays](https://twitter.com/intent/tweet?text=https://github.com/yusuke/holidays/+%23javaHolidays)
