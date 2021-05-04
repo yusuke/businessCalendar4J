@@ -35,9 +35,9 @@ dependencies {
 }
 ```
 ## 利用方法
+日本の祝日については[JapaneseHolidays](https://github.com/yusuke/holidays/blob/main/src/main/java/com/samuraism/holidays/JapaneseHolidays.java) の他、日本語のAPIである [日本の祝休日](https://github.com/yusuke/holidays/blob/main/src/main/java/com/samuraism/holidays/日本の祝休日.java) もあります。
 
-日本の祝日の処理方法は [com.samuraism.holidays.exmaple.JapaneseHolidaysExample](https://github.com/yusuke/holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/JapaneseHolidaysExample.java) を、アメリカ合衆国の祝日の処理方法は [com.samuraism.holidays.exmaple.UnitedStatesHolidaysExample](https://github.com/yusuke/holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/UnitedStatesHolidaysExample.java) をご覧ください。
-日本の祝日については[ JapaneseHolidays](https://github.com/yusuke/holidays/blob/main/src/main/java/com/samuraism/holidays/JapaneseHolidays.java) の他、日本語のAPIである [日本の祝休日](https://github.com/yusuke/holidays/blob/main/src/main/java/com/samuraism/holidays/日本の祝休日.java) もあります。
+サンプルコードは日本の祝日の処理方法については [JapaneseHolidaysExample.java (英語語API)](https://github.com/yusuke/holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/JapaneseHolidaysExample.java),  [日本の祝休日Example.java (日本語API)](https://github.com/yusuke/holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/日本の祝休日Example.java) を、アメリカ合衆国の祝日の処理方法については [UnitedStatesHolidaysExample](https://github.com/yusuke/holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/UnitedStatesHolidaysExample.java) をご覧ください。
 ```java
 import com.samuraism.holidays.日本の祝休日;
 import com.samuraism.holidays.祝休日;
