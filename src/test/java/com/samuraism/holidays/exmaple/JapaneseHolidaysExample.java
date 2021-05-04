@@ -24,10 +24,10 @@ import java.util.Optional;
 
 public class JapaneseHolidaysExample {
     public static void main(String[] args) {
-        JapaneseHolidays holidays = JapaneseHolidays.getInstance(conf->conf.locale(Locale.ENGLISH));
+        JapaneseHolidays holidays = JapaneseHolidays.getInstance(conf -> conf.locale(Locale.ENGLISH));
 
         // prints true, because it's New Year's Day
-        System.out.println("Is Jan 1, 2021 a holiday? " 
+        System.out.println("Is Jan 1, 2021 a holiday? "
                 + holidays.isHoliday(LocalDate.of(2021, 1, 1)));
         // prints false, because it's New Year's Day
         System.out.println("Is Jan 1, 2021 a business day？: "
@@ -55,7 +55,7 @@ public class JapaneseHolidaysExample {
         System.out.println("Last business day in January 2021: "
                 + holidays.lastBusinessDay(LocalDate.of(2021, 1, 31)));
         // Gets the first business day on and after Dec 31 2020
-        System.out.println("First business day on and after Dec 31 2020: " 
+        System.out.println("First business day on and after Dec 31 2020: "
                 + holidays.firstBusinessDay(LocalDate.of(2020, 12, 31)));
         // Gets the first holiday on and after February 22, 2021
         System.out.println(holidays.firstHoliday(LocalDate.of(2021, 2, 22)));
