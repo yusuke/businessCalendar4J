@@ -3,9 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/.idea.iml" filepath="$PROJECT_DIR$/.idea/.idea.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/japan-holidays.iml" filepath="$PROJECT_DIR$/.idea/modules/japan-holidays.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/japan-holidays.main.iml" filepath="$PROJECT_DIR$/.idea/modules/japan-holidays.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/japan-holidays.test.iml" filepath="$PROJECT_DIR$/.idea/modules/japan-holidays.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/holidays.iml" filepath="$PROJECT_DIR$/.idea/modules/holidays.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/holidays.main.iml" filepath="$PROJECT_DIR$/.idea/modules/holidays.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/holidays.test.iml" filepath="$PROJECT_DIR$/.idea/modules/holidays.test.iml" />
     </modules>
   </component>
 </project>
