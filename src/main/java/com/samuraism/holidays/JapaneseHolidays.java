@@ -17,7 +17,6 @@ package com.samuraism.holidays;
 
 import java.time.LocalDate;
 import java.util.Random;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public final class JapaneseHolidays extends Holidays {
@@ -39,7 +38,7 @@ public final class JapaneseHolidays extends Holidays {
     private static final long aboutOneMonth = 1000L * 60 * 60 * 24 * 31 + new Random(System.currentTimeMillis()).nextLong() % (1000L * 60 * 60 * 10);
     final CSVHolidays csv;
 
-    private JapaneseHolidays(HolidayConfiguration conf) {
+    private JapaneseHolidays(HolidaysBuilder<JapaneseHolidays> conf) {
 
         super("japanese/holidays", conf);
         csv = new CSVHolidays(aboutOneMonth, System.getProperty("SYUKUJITSU_URL",
@@ -50,14 +49,16 @@ public final class JapaneseHolidays extends Holidays {
 
     }
 
-    public static JapaneseHolidays getInstance(Consumer<HolidayConfiguration> func) {
-        final HolidayConfiguration conf = new HolidayConfiguration();
-        func.accept(conf);
-        return new JapaneseHolidays(conf);
+    public static HolidaysBuilder<JapaneseHolidays> newBuilder() {
+        return new HolidaysBuilder<JapaneseHolidays>() {
+            @Override
+            public JapaneseHolidays build() {
+                return new JapaneseHolidays(this);
+            }
+        };
     }
     public static JapaneseHolidays getInstance() {
-        final HolidayConfiguration conf = new HolidayConfiguration();
-        return new JapaneseHolidays(conf);
+        return newBuilder().build();
     }
 
 

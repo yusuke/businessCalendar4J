@@ -24,14 +24,12 @@ import java.util.regex.Pattern;
 
 public class Holidays {
     protected final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
-    private final HolidayMap customHolidayMap;
 
     protected final ResourceBundle resource;
 
-    Holidays(String baseName, HolidayConfiguration conf) {
+    Holidays(String baseName, HolidaysBuilder<? extends Holidays> conf) {
         this.resource = ResourceBundle.getBundle(baseName, conf.locale);
         holidayLogics.addAll(conf.holidayLogics);
-        this.customHolidayMap = conf.customHolidayMap;
         this.holidayLogics.add(conf.customHolidayMap);
     }
 

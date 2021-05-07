@@ -40,7 +40,7 @@ public class DumpUnitedStatesHolidays {
         try (final BufferedWriter utf8 = Files.newBufferedWriter(Paths.get(utf8FileName), StandardCharsets.UTF_8)) {
             final String header = "date,name\n";
             utf8.write(header);
-            for (Holiday holiday : UnitedStatesHolidays.getInstance(conf -> conf
+            for (Holiday holiday : UnitedStatesHolidays.newBuilder()
                     .locale(Locale.ENGLISH)
                     .holiday(NEW_YEARS_DAY,
                             MARTIN_LUTHER_KING_JR_DAY,
@@ -49,7 +49,9 @@ public class DumpUnitedStatesHolidays {
                             LABOR_DAY,
                             VETERANS_DAY,
                             THANKS_GIVING_DAY,
-                            CHRISTMAS_DAY)).getHolidaysBetween️(start, end)) {
+                            CHRISTMAS_DAY)
+                    .build()
+                    .getHolidaysBetween️(start, end)) {
                 final String line = String.format("%s,%s\n", holiday.date.format(dateTimeFormatter), holiday.name);
                 System.out.print(line);
                 utf8.write(line);

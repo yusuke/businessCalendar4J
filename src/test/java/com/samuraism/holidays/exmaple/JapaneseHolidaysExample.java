@@ -24,7 +24,7 @@ import java.util.Optional;
 
 public class JapaneseHolidaysExample {
     public static void main(String[] args) {
-        JapaneseHolidays holidays = JapaneseHolidays.getInstance(conf -> conf.locale(Locale.ENGLISH));
+        JapaneseHolidays holidays = JapaneseHolidays.newBuilder().locale(Locale.ENGLISH).build();
 
         // prints true, because it's New Year's Day
         System.out.println("Is Jan 1, 2021 a holiday? "
@@ -44,12 +44,13 @@ public class JapaneseHolidaysExample {
                 .forEach(e -> System.out.println(e.date + ": " + e.name));
 
         // Sets custom holidays
-        holidays = JapaneseHolidays.getInstance(conf -> conf
+        holidays = JapaneseHolidays.newBuilder()
                 .locale(Locale.ENGLISH)
                 .holiday(LocalDate.of(1995, 5, 23), "Java public debut")
                 .holiday(JapaneseHolidays.CLOSED_ON_SATURDAYS_AND_SUNDAYS)
                 // ロジックベーのカスタム祝休日を設定。当該日が祝日ならば名称を、そうでなければnullを返す関数を指定する
-                .holiday(e -> e.getMonthValue() == 5 && e.getDayOfMonth() == 19 ? "James Gosling's birthday" : null));
+                .holiday(e -> e.getMonthValue() == 5 && e.getDayOfMonth() == 19 ? "James Gosling's birthday" : null)
+                .build();
 
         // Gets the last business day in January 2021
         System.out.println("Last business day in January 2021: "

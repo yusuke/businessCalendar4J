@@ -22,12 +22,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 
-public final class HolidayConfiguration {
-    final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
-    final HolidayMap customHolidayMap = new HolidayMap();
+public abstract class HolidaysBuilder<E extends Holidays> {
+    List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
+    HolidayMap customHolidayMap = new HolidayMap();
     Locale locale = Locale.getDefault();
 
-    public final HolidayConfiguration locale(Locale locale) {
+    public final HolidaysBuilder<E> locale(Locale locale) {
         this.locale = locale;
         return this;
     }
@@ -39,7 +39,7 @@ public final class HolidayConfiguration {
      * @return This instance
      */
     @SafeVarargs
-    public final HolidayConfiguration holiday(Function<LocalDate, String>... logics) {
+    public final HolidaysBuilder<E> holiday(Function<LocalDate, String>... logics) {
         Collections.addAll(holidayLogics, logics);
         return this;
     }
@@ -51,8 +51,10 @@ public final class HolidayConfiguration {
      * @param name name
      * @return This instance
      */
-    public HolidayConfiguration holiday(LocalDate date, String name) {
+    public HolidaysBuilder<E> holiday(LocalDate date, String name) {
         customHolidayMap.addHoliday(date, name);
         return this;
     }
+
+    public abstract E build();
 }

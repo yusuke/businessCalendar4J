@@ -22,15 +22,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 
-public final class 祝休日設定 {
+public final class 日本の祝休日Builder {
     final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
     final HolidayMap customHolidayMap = new HolidayMap();
     Locale locale = Locale.getDefault();
 
-    祝休日設定() {
+    日本の祝休日Builder() {
     }
 
-    public final 祝休日設定 locale(Locale locale) {
+    public final 日本の祝休日Builder locale(Locale locale) {
         this.locale = locale;
         return this;
     }
@@ -42,7 +42,7 @@ public final class 祝休日設定 {
      * @return このインスタンス
      */
     @SafeVarargs
-    public final 祝休日設定 祝休日(Function<LocalDate, String>... logics) {
+    public final 日本の祝休日Builder 祝休日(Function<LocalDate, String>... logics) {
         Collections.addAll(holidayLogics, logics);
         return this;
     }
@@ -54,8 +54,16 @@ public final class 祝休日設定 {
      * @param 名称 名称
      * @return このインスタンス
      */
-    public 祝休日設定 祝休日(LocalDate 日付, String 名称) {
+    public 日本の祝休日Builder 祝休日(LocalDate 日付, String 名称) {
         customHolidayMap.addHoliday(日付, 名称);
         return this;
+    }
+
+    public 日本の祝休日 build() {
+        final HolidaysBuilder<JapaneseHolidays> builder = JapaneseHolidays.newBuilder();
+        builder.locale(this.locale);
+        builder.holidayLogics = this.holidayLogics;
+        builder.customHolidayMap = this.customHolidayMap;
+        return new 日本の祝休日(builder.build());
     }
 }

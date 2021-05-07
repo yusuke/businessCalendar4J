@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 class UnitedStatesHolidaysTest {
-    final UnitedStatesHolidays holidays = UnitedStatesHolidays.getInstance(conf -> conf.locale(Locale.ENGLISH)
+    final UnitedStatesHolidays holidays = UnitedStatesHolidays.newBuilder().locale(Locale.ENGLISH)
             .holiday(
                     NEW_YEARS_DAY,
                     MARTIN_LUTHER_KING_JR_DAY,
@@ -24,7 +24,8 @@ class UnitedStatesHolidaysTest {
                     VETERANS_DAY,
                     THANKS_GIVING_DAY,
                     CHRISTMAS_DAY
-            ));
+            )
+            .build();
 
     @Test
     void newYearsDay() {

@@ -18,7 +18,6 @@ package com.samuraism.holidays;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -46,7 +45,7 @@ public class 日本の祝休日 {
      */
     public static final Function<LocalDate, String> 土日休業 = JapaneseHolidays.CLOSED_ON_SATURDAYS_AND_SUNDAYS;
 
-    private 日本の祝休日 (JapaneseHolidays holidays) {
+    日本の祝休日(JapaneseHolidays holidays) {
         this.holidays = holidays;
     }
 
@@ -54,17 +53,8 @@ public class 日本の祝休日 {
         return new 日本の祝休日(JapaneseHolidays.getInstance());
     }
 
-    public static 日本の祝休日 getInstance(Consumer<祝休日設定> func) {
-        final 祝休日設定 conf = new 祝休日設定();
-        func.accept(conf);
-        return new 日本の祝休日(JapaneseHolidays.getInstance(e->{
-            e.locale(conf.locale);
-            conf.holidayLogics.forEach(e::holiday);
-            conf.customHolidayMap.holidayMap.keySet().forEach(
-                    date->
-                    e.holiday(date,conf.customHolidayMap.holidayMap.get(date) )
-            );
-        }));
+    public static 日本の祝休日Builder newBuilder(){
+        return new 日本の祝休日Builder();
     }
 
     /**
