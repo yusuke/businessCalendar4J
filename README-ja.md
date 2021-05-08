@@ -24,14 +24,14 @@ Maven Central Repositoryにリリースされているため、以下のよう�
     <dependency>
         <groupId>com.samuraism</groupId>
         <artifactId>holidays</artifactId>
-        <version>1.6</version>
+        <version>1.7</version>
     </dependency>
 </dependencies>
 ```
 ### Gradleの場合
 ```text
 dependencies {
-    compile 'com.samuraism:holidays:1.6'
+    compile 'com.samuraism:holidays:1.7'
 }
 ```
 ## 利用方法

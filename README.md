@@ -21,14 +21,14 @@ Add a dependency declaration to pom.xml, or build.gradle as follows:
     <dependency>
         <groupId>com.samuraism</groupId>
         <artifactId>holidays</artifactId>
-        <version>1.6</version>
+        <version>1.7</version>
     </dependency>
 </dependencies>
 ```
 ### Gradle
 ```text
 dependencies {
-    compile 'com.samuraism:holidays:1.6'
+    compile 'com.samuraism:holidays:1.7'
 }
 ```
 ## How to use
