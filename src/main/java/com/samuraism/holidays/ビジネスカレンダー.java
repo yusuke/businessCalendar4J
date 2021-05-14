@@ -19,7 +19,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class ビジネスカレンダー {
     private final BusinessCalendar businessCalendar;
@@ -103,9 +102,8 @@ public class ビジネスカレンダー {
      * @param date 日付
      * @return 祝日・休日
      */
-    public Optional<祝休日> get祝休日(LocalDate date) {
-        final Optional<Holiday> holiday = businessCalendar.getHoliday(date);
-        return holiday.map(祝休日::new);
+    public Optional<Holiday> get祝休日(LocalDate date) {
+        return businessCalendar.getHoliday(date);
     }
 
     /**
@@ -155,8 +153,8 @@ public class ビジネスカレンダー {
      * @param date 指定日
      * @return 指定した日以前の祝休日
      */
-    public 祝休日 最後の祝休日(LocalDate date) {
-        return new 祝休日(businessCalendar.lastHoliday(date));
+    public Holiday 最後の祝休日(LocalDate date) {
+        return businessCalendar.lastHoliday(date);
     }
 
     /**
@@ -165,8 +163,8 @@ public class ビジネスカレンダー {
      * @return 今日以前の祝休日
      * @since 1.4
      */
-    public 祝休日 最後の祝休日() {
-        return new 祝休日(businessCalendar.lastHoliday());
+    public Holiday 最後の祝休日() {
+        return businessCalendar.lastHoliday();
     }
 
     /**
@@ -175,8 +173,8 @@ public class ビジネスカレンダー {
      * @param date 指定日
      * @return 指定した日以前の祝休日
      */
-    public 祝休日 最初の祝休日(LocalDate date) {
-        return new 祝休日(businessCalendar.firstHoliday(date));
+    public Holiday 最初の祝休日(LocalDate date) {
+        return businessCalendar.firstHoliday(date);
     }
 
     /**
@@ -185,8 +183,8 @@ public class ビジネスカレンダー {
      * @return 今日以降の祝休日
      * @since 1.4
      */
-    public 祝休日 最初の祝休日() {
-        return new 祝休日(businessCalendar.firstHoliday());
+    public Holiday 最初の祝休日() {
+        return businessCalendar.firstHoliday();
     }
 
     /**
@@ -196,8 +194,8 @@ public class ビジネスカレンダー {
      * @param 終了日 指定終了日。この日も含む。
      * @return 指定期間内の祝休日のリスト。
      */
-    public List<祝休日> get指定期間内の祝休日(LocalDate 開始日, LocalDate 終了日) {
-        return businessCalendar.getHolidaysBetween️(開始日, 終了日).stream().map(祝休日::new).collect(Collectors.toList());
+    public List<Holiday> get指定期間内の祝休日(LocalDate 開始日, LocalDate 終了日) {
+        return businessCalendar.getHolidaysBetween️(開始日, 終了日);
     }
 
     /**
