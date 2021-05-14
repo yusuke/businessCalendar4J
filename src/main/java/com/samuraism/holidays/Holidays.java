@@ -30,14 +30,33 @@ public class Holidays {
     protected final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
     protected final BusinessHours businessHours;
 
-    protected final ResourceBundle resource;
+    final ResourceBundle resource;
 
-    Holidays(String baseName, HolidaysBuilder<? extends Holidays> conf) {
-        this.resource = ResourceBundle.getBundle(baseName, conf.locale);
+    Holidays(HolidaysBuilder conf) {
+        this.resource = ResourceBundle.getBundle("holidays", conf.locale);
         holidayLogics.addAll(conf.holidayLogics);
         this.holidayLogics.add(conf.customHolidayMap);
         this.businessHours = conf.getBusinessHours();
     }
+    public static HolidaysBuilder newBuilder(){
+        return new HolidaysBuilder();
+    }
+
+    /**
+     * Fixed algorithm to close on Saturdays and Sundays
+     *
+     * @since 1.5
+     */
+    public static final Function<LocalDate, String> CLOSED_ON_SATURDAYS_AND_SUNDAYS = localDate -> {
+        switch (localDate.getDayOfWeek()) {
+            case SATURDAY:
+                return "japanese.土曜日";
+            case SUNDAY:
+                return "japanese.日曜日";
+            default:
+                return null;
+        }
+    };
 
     /**
      * Test if the specified date is a holiday
@@ -213,7 +232,7 @@ public class Holidays {
         return first.map(s -> new Holiday(date, toHolidayString(s)));
     }
 
-    Pattern p = Pattern.compile("\\$\\{([a-zA-Z]+)}");
+    Pattern p = Pattern.compile("\\$\\{([a-z.A-Z]+)}");
 
     private String toHolidayString(String key) {
         if (resource.containsKey(key)) {

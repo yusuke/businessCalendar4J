@@ -16,7 +16,8 @@
 package com.samuraism.holidays.exmaple;
 
 import com.samuraism.holidays.Holiday;
-import com.samuraism.holidays.JapaneseHolidays;
+import com.samuraism.holidays.Holidays;
+import com.samuraism.holidays.Japan;
 
 import java.time.LocalDate;
 import java.util.Locale;
@@ -24,7 +25,7 @@ import java.util.Optional;
 
 public class JapaneseHolidaysExample {
     public static void main(String[] args) {
-        JapaneseHolidays holidays = JapaneseHolidays.newBuilder().locale(Locale.ENGLISH).build();
+        Holidays holidays = Holidays.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
 
         // prints true, because it's New Year's Day
         System.out.println("Is Jan 1, 2021 a holiday? "
@@ -44,10 +45,11 @@ public class JapaneseHolidaysExample {
                 .forEach(e -> System.out.println(e.date + ": " + e.name));
 
         // Sets custom holidays
-        holidays = JapaneseHolidays.newBuilder()
+        holidays = Holidays.newBuilder()
                 .locale(Locale.ENGLISH)
+                .holiday(Japan.PUBLIC_HOLIDAYS)
                 .holiday(LocalDate.of(1995, 5, 23), "Java public debut")
-                .holiday(JapaneseHolidays.CLOSED_ON_SATURDAYS_AND_SUNDAYS)
+                .holiday(Holidays.CLOSED_ON_SATURDAYS_AND_SUNDAYS)
                 // ロジックベーのカスタム祝休日を設定。当該日が祝日ならば名称を、そうでなければnullを返す関数を指定する
                 .holiday(e -> e.getMonthValue() == 5 && e.getDayOfMonth() == 19 ? "James Gosling's birthday" : null)
                 .build();

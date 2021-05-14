@@ -28,18 +28,18 @@ public class LocalizedHolidayName {
     void localized() {
         final boolean isLocaleJapanese = Locale.getDefault().getLanguage().equals("ja");
         assertEquals("Constitution Memorial Day",
-                JapaneseHolidays.newBuilder().locale(Locale.ENGLISH).build().getHoliday(LocalDate.of(2040, 5, 3)).get().name);
+                Holidays.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build().getHoliday(LocalDate.of(2040, 5, 3)).get().name);
         assertEquals(isLocaleJapanese ? "憲法記念日" : "Constitution Memorial Day",
-                JapaneseHolidays.newBuilder().locale(Locale.FRANCE).build().getHoliday(LocalDate.of(2040, 5, 3)).get().name);
+                Holidays.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.FRANCE).build().getHoliday(LocalDate.of(2040, 5, 3)).get().name);
         assertEquals("憲法記念日",
-                JapaneseHolidays.newBuilder().locale(Locale.JAPANESE).build().getHoliday(LocalDate.of(2040, 5, 3)).get().name);
+                Holidays.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE).build().getHoliday(LocalDate.of(2040, 5, 3)).get().name);
 
 
         assertEquals("Constitution Memorial Day",
-                JapaneseHolidays.newBuilder().locale(Locale.ENGLISH).build().getHoliday(LocalDate.of(2021, 5, 3)).get().name);
+                Holidays.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build().getHoliday(LocalDate.of(2021, 5, 3)).get().name);
         assertEquals(isLocaleJapanese ? "憲法記念日" : "Constitution Memorial Day",
-                JapaneseHolidays.newBuilder().locale(Locale.FRANCE).build().getHoliday(LocalDate.of(2021, 5, 3)).get().name);
+                Holidays.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.FRANCE).build().getHoliday(LocalDate.of(2021, 5, 3)).get().name);
         assertEquals("憲法記念日",
-                JapaneseHolidays.newBuilder().locale(Locale.JAPANESE).build().getHoliday(LocalDate.of(2021, 5, 3)).get().name);
+                Holidays.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE).build().getHoliday(LocalDate.of(2021, 5, 3)).get().name);
     }
 }

@@ -22,14 +22,14 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class 日本の祝休日 {
-    private final JapaneseHolidays holidays;
+    private final Holidays holidays;
 
     /**
      * 正月三が日を休業とするアルゴリズム
      *
      * @since 1.5
      */
-    public static final Function<LocalDate, String> 正月三が日休業 = JapaneseHolidays.CLOSED_ON_NEW_YEARS_HOLIDAYS;
+    public static final Function<LocalDate, String> 正月三が日休業 = Japan.CLOSED_ON_NEW_YEARS_HOLIDAYS;
 
 
     /**
@@ -37,20 +37,20 @@ public class 日本の祝休日 {
      *
      * @since 1.5
      */
-    public static final Function<LocalDate, String> 大晦日休業 = JapaneseHolidays.CLOSED_ON_NEW_YEARS_EVE;
+    public static final Function<LocalDate, String> 大晦日休業 = Japan.CLOSED_ON_NEW_YEARS_EVE;
 
     /**
      * 大晦日を休業とするアルゴリズム
      * @since 1.5
      */
-    public static final Function<LocalDate, String> 土日休業 = JapaneseHolidays.CLOSED_ON_SATURDAYS_AND_SUNDAYS;
+    public static final Function<LocalDate, String> 土日休業 = Holidays.CLOSED_ON_SATURDAYS_AND_SUNDAYS;
 
-    日本の祝休日(JapaneseHolidays holidays) {
+    日本の祝休日(Holidays holidays) {
         this.holidays = holidays;
     }
 
     public static 日本の祝休日 getInstance() {
-        return new 日本の祝休日(JapaneseHolidays.getInstance());
+        return new 日本の祝休日(Holidays.newBuilder().holiday().build());
     }
 
     public static 日本の祝休日Builder newBuilder(){
@@ -207,7 +207,7 @@ public class 日本の祝休日 {
      * @since 1.4
      */
     public LocalDate get内閣府公表祝休日初日(){
-        return  holidays.getCabinetOfficialHolidayDataFirstDay();
+        return Japan.getCabinetOfficialHolidayDataFirstDay();
     }
 
     /**
@@ -217,6 +217,6 @@ public class 日本の祝休日 {
      * @since 1.4
      */
     public LocalDate get内閣府公表祝休日最終日(){
-        return holidays.getCabinetOfficialHolidayDataLastDay();
+        return Japan.getCabinetOfficialHolidayDataLastDay();
     }
 }

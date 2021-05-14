@@ -9,12 +9,12 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.samuraism.holidays.UnitedStatesHolidays.*;
+import static com.samuraism.holidays.UnitedStates.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("OptionalGetWithoutIsPresent")
-class UnitedStatesHolidaysTest {
-    final UnitedStatesHolidays holidays = UnitedStatesHolidays.newBuilder().locale(Locale.ENGLISH)
+class UnitedStatesTest {
+    final Holidays holidays = Holidays.newBuilder().locale(Locale.ENGLISH)
             .holiday(
                     NEW_YEARS_DAY,
                     MARTIN_LUTHER_KING_JR_DAY,

@@ -26,10 +26,11 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SuppressWarnings("OptionalGetWithoutIsPresent")
+@SuppressWarnings({"OptionalGetWithoutIsPresent", "AccessStaticViaInstance"})
 public class 日本の祝休日アルゴリズムTest {
     static TreeMap<LocalDate, String> testCases;
-    final static JapaneseHolidays holidays = JapaneseHolidays.newBuilder().locale(Locale.JAPANESE).build();
+    final static Holidays holidays = Holidays.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE).build();
+    static Japan j = (Japan) Japan.PUBLIC_HOLIDAYS;
 
     static TreeMap<LocalDate, String> 祝休日Map待避;
 
@@ -38,18 +39,17 @@ public class 日本の祝休日アルゴリズムTest {
         // テスト用のデータセット
         // 内閣府のデータにはない2022年以降の未来の春分の日、秋分の日、スポーツの日を含む
         //noinspection ConstantConditions
-        testCases = CSVHolidays.load(日本の祝休日アルゴリズムTest.class.getResourceAsStream("/syukujitsu-testcase.csv"),
-                ResourceBundle.getBundle("japanese/holidays", Locale.JAPANESE));
-        祝休日Map待避 = holidays.csv.holidayMap;
+        testCases = CSVHolidays.load(日本の祝休日アルゴリズムTest.class.getResourceAsStream("/syukujitsu-testcase.csv"));
+        祝休日Map待避 = j.csv.holidayMap;
         // 1970年1月1日元日(特にこの日付に意味は無い)まで残して、以降はアルゴリズムで答え合わせする
-        holidays.csv.holidayMap = new TreeMap<>(祝休日Map待避.subMap(LocalDate.of(1955, 1, 1), LocalDate.of(1970, 1, 1)));
+        j.csv.holidayMap = new TreeMap<>(祝休日Map待避.subMap(LocalDate.of(1955, 1, 1), LocalDate.of(1970, 1, 1)));
     }
 
 
     @AfterAll
     static void afterAll() {
         // 他のテストに影響を与えないよう、戻しておく
-        holidays.csv.holidayMap = 祝休日Map待避;
+        j.csv.holidayMap = 祝休日Map待避;
     }
 
     @Test
@@ -200,7 +200,7 @@ public class 日本の祝休日アルゴリズムTest {
 
     @Test
     void カスタム休日を指定しても休日算出が正しい() {
-        Holidays holidays = JapaneseHolidays.newBuilder().locale(Locale.JAPANESE)
+        Holidays holidays = Holidays.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE)
                 .holiday(LocalDate.of(2022, 1, 2), "休みたいから休む")
                 .holiday(LocalDate.of(2007, 2, 12), "休みたいから休む")
                 .build();

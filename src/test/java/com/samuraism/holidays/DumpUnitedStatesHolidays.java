@@ -24,7 +24,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-import static com.samuraism.holidays.UnitedStatesHolidays.*;
+import static com.samuraism.holidays.UnitedStates.*;
 
 /**
  * Dump United States holidays
@@ -40,7 +40,7 @@ public class DumpUnitedStatesHolidays {
         try (final BufferedWriter utf8 = Files.newBufferedWriter(Paths.get(utf8FileName), StandardCharsets.UTF_8)) {
             final String header = "date,name\n";
             utf8.write(header);
-            for (Holiday holiday : UnitedStatesHolidays.newBuilder()
+            for (Holiday holiday : Holidays.newBuilder()
                     .locale(Locale.ENGLISH)
                     .holiday(NEW_YEARS_DAY,
                             MARTIN_LUTHER_KING_JR_DAY,

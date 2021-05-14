@@ -15,21 +15,16 @@
  */
 package com.samuraism.holidays;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ResourceBundle;
 import java.util.function.Function;
 
 final class JapaneseHolidayAlgorithm implements Function<LocalDate, String> {
-    private final ResourceBundle resource;
     private CSVHolidays csv;
 
-    JapaneseHolidayAlgorithm(@NotNull ResourceBundle resource, CSVHolidays csv){
-        this.resource = resource;
+    JapaneseHolidayAlgorithm(CSVHolidays csv){
         this.csv = csv;
     }
 
@@ -40,7 +35,7 @@ final class JapaneseHolidayAlgorithm implements Function<LocalDate, String> {
         final int day = e.getDayOfMonth();
         if(month == 1 && day == 1){
             // 1955年1月1日以前を指定して以前の祝休日()を呼び出しても無限ループしないよう、元日だけは決め打ちで返す
-            return resource.getString("元日");
+            return "japanese.元日";
         }
 
         if (csv.holidayMap.lastKey().isAfter(e)) {
@@ -54,15 +49,15 @@ final class JapaneseHolidayAlgorithm implements Function<LocalDate, String> {
                 break;
             case 1:
                 if (day == e.with(TemporalAdjusters.dayOfWeekInMonth(2, DayOfWeek.MONDAY)).getDayOfMonth()) {
-                    return resource.getString("成人の日");
+                    return "japanese.成人の日";
                 }
                 break;
             case 2:
                 if (day == 11) {
-                    return resource.getString("建国記念の日");
+                    return "japanese.建国記念の日";
                 }
                 if (day == 23) {
-                    return resource.getString("天皇誕生日");
+                    return "japanese.天皇誕生日";
                 }
                 break;
             case 3:
@@ -75,39 +70,39 @@ final class JapaneseHolidayAlgorithm implements Function<LocalDate, String> {
                                 return null;
                             }
                         }
-                        return resource.getString("春分の日");
+                        return "japanese.春分の日";
                     case 21:
                         for (int 二十一日year : 二十一日が春分の日の年) {
                             if (year == 二十一日year) {
-                                return resource.getString("春分の日");
+                                return "japanese.春分の日";
                             }
                         }
                 }
                 break;
             case 4:
                 if (day == 29) {
-                    return resource.getString("昭和の日");
+                    return "japanese.昭和の日";
                 }
                 break;
             case 5:
                 if (day == 3) {
-                    return resource.getString("憲法記念日");
+                    return "japanese.憲法記念日";
                 }
                 if (day == 4) {
-                    return resource.getString("みどりの日");
+                    return "japanese.みどりの日";
                 }
                 if (day == 5) {
-                    return resource.getString("こどもの日");
+                    return "japanese.こどもの日";
                 }
                 break;
             case 7:
                 if (day == e.with(TemporalAdjusters.dayOfWeekInMonth(3, DayOfWeek.MONDAY)).getDayOfMonth()) {
-                    return resource.getString("海の日");
+                    return "japanese.海の日";
                 }
                 break;
             case 8:
                 if (day == 11) {
-                    return resource.getString("山の日");
+                    return "japanese.山の日";
                 }
                 break;
             case 9:
@@ -115,7 +110,7 @@ final class JapaneseHolidayAlgorithm implements Function<LocalDate, String> {
 
                 final int 敬老の日 = e.with(TemporalAdjusters.dayOfWeekInMonth(3, DayOfWeek.MONDAY)).getDayOfMonth();
                 if (day == 敬老の日) {
-                    return resource.getString("敬老の日");
+                    return "japanese.敬老の日";
                 }
                 int 秋分の日 = 23;
                 for (int 二十二日year : 二十二日が秋分の日の年) {
@@ -130,23 +125,23 @@ final class JapaneseHolidayAlgorithm implements Function<LocalDate, String> {
                 //「秋分の日」は「秋分日」が9月22日か23日のいずれかで移動します。
                 // このことにより数年に一度、不定期に現れる休日です。
                 if (((day - 1) == 敬老の日) && ((day + 1) == 秋分の日)) {
-                    return resource.getString("休日");
+                    return "japanese.休日";
                 }
                 if (day == 秋分の日) {
-                    return resource.getString("秋分の日");
+                    return "japanese.秋分の日";
                 }
                 break;
             case 10:
                 if (day == e.with(TemporalAdjusters.dayOfWeekInMonth(2, DayOfWeek.MONDAY)).getDayOfMonth()) {
-                    return resource.getString("スポーツの日");
+                    return "japanese.スポーツの日";
                 }
                 break;
             case 11:
                 if (day == 3) {
-                    return resource.getString("文化の日");
+                    return "japanese.文化の日";
                 }
                 if (day == 23) {
-                    return resource.getString("勤労感謝の日");
+                    return "japanese.勤労感謝の日";
                 }
                 break;
         }
@@ -157,11 +152,11 @@ final class JapaneseHolidayAlgorithm implements Function<LocalDate, String> {
         while (test.getDayOfWeek() != DayOfWeek.SATURDAY) {
             // is祝休日で調べるとカスタム祝休日も含めて振替休日を算出してしまうので注意
             final String 導出祝休日 = this.apply(test);
-            if (!csv.holidayMap.containsKey(test) && (導出祝休日 == null || resource.getString("休日").equals(導出祝休日))) {
+            if (!csv.holidayMap.containsKey(test) && (導出祝休日 == null || "japanese.休日".equals(導出祝休日))) {
                 break;
             }
             if (test.getDayOfWeek() == DayOfWeek.SUNDAY) {
-                return resource.getString("休日");
+                return "japanese.休日";
             }
             test = test.minus(1, ChronoUnit.DAYS);
         }

@@ -21,14 +21,14 @@ Add a dependency declaration to pom.xml, or build.gradle as follows:
     <dependency>
         <groupId>com.samuraism</groupId>
         <artifactId>holidays</artifactId>
-        <version>1.7</version>
+        <version>1.8</version>
     </dependency>
 </dependencies>
 ```
 ### Gradle
 ```text
 dependencies {
-    compile 'com.samuraism:holidays:1.7'
+    compile 'com.samuraism:holidays:1.8'
 }
 ```
 ## How to use
@@ -36,24 +36,16 @@ See [JapaneseHolidaysExample](https://github.com/yusuke/holidays/blob/main/src/t
 
 ```java
 import com.samuraism.holidays.Holiday;
-import com.samuraism.holidays.UnitedStatesHolidays;
+import com.samuraism.holidays.Holidays;
+import com.samuraism.holidays.UnitedStates;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static com.samuraism.holidays.UnitedStatesHolidays.*;
-
 public class UnitedStatesHolidaysExample {
     public static void main(String[] args) {
-        UnitedStatesHolidays holidays = UnitedStatesHolidays.newBuilder()
-                .holiday(NEW_YEARS_DAY,
-                        MARTIN_LUTHER_KING_JR_DAY,
-                        MEMORIAL_DAY,
-                        INDEPENDENCE_DAY,
-                        LABOR_DAY,
-                        VETERANS_DAY,
-                        THANKS_GIVING_DAY,
-                        CHRISTMAS_DAY)
+        Holidays holidays = Holidays.newBuilder()
+                .holiday(UnitedStates.PUBLIC_HOLIDAYS)
                 .build();
 
         // prints true, because it's New Year's Day
@@ -73,16 +65,16 @@ public class UnitedStatesHolidaysExample {
                 .forEach(e -> System.out.println(e.date + ": " + e.name));
 
         // sets a fixed custom Holiday
-        UnitedStatesHolidays customHolidays = UnitedStatesHolidays.newBuilder()
-                .holiday(NEW_YEARS_DAY,
-                        MARTIN_LUTHER_KING_JR_DAY,
-                        MEMORIAL_DAY,
-                        INDEPENDENCE_DAY,
-                        LABOR_DAY,
-                        VETERANS_DAY,
-                        THANKS_GIVING_DAY,
-                        CHRISTMAS_DAY,
-                        CLOSED_ON_SATURDAYS_AND_SUNDAYS,
+        Holidays customHolidays = Holidays.newBuilder()
+                .holiday(UnitedStates.NEW_YEARS_DAY,
+                        UnitedStates.MARTIN_LUTHER_KING_JR_DAY,
+                        UnitedStates.MEMORIAL_DAY,
+                        UnitedStates.INDEPENDENCE_DAY,
+                        UnitedStates.LABOR_DAY,
+                        UnitedStates.VETERANS_DAY,
+                        UnitedStates.THANKS_GIVING_DAY,
+                        UnitedStates.CHRISTMAS_DAY,
+                        Holidays.CLOSED_ON_SATURDAYS_AND_SUNDAYS,
                         // Specify logic based custom holidays. returns a string if the day is a holiday
                         e -> e.getMonthValue() == 5 && e.getDayOfMonth() == 19 ? "James Gosling's birthday" : null)
                 .holiday(LocalDate.of(1995, 5, 23), "Java public debut")

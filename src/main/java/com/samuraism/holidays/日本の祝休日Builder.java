@@ -60,7 +60,7 @@ public final class 日本の祝休日Builder {
     }
 
     public 日本の祝休日 build() {
-        final HolidaysBuilder<JapaneseHolidays> builder = JapaneseHolidays.newBuilder();
+        final HolidaysBuilder builder = Holidays.newBuilder();
         builder.locale(this.locale);
         builder.holidayLogics = this.holidayLogics;
         builder.customHolidayMap = this.customHolidayMap;

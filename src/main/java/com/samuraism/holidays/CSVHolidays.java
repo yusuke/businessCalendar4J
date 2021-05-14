@@ -27,12 +27,10 @@ import java.util.*;
 
 class CSVHolidays extends HolidayMap {
     private final String リソースURL;
-    private final ResourceBundle resource;
 
-    CSVHolidays(long ロード間隔, String リソースURL, ResourceBundle resource){
+    CSVHolidays(long ロード間隔, String リソースURL) {
         // リソースURLから読み込む場合
         this.リソースURL = リソースURL;
-        this.resource = resource;
         祝休日情報をロード();
         new Timer(true).schedule(new TimerTask() {
             @Override
@@ -41,6 +39,7 @@ class CSVHolidays extends HolidayMap {
             }
         }, ロード間隔, ロード間隔);
     }
+
     /**
      * 祝日情報を読み込む。
      */
@@ -49,17 +48,17 @@ class CSVHolidays extends HolidayMap {
             final URLConnection con = new URL(リソースURL).openConnection();
             con.setConnectTimeout(30000);
             con.setReadTimeout(5000);
-            holidayMap = load(con.getInputStream(), resource);
+            holidayMap = load(con.getInputStream());
         } catch (IOException ignored) {
             // www8.cao.go.jpの読み込みに失敗している
             try {
-                holidayMap = load(JapaneseHolidays.class.getResourceAsStream("/syukujitsu.csv"), resource);
+                holidayMap = load(Objects.requireNonNull(Japan.class.getResourceAsStream("/syukujitsu.csv")));
             } catch (IOException ignored1) {
             }
         }
     }
 
-    static TreeMap<LocalDate, String> load(InputStream is, ResourceBundle resource) throws IOException {
+    static TreeMap<LocalDate, String> load(InputStream is) throws IOException {
         final TreeMap<LocalDate, String> holidayMap = new TreeMap<>();
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(20000);
         byte[] buf = new byte[1024];
@@ -73,10 +72,7 @@ class CSVHolidays extends HolidayMap {
                 final String[] split = line.split(",");
                 final LocalDate date = LocalDate.parse(split[0], DateTimeFormatter.ofPattern("yyyy/M/d"));
                 String holidayName = split[1].trim();
-                try {
-                    holidayName = resource.getString(split[1].trim());
-                }catch(MissingResourceException ignore){}
-                holidayMap.put(date, holidayName);
+                holidayMap.put(date, "japanese." + holidayName);
             }
         });
         return holidayMap;
