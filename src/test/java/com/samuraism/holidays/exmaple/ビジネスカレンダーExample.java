@@ -23,7 +23,7 @@ import java.util.Optional;
 
 public class ビジネスカレンダーExample {
     public static void main(String[] args) {
-        ビジネスカレンダー calendar = ビジネスカレンダー.getInstance();
+        ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder().祝休日(ビジネスカレンダー.日本の祝休日).build();
 
         // 元日なのでtrueが表示される
         System.out.println("2021年1月1日は祝日？: " 
@@ -44,6 +44,7 @@ public class ビジネスカレンダーExample {
 
         // 固定のカスタム祝休日を設定
         calendar = ビジネスカレンダー.newBuilder()
+                .祝休日(ビジネスカレンダー.日本の祝休日)
                 .祝休日(LocalDate.of(1995, 5, 23), "Java誕生")
                 .祝休日(ビジネスカレンダー.土日休業)
                 // ロジックベーのカスタム祝休日を設定。当該日が祝日ならば名称を、そうでなければnullを返す関数を指定する

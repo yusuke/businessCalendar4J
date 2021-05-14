@@ -30,6 +30,15 @@ public class ビジネスカレンダー {
      */
     public static final Function<LocalDate, String> 正月三が日休業 = Japan.CLOSED_ON_NEW_YEARS_HOLIDAYS;
 
+    /**
+     * 日本の祝休日を算出するアルゴリズム
+     */
+    public static final Function<LocalDate, String> 日本の祝休日 = Japan.PUBLIC_HOLIDAYS;
+
+    /**
+     * アメリカ合衆国の祝休日を算出するアルゴリズム
+     */
+    public static final Function<LocalDate, String>[] アメリカ合衆国の祝休日 = UnitedStates.PUBLIC_HOLIDAYS;
 
     /**
      * 大晦日を休業とするアルゴリズム
@@ -46,10 +55,6 @@ public class ビジネスカレンダー {
 
     ビジネスカレンダー(BusinessCalendar businessCalendar) {
         this.businessCalendar = businessCalendar;
-    }
-
-    public static ビジネスカレンダー getInstance() {
-        return new ビジネスカレンダー(BusinessCalendar.newBuilder().holiday().build());
     }
 
     public static ビジネスカレンダーBuilder newBuilder(){

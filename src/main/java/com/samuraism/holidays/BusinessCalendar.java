@@ -26,11 +26,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class BusinessCalendar {
-    protected final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
-    protected final BusinessHours businessHours;
+public final class BusinessCalendar {
+    private final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
+    private final BusinessHours businessHours;
 
-    final ResourceBundle resource;
+    private final ResourceBundle resource;
 
     BusinessCalendar(BusinessCalendarBuilder conf) {
         this.resource = ResourceBundle.getBundle("holidays", conf.locale);
