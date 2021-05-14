@@ -20,11 +20,10 @@ import java.util.TreeMap;
 import java.util.function.Function;
 
 class HolidayMap implements Function<LocalDate, String> {
-    /* アルゴリズムのテストで空にするので package private */
+    /* intentionally package private for the test purpose  */
     TreeMap<LocalDate, String> holidayMap;
 
     HolidayMap(){
-        // リソースURLから読み込まない場合
         holidayMap = new TreeMap<>();
     }
 

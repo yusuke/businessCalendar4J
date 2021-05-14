@@ -15,6 +15,7 @@
  */
 package com.samuraism.holidays;
 
+import java.nio.charset.Charset;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -41,9 +42,10 @@ public final class Japan implements Function<LocalDate, String> {
 
     private static final long aboutOneMonth = 1000L * 60 * 60 * 24 * 31 + new Random(System.currentTimeMillis()).nextLong() % (1000L * 60 * 60 * 10);
     static final CSVHolidays csv = new CSVHolidays(aboutOneMonth, System.getProperty("SYUKUJITSU_URL",
-            "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"));
+            "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"), "/syukujitsu.csv", 
+            "japanese.", Charset.forName("Shift_JIS"));
 
-    private Japan(){
+    private Japan() {
     }
 
     @Override
@@ -56,7 +58,7 @@ public final class Japan implements Function<LocalDate, String> {
         final int year = e.getYear();
         final int month = e.getMonthValue();
         final int day = e.getDayOfMonth();
-        if(month == 1 && day == 1){
+        if (month == 1 && day == 1) {
             // 1955年1月1日以前を指定して以前の祝休日()を呼び出しても無限ループしないよう、元日だけは決め打ちで返す
             return "japanese.元日";
         }

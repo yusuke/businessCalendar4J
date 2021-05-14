@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,7 +40,8 @@ public class 日本の祝休日アルゴリズムTest {
         // テスト用のデータセット
         // 内閣府のデータにはない2022年以降の未来の春分の日、秋分の日、スポーツの日を含む
         //noinspection ConstantConditions
-        testCases = CSVHolidays.load(日本の祝休日アルゴリズムTest.class.getResourceAsStream("/syukujitsu-testcase.csv"));
+        testCases = CSVHolidays.load(日本の祝休日アルゴリズムTest.class.getResourceAsStream("/syukujitsu-testcase.csv"), 
+                ".japanese", Charset.forName("Shift_JIS"));
         祝休日Map待避 = j.csv.holidayMap;
         // 1970年1月1日元日(特にこの日付に意味は無い)まで残して、以降はアルゴリズムで答え合わせする
         j.csv.holidayMap = new TreeMap<>(祝休日Map待避.subMap(LocalDate.of(1955, 1, 1), LocalDate.of(1970, 1, 1)));
