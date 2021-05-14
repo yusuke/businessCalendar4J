@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 class UnitedStatesTest {
-    final Holidays holidays = Holidays.newBuilder().locale(Locale.ENGLISH)
+    final BusinessCalendar calendar = BusinessCalendar.newBuilder().locale(Locale.ENGLISH)
             .holiday(
                     NEW_YEARS_DAY,
                     MARTIN_LUTHER_KING_JR_DAY,
@@ -29,7 +29,7 @@ class UnitedStatesTest {
 
     @Test
     void newYearsDay() {
-        assertEquals("New Year's Day", holidays.getHoliday(LocalDate.of(2021, 1, 1)).get().name);
+        assertEquals("New Year's Day", calendar.getHoliday(LocalDate.of(2021, 1, 1)).get().name);
     }
 
     @Test
@@ -48,7 +48,7 @@ class UnitedStatesTest {
         for (Integer day : myMap.keySet()) {
             final Integer[] years = myMap.get(day);
             for (Integer year : years) {
-                assertEquals("Martin Luther King Jr. Day", holidays.getHoliday(LocalDate.of(year, 1, day)).get().name);
+                assertEquals("Martin Luther King Jr. Day", calendar.getHoliday(LocalDate.of(year, 1, day)).get().name);
             }
         }
     }
@@ -69,7 +69,7 @@ class UnitedStatesTest {
         for (Integer day : myMap.keySet()) {
             final Integer[] years = myMap.get(day);
             for (Integer year : years) {
-                assertEquals("Memorial Day", holidays.getHoliday(LocalDate.of(year, 5, day)).get().name);
+                assertEquals("Memorial Day", calendar.getHoliday(LocalDate.of(year, 5, day)).get().name);
             }
         }
     }
@@ -82,29 +82,29 @@ class UnitedStatesTest {
             final LocalDate previous = date.minus(1, ChronoUnit.DAYS);
             final LocalDate next = date.plus(1, ChronoUnit.DAYS);
             if (date.getDayOfWeek() == DayOfWeek.SATURDAY) {
-                assertTrue(holidays.isHoliday(previous));
-                assertEquals("Independence Day (observed)", holidays.getHoliday(previous).get().name);
-                assertTrue(holidays.isHoliday(date));
-                assertEquals("Independence Day", holidays.getHoliday(date).get().name);
-                assertFalse(holidays.isHoliday(next));
+                assertTrue(calendar.isHoliday(previous));
+                assertEquals("Independence Day (observed)", calendar.getHoliday(previous).get().name);
+                assertTrue(calendar.isHoliday(date));
+                assertEquals("Independence Day", calendar.getHoliday(date).get().name);
+                assertFalse(calendar.isHoliday(next));
             } else if (date.getDayOfWeek() == DayOfWeek.SUNDAY) {
-                assertFalse(holidays.isHoliday(previous));
-                assertTrue(holidays.isHoliday(date));
-                assertEquals("Independence Day", holidays.getHoliday(date).get().name);
-                assertTrue(holidays.isHoliday(next));
-                assertEquals("Independence Day (observed)", holidays.getHoliday(next).get().name);
+                assertFalse(calendar.isHoliday(previous));
+                assertTrue(calendar.isHoliday(date));
+                assertEquals("Independence Day", calendar.getHoliday(date).get().name);
+                assertTrue(calendar.isHoliday(next));
+                assertEquals("Independence Day (observed)", calendar.getHoliday(next).get().name);
             } else {
-                assertFalse(holidays.isHoliday(previous));
-                assertTrue(holidays.isHoliday(date));
-                assertEquals("Independence Day", holidays.getHoliday(date).get().name);
-                assertFalse(holidays.isHoliday(next));
+                assertFalse(calendar.isHoliday(previous));
+                assertTrue(calendar.isHoliday(date));
+                assertEquals("Independence Day", calendar.getHoliday(date).get().name);
+                assertFalse(calendar.isHoliday(next));
             }
         }
     }
 
     @Test
     void laborDay() {
-        assertEquals("Labor Day", holidays.getHoliday(LocalDate.of(2021, 9, 6)).get().name);
+        assertEquals("Labor Day", calendar.getHoliday(LocalDate.of(2021, 9, 6)).get().name);
     }
 
     @Test
@@ -125,22 +125,22 @@ class UnitedStatesTest {
                 final LocalDate date = LocalDate.of(year, 11, 11);
                 final LocalDate next = LocalDate.of(year, 11, 12);
                 if (day.equals(10)) {
-                    assertTrue(holidays.isHoliday(previous), previous.toString());
-                    assertEquals("Veterans Day (observed)", holidays.getHoliday(previous).get().name);
-                    assertTrue(holidays.isHoliday(date), date.toString());
-                    assertEquals("Veterans Day", holidays.getHoliday(date).get().name);
-                    assertFalse(holidays.isHoliday(next));
+                    assertTrue(calendar.isHoliday(previous), previous.toString());
+                    assertEquals("Veterans Day (observed)", calendar.getHoliday(previous).get().name);
+                    assertTrue(calendar.isHoliday(date), date.toString());
+                    assertEquals("Veterans Day", calendar.getHoliday(date).get().name);
+                    assertFalse(calendar.isHoliday(next));
                 } else if (day.equals(11)) {
-                    assertFalse(holidays.isHoliday(previous), previous.toString());
-                    assertTrue(holidays.isHoliday(date), date.toString());
-                    assertEquals("Veterans Day", holidays.getHoliday(date).get().name);
-                    assertFalse(holidays.isHoliday(next), next.toString());
+                    assertFalse(calendar.isHoliday(previous), previous.toString());
+                    assertTrue(calendar.isHoliday(date), date.toString());
+                    assertEquals("Veterans Day", calendar.getHoliday(date).get().name);
+                    assertFalse(calendar.isHoliday(next), next.toString());
                 } else if (day.equals(12)) {
-                    assertFalse(holidays.isHoliday(previous), previous.toString());
-                    assertTrue(holidays.isHoliday(date), date.toString());
-                    assertEquals("Veterans Day", holidays.getHoliday(date).get().name);
-                    assertTrue(holidays.isHoliday(next), next.toString());
-                    assertEquals("Veterans Day (observed)", holidays.getHoliday(next).get().name);
+                    assertFalse(calendar.isHoliday(previous), previous.toString());
+                    assertTrue(calendar.isHoliday(date), date.toString());
+                    assertEquals("Veterans Day", calendar.getHoliday(date).get().name);
+                    assertTrue(calendar.isHoliday(next), next.toString());
+                    assertEquals("Veterans Day (observed)", calendar.getHoliday(next).get().name);
                 }
             }
         }
@@ -162,7 +162,7 @@ class UnitedStatesTest {
         for (Integer day : myMap.keySet()) {
             final Integer[] years = myMap.get(day);
             for (Integer year : years) {
-                assertEquals("Thanksgiving Day", holidays.getHoliday(LocalDate.of(year, 11, day)).get().name);
+                assertEquals("Thanksgiving Day", calendar.getHoliday(LocalDate.of(year, 11, day)).get().name);
             }
         }
     }
@@ -170,7 +170,7 @@ class UnitedStatesTest {
     @Test
     void christmasDay() {
         for (int year = 1; year < 2100; year++) {
-            assertEquals("Christmas Day", holidays.getHoliday(LocalDate.of(year, 12, 24)).get().name);
+            assertEquals("Christmas Day", calendar.getHoliday(LocalDate.of(year, 12, 24)).get().name);
         }
     }
 }

@@ -4,10 +4,10 @@
 
 日本の祝日については内閣府の公開している情報を直接取得して、かつ定期的に更新してるため正確です。内閣府で公開している確定情報の範囲よりも後の日付については現行の法律をベースにしたアルゴリズムと国立天文台の情報を元に休祝日を推定します。
 
-また [HolidayConfiguration](https://github.com/yusuke/holidays/blob/main/src/main/java/com/samuraism/holidays/HolidayConfiguration.java) より固定の日、またはlambda式で柔軟に「土日を祝日扱いにする」、「特定の日を祝休日扱いにする」、などの定義が行えるので事業等の実態に合わせた営業日の導出が行えます。
+また [HolidayConfiguration](https://github.com/yusuke/businessCalendar/blob/main/src/main/java/com/samuraism/businessCalendar/HolidayConfiguration.java) より固定の日、またはlambda式で柔軟に「土日を祝日扱いにする」、「特定の日を祝休日扱いにする」、などの定義が行えるので事業等の実態に合わせた営業日の導出が行えます。
 
 ## ハッシュタグ
-ご意見、ご感想などは [&#35;javaHolidays](https://twitter.com/intent/tweet?text=https://github.com/yusuke/holidays/+%23javaHolidays) を使ってツイートしていただければ幸いです。
+ご意見、ご感想などは [&#35;javaHolidays](https://twitter.com/intent/tweet?text=https://github.com/yusuke/businessCalendar/+%23javaHolidays) を使ってツイートしていただければ幸いです。
 
 [![@HolidaysJava](https://img.shields.io/twitter/url/https/twitter.com/HolidaysJava.svg?style=social&label=Follow%20%40HolidaysJava)](https://twitter.com/HolidaysJava)
 ## 動作要件
@@ -16,58 +16,58 @@ Java 8以降
 ## 利用方法
 Maven Central Repositoryにリリースされているため、以下のように依存を指定するだけで利用出来るようになります。
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.samuraism/holidays/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.samuraism/holidays)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.samuraism/businessCalendar/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.samuraism/businessCalendar)
 
 ### Mavenの場合
 ```xml
 <dependencies>
     <dependency>
         <groupId>com.samuraism</groupId>
-        <artifactId>holidays</artifactId>
-        <version>1.7</version>
+        <artifactId>businessCalendar4j</artifactId>
+        <version>1.8</version>
     </dependency>
 </dependencies>
 ```
 ### Gradleの場合
 ```text
 dependencies {
-    compile 'com.samuraism:holidays:1.7'
+    compile 'com.samuraism:businessCalendar4j:1.8'
 }
 ```
 ## 利用方法
-日本の祝日については[JapaneseHolidays](https://github.com/yusuke/holidays/blob/main/src/main/java/com/samuraism/holidays/JapaneseHolidays.java) の他、日本語のAPIである [日本の祝休日](https://github.com/yusuke/holidays/blob/main/src/main/java/com/samuraism/holidays/日本の祝休日.java) もあります。
+日本の祝日については[JapaneseHolidays](https://github.com/yusuke/businessCalendar4j/blob/main/src/main/java/com/samuraism/businessCalendar/JapaneseHolidays.java) の他、日本語のAPIである [日本の祝休日](https://github.com/yusuke/businessCalendar/blob/main/src/main/java/com/samuraism/businessCalendar/日本の祝休日.java) もあります。
 
-サンプルコードは日本の祝日の処理方法については [JapaneseHolidaysExample.java (英語語API)](https://github.com/yusuke/holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/JapaneseHolidaysExample.java),  [日本の祝休日Example.java (日本語API)](https://github.com/yusuke/holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/日本の祝休日Example.java) を、アメリカ合衆国の祝日の処理方法については [UnitedStatesHolidaysExample](https://github.com/yusuke/holidays/blob/main/src/test/java/com/samuraism/holidays/exmaple/UnitedStatesHolidaysExample.java) をご覧ください。
+サンプルコードは日本の祝日の処理方法については [JapaneseHolidaysExample.java (英語語API)](https://github.com/yusuke/businessCalendar/blob/main/src/test/java/com/samuraism/businessCalendar/exmaple/JapaneseHolidaysExample.java),  [日本の祝休日Example.java (日本語API)](https://github.com/yusuke/businessCalendar/blob/main/src/test/java/com/samuraism/businessCalendar/exmaple/日本の祝休日Example.java) を、アメリカ合衆国の祝日の処理方法については [UnitedStatesHolidaysExample](https://github.com/yusuke/businessCalendar/blob/main/src/test/java/com/samuraism/businessCalendar/exmaple/UnitedStatesHolidaysExample.java) をご覧ください。
 ```java
-import com.samuraism.holidays.日本の祝休日;
-import com.samuraism.holidays.祝休日;
+import com.samuraism.businessCalendar.ビジネスカレンダー;
+import com.samuraism.businessCalendar.祝休日;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
 public class JapaneseHolidaysExample {
     public static void main(String[] args) {
-        日本の祝休日 holidays = 日本の祝休日.getInstance();
+        日本の祝休日 businessCalendar = 日本の祝休日.getInstance();
 
         // 元日なのでtrueが表示される
         System.out.println("2021年1月1日は祝日？: "
-                + holidays.is祝休日(LocalDate.of(2021, 1, 1)));
+                + businessCalendar.is祝休日(LocalDate.of(2021, 1, 1)));
         // 元日なのでfalseが表示される
         System.out.println("2021年1月1日は営業日？: "
-                + holidays.is営業日(LocalDate.of(2021, 1, 1)));
+                + businessCalendar.is営業日(LocalDate.of(2021, 1, 1)));
 
         // 成人の日を取得
-        Optional<祝休日> holiday = holidays.get祝休日(LocalDate.of(2021, 1, 11));
+        Optional<祝休日> holiday = businessCalendar.get祝休日(LocalDate.of(2021, 1, 11));
         holiday.ifPresent(e -> System.out.println("2021年1月11日は何の日？: " + e.名称));
 
         System.out.println("2021年5月の祝休日一覧: ");
         // 2021-05-03:憲法記念日、2021-05-04:みどりの日、2021-05-05:こどもの日 を表示
-        holidays.get指定期間内の祝休日(LocalDate.of(2021, 5, 1)
+        businessCalendar.get指定期間内の祝休日(LocalDate.of(2021, 5, 1)
                 , LocalDate.of(2021, 5, 31))
                 .forEach(e -> System.out.println(e.日付 + ": " + e.名称));
 
         // 固定のカスタム祝休日を設定
-        holidays = 日本の祝休日.newBuilder()
+        businessCalendar = 日本の祝休日.newBuilder()
                 .祝休日(LocalDate.of(1995, 5, 23), "Java誕生")
                 .祝休日(日本の祝休日.土日休業)
                 // ロジックベーのカスタム祝休日を設定。当該日が祝日ならば名称を、そうでなければnullを返す関数を指定する
@@ -76,14 +76,14 @@ public class JapaneseHolidaysExample {
 
         // 2021年1月最終営業日を取得→ 1月30日、31日が土日なので1月29日金曜日
         System.out.println("2021年1月最終営業日: "
-                + holidays.最後の営業日(LocalDate.of(2021, 1, 31)));
+                + businessCalendar.最後の営業日(LocalDate.of(2021, 1, 31)));
         // 2020年大晦日以降最初の営業日を取得→ 1月1日は元日、1月2,3日はカスタム祝日(土日)なので1月4日月曜日
         System.out.println("2020年大晦日以降最初の営業日: "
-                + holidays.最初の営業日(LocalDate.of(2020, 12, 31)));
+                + businessCalendar.最初の営業日(LocalDate.of(2020, 12, 31)));
         // 2021年2月22日以降最初の祝日を取得→ 2月23日 天皇誕生日
-        System.out.println(holidays.最初の祝休日(LocalDate.of(2021, 2, 22)));
+        System.out.println(businessCalendar.最初の祝休日(LocalDate.of(2021, 2, 22)));
         // 2021年2月26日以前最初の祝日を取得→ 2月23日 天皇誕生日
-        System.out.println(holidays.最後の祝休日(LocalDate.of(2021, 2, 26)));
+        System.out.println(businessCalendar.最後の祝休日(LocalDate.of(2021, 2, 26)));
     }
 }
 ```
@@ -94,7 +94,7 @@ public class JapaneseHolidaysExample {
 ```java
 public class Example {
     // 土日は非営業日
-    private final 日本の祝休日 holidays = 日本の祝休日.newBuilder()
+    private final 日本の祝休日 calendar = 日本の祝休日.newBuilder()
             .祝休日(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "土曜日" : null)
             .祝休日(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "日曜日" : null)
             .build();
@@ -112,4 +112,4 @@ public class Example {
 # ライセンス
 Apache License Version 2.0
 
-![Java CI with Gradle](https://github.com/yusuke/holidays/workflows/Java%20CI%20with%20Gradle/badge.svg)
+![Java CI with Gradle](https://github.com/yusuke/businessCalendar4j/workflows/Java%20CI%20with%20Gradle/badge.svg)

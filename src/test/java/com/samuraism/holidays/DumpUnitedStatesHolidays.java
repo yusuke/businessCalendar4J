@@ -40,7 +40,7 @@ public class DumpUnitedStatesHolidays {
         try (final BufferedWriter utf8 = Files.newBufferedWriter(Paths.get(utf8FileName), StandardCharsets.UTF_8)) {
             final String header = "date,name\n";
             utf8.write(header);
-            for (Holiday holiday : Holidays.newBuilder()
+            for (Holiday holiday : BusinessCalendar.newBuilder()
                     .locale(Locale.ENGLISH)
                     .holiday(NEW_YEARS_DAY,
                             MARTIN_LUTHER_KING_JR_DAY,

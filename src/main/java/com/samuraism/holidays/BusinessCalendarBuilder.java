@@ -26,13 +26,13 @@ import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class HolidaysBuilder {
+public class BusinessCalendarBuilder {
     List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
     HolidayMap customHolidayMap = new HolidayMap();
     Locale locale = Locale.getDefault();
     List<BusinessHourFrom> businessHourFroms = new ArrayList<>();
 
-    public final HolidaysBuilder locale(Locale locale) {
+    public final BusinessCalendarBuilder locale(Locale locale) {
         this.locale = locale;
         return this;
     }
@@ -44,7 +44,7 @@ public class HolidaysBuilder {
      * @return This instance
      */
     @SafeVarargs
-    public final HolidaysBuilder holiday(Function<LocalDate, String>... logics) {
+    public final BusinessCalendarBuilder holiday(Function<LocalDate, String>... logics) {
         Collections.addAll(holidayLogics, logics);
         return this;
     }
@@ -56,13 +56,13 @@ public class HolidaysBuilder {
      * @param name name
      * @return This instance
      */
-    public HolidaysBuilder holiday(LocalDate date, String name) {
+    public BusinessCalendarBuilder holiday(LocalDate date, String name) {
         customHolidayMap.addHoliday(date, name);
         return this;
     }
 
-    public Holidays build(){
-        return new Holidays(this);
+    public BusinessCalendar build(){
+        return new BusinessCalendar(this);
     }
 
     public BusinessHourFrom businessHourFrom(int hour) {
@@ -88,14 +88,14 @@ public class HolidaysBuilder {
         };
     }
 
-    class BusinessHourFrom {
+    static class BusinessHourFrom {
         int fromHour;
         int fromMinutes;
         int toHour;
         int toMinutes;
-        HolidaysBuilder builder;
+        BusinessCalendarBuilder builder;
 
-        BusinessHourFrom(int fromHour, int fromMinutes, HolidaysBuilder builder) {
+        BusinessHourFrom(int fromHour, int fromMinutes, BusinessCalendarBuilder builder) {
             checkParameter(0 <= fromHour, "value should be greater than or equals to 0, provided: " + fromHour);
             checkParameter(fromHour <= 24, "value should be less than or equals to 24, provided: " + fromHour);
             checkParameter(0 <= fromMinutes, "value should be greater than or equals to 0, provided: " + fromMinutes);
@@ -105,11 +105,11 @@ public class HolidaysBuilder {
             this.builder = builder;
         }
 
-        HolidaysBuilder to(int hour) {
+        BusinessCalendarBuilder to(int hour) {
             return to(hour, 0);
         }
 
-        HolidaysBuilder to(int hour, int minutes) {
+        BusinessCalendarBuilder to(int hour, int minutes) {
             checkParameter(0 <= hour, "value should be greater than or equals to 0, provided: " + hour);
             checkParameter(hour < 24, "value should be less than 24, provided: " + hour);
             checkParameter(0 <= minutes, "value should be greater than or equals to 0, provided: " + minutes);

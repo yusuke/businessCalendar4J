@@ -26,20 +26,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class Holidays {
+public class BusinessCalendar {
     protected final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
     protected final BusinessHours businessHours;
 
     final ResourceBundle resource;
 
-    Holidays(HolidaysBuilder conf) {
+    BusinessCalendar(BusinessCalendarBuilder conf) {
         this.resource = ResourceBundle.getBundle("holidays", conf.locale);
         holidayLogics.addAll(conf.holidayLogics);
         this.holidayLogics.add(conf.customHolidayMap);
         this.businessHours = conf.getBusinessHours();
     }
-    public static HolidaysBuilder newBuilder(){
-        return new HolidaysBuilder();
+    public static BusinessCalendarBuilder newBuilder(){
+        return new BusinessCalendarBuilder();
     }
 
     /**

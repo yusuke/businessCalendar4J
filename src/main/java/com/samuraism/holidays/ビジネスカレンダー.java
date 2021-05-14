@@ -21,8 +21,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class 日本の祝休日 {
-    private final Holidays holidays;
+public class ビジネスカレンダー {
+    private final BusinessCalendar businessCalendar;
 
     /**
      * 正月三が日を休業とするアルゴリズム
@@ -43,18 +43,18 @@ public class 日本の祝休日 {
      * 大晦日を休業とするアルゴリズム
      * @since 1.5
      */
-    public static final Function<LocalDate, String> 土日休業 = Holidays.CLOSED_ON_SATURDAYS_AND_SUNDAYS;
+    public static final Function<LocalDate, String> 土日休業 = BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS;
 
-    日本の祝休日(Holidays holidays) {
-        this.holidays = holidays;
+    ビジネスカレンダー(BusinessCalendar businessCalendar) {
+        this.businessCalendar = businessCalendar;
     }
 
-    public static 日本の祝休日 getInstance() {
-        return new 日本の祝休日(Holidays.newBuilder().holiday().build());
+    public static ビジネスカレンダー getInstance() {
+        return new ビジネスカレンダー(BusinessCalendar.newBuilder().holiday().build());
     }
 
-    public static 日本の祝休日Builder newBuilder(){
-        return new 日本の祝休日Builder();
+    public static ビジネスカレンダーBuilder newBuilder(){
+        return new ビジネスカレンダーBuilder();
     }
 
     /**
@@ -64,7 +64,7 @@ public class 日本の祝休日 {
      * @return 指定した日が祝休日であればtrue
      */
     public boolean is祝休日(LocalDate date) {
-        return holidays.isHoliday(date);
+        return businessCalendar.isHoliday(date);
     }
 
     /**
@@ -74,7 +74,7 @@ public class 日本の祝休日 {
      * @since 1.3
      */
     public boolean is祝休日() {
-        return holidays.isHoliday();
+        return businessCalendar.isHoliday();
     }
 
     /**
@@ -84,7 +84,7 @@ public class 日本の祝休日 {
      * @return 指定した日が営業日であればtrue
      */
     public boolean is営業日(LocalDate date) {
-        return holidays.isBusinessDay(date);
+        return businessCalendar.isBusinessDay(date);
     }
 
     /**
@@ -94,7 +94,7 @@ public class 日本の祝休日 {
      * @since 1.3
      */
     public boolean is営業日() {
-        return holidays.isBusinessDay();
+        return businessCalendar.isBusinessDay();
     }
 
     /**
@@ -104,7 +104,7 @@ public class 日本の祝休日 {
      * @return 祝日・休日
      */
     public Optional<祝休日> get祝休日(LocalDate date) {
-        final Optional<Holiday> holiday = holidays.getHoliday(date);
+        final Optional<Holiday> holiday = businessCalendar.getHoliday(date);
         return holiday.map(祝休日::new);
     }
 
@@ -116,7 +116,7 @@ public class 日本の祝休日 {
      * @since 1.4
      */
     public LocalDate 最後の営業日(LocalDate date) {
-        return holidays.lastBusinessDay(date);
+        return businessCalendar.lastBusinessDay(date);
     }
 
     /**
@@ -126,7 +126,7 @@ public class 日本の祝休日 {
      * @since 1.4
      */
     public LocalDate 最後の営業日() {
-        return holidays.lastBusinessDay();
+        return businessCalendar.lastBusinessDay();
     }
 
     /**
@@ -136,7 +136,7 @@ public class 日本の祝休日 {
      * @return 指定した日以降の営業日
      */
     public LocalDate 最初の営業日(LocalDate date) {
-        return holidays.firstBusinessDay(date);
+        return businessCalendar.firstBusinessDay(date);
     }
 
     /**
@@ -146,7 +146,7 @@ public class 日本の祝休日 {
      * @since 1.4
      */
     public LocalDate 最初の営業日() {
-        return holidays.firstBusinessDay();
+        return businessCalendar.firstBusinessDay();
     }
 
     /**
@@ -156,7 +156,7 @@ public class 日本の祝休日 {
      * @return 指定した日以前の祝休日
      */
     public 祝休日 最後の祝休日(LocalDate date) {
-        return new 祝休日(holidays.lastHoliday(date));
+        return new 祝休日(businessCalendar.lastHoliday(date));
     }
 
     /**
@@ -166,7 +166,7 @@ public class 日本の祝休日 {
      * @since 1.4
      */
     public 祝休日 最後の祝休日() {
-        return new 祝休日(holidays.lastHoliday());
+        return new 祝休日(businessCalendar.lastHoliday());
     }
 
     /**
@@ -176,7 +176,7 @@ public class 日本の祝休日 {
      * @return 指定した日以前の祝休日
      */
     public 祝休日 最初の祝休日(LocalDate date) {
-        return new 祝休日(holidays.firstHoliday(date));
+        return new 祝休日(businessCalendar.firstHoliday(date));
     }
 
     /**
@@ -186,7 +186,7 @@ public class 日本の祝休日 {
      * @since 1.4
      */
     public 祝休日 最初の祝休日() {
-        return new 祝休日(holidays.firstHoliday());
+        return new 祝休日(businessCalendar.firstHoliday());
     }
 
     /**
@@ -197,7 +197,7 @@ public class 日本の祝休日 {
      * @return 指定期間内の祝休日のリスト。
      */
     public List<祝休日> get指定期間内の祝休日(LocalDate 開始日, LocalDate 終了日) {
-        return holidays.getHolidaysBetween️(開始日, 終了日).stream().map(祝休日::new).collect(Collectors.toList());
+        return businessCalendar.getHolidaysBetween️(開始日, 終了日).stream().map(祝休日::new).collect(Collectors.toList());
     }
 
     /**

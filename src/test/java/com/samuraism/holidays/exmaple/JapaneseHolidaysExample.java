@@ -15,8 +15,8 @@
  */
 package com.samuraism.holidays.exmaple;
 
+import com.samuraism.holidays.BusinessCalendar;
 import com.samuraism.holidays.Holiday;
-import com.samuraism.holidays.Holidays;
 import com.samuraism.holidays.Japan;
 
 import java.time.LocalDate;
@@ -25,44 +25,44 @@ import java.util.Optional;
 
 public class JapaneseHolidaysExample {
     public static void main(String[] args) {
-        Holidays holidays = Holidays.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
+        BusinessCalendar businessCalendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
 
         // prints true, because it's New Year's Day
         System.out.println("Is Jan 1, 2021 a holiday? "
-                + holidays.isHoliday(LocalDate.of(2021, 1, 1)));
+                + businessCalendar.isHoliday(LocalDate.of(2021, 1, 1)));
         // prints false, because it's New Year's Day
         System.out.println("Is Jan 1, 2021 a business day？: "
-                + holidays.isBusinessDay(LocalDate.of(2021, 1, 1)));
+                + businessCalendar.isBusinessDay(LocalDate.of(2021, 1, 1)));
 
         // Gets Coming-of-Age Day
-        Optional<Holiday> holiday = holidays.getHoliday(LocalDate.of(2021, 1, 11));
+        Optional<Holiday> holiday = businessCalendar.getHoliday(LocalDate.of(2021, 1, 11));
         holiday.ifPresent(e -> System.out.println("What day is January 11, 2021?: " + e.name));
 
         System.out.println("List of holidays in May 2021: ");
         // 2021-05-03:Constitution Memorial Day、2021-05-04:Greenery day、2021-05-05:Children's day を表示
-        holidays.getHolidaysBetween️(LocalDate.of(2021, 5, 1)
+        businessCalendar.getHolidaysBetween️(LocalDate.of(2021, 5, 1)
                 , LocalDate.of(2021, 5, 31))
                 .forEach(e -> System.out.println(e.date + ": " + e.name));
 
         // Sets custom holidays
-        holidays = Holidays.newBuilder()
+        businessCalendar = BusinessCalendar.newBuilder()
                 .locale(Locale.ENGLISH)
                 .holiday(Japan.PUBLIC_HOLIDAYS)
                 .holiday(LocalDate.of(1995, 5, 23), "Java public debut")
-                .holiday(Holidays.CLOSED_ON_SATURDAYS_AND_SUNDAYS)
+                .holiday(BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS)
                 // ロジックベーのカスタム祝休日を設定。当該日が祝日ならば名称を、そうでなければnullを返す関数を指定する
                 .holiday(e -> e.getMonthValue() == 5 && e.getDayOfMonth() == 19 ? "James Gosling's birthday" : null)
                 .build();
 
         // Gets the last business day in January 2021
         System.out.println("Last business day in January 2021: "
-                + holidays.lastBusinessDay(LocalDate.of(2021, 1, 31)));
+                + businessCalendar.lastBusinessDay(LocalDate.of(2021, 1, 31)));
         // Gets the first business day on and after Dec 31 2020
         System.out.println("First business day on and after Dec 31 2020: "
-                + holidays.firstBusinessDay(LocalDate.of(2020, 12, 31)));
+                + businessCalendar.firstBusinessDay(LocalDate.of(2020, 12, 31)));
         // Gets the first holiday on and after February 22, 2021
-        System.out.println(holidays.firstHoliday(LocalDate.of(2021, 2, 22)));
+        System.out.println(businessCalendar.firstHoliday(LocalDate.of(2021, 2, 22)));
         // Gets the last holiday by February 26, 2021
-        System.out.println(holidays.lastHoliday(LocalDate.of(2021, 2, 26)));
+        System.out.println(businessCalendar.lastHoliday(LocalDate.of(2021, 2, 26)));
     }
 }

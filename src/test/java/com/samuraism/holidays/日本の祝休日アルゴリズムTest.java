@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SuppressWarnings({"OptionalGetWithoutIsPresent", "AccessStaticViaInstance"})
 public class 日本の祝休日アルゴリズムTest {
     static TreeMap<LocalDate, String> testCases;
-    final static Holidays holidays = Holidays.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE).build();
+    final static BusinessCalendar CALENDAR = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE).build();
     static Japan j = (Japan) Japan.PUBLIC_HOLIDAYS;
 
     static TreeMap<LocalDate, String> 祝休日Map待避;
@@ -148,7 +148,7 @@ public class 日本の祝休日アルゴリズムTest {
             if (holiday.isAfter(from)
                     && holiday.isBefore(to)) {
                 try {
-                    assertEquals(祝日名, holidays.getHoliday(holiday).get().name, holiday.toString());
+                    assertEquals(祝日名, CALENDAR.getHoliday(holiday).get().name, holiday.toString());
                 } catch (NoSuchElementException e) {
                     fail(holiday.toString());
                 }
@@ -176,7 +176,7 @@ public class 日本の祝休日アルゴリズムTest {
         for (LocalDate holiday : list) {
             if (holiday.isAfter(LocalDate.of(2007, 1, 1))) {
                 try {
-                    assertEquals("休日", holidays.getHoliday(holiday).get().name, holiday.toString());
+                    assertEquals("休日", CALENDAR.getHoliday(holiday).get().name, holiday.toString());
                 } catch (NoSuchElementException e) {
                     if (
                         // 以前の天皇誕生日の振替休日
@@ -200,17 +200,17 @@ public class 日本の祝休日アルゴリズムTest {
 
     @Test
     void カスタム休日を指定しても休日算出が正しい() {
-        Holidays holidays = Holidays.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE)
+        BusinessCalendar businessCalendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE)
                 .holiday(LocalDate.of(2022, 1, 2), "休みたいから休む")
                 .holiday(LocalDate.of(2007, 2, 12), "休みたいから休む")
                 .build();
         // 2022/1/1が元旦、かつ日曜日なので2022/1/2が休日
         // カスタム休日を2022/1/2に設定しても振替休日は2022/1/3にはならない
-        assertFalse(holidays.isHoliday(LocalDate.of(2022, 1, 3)));
+        assertFalse(businessCalendar.isHoliday(LocalDate.of(2022, 1, 3)));
 
         // 2007/2/11日が建国記念の日で日曜日なので2007/年2月12日は振替休日。カスタム祝休日の名称は出てこない
-        assertEquals("休日", holidays.getHoliday(LocalDate.of(2007, 2, 12)).get().name);
-        assertFalse(holidays.isHoliday(LocalDate.of(2007, 2, 13)));
+        assertEquals("休日", businessCalendar.getHoliday(LocalDate.of(2007, 2, 12)).get().name);
+        assertFalse(businessCalendar.isHoliday(LocalDate.of(2007, 2, 13)));
 
     }
 }
