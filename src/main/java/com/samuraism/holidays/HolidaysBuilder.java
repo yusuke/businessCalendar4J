@@ -16,16 +16,21 @@
 package com.samuraism.holidays;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public abstract class HolidaysBuilder<E extends Holidays> {
     List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
     HolidayMap customHolidayMap = new HolidayMap();
     Locale locale = Locale.getDefault();
+    List<BusinessHourFrom> businessHourFroms = new ArrayList<>();
 
     public final HolidaysBuilder<E> locale(Locale locale) {
         this.locale = locale;
@@ -57,4 +62,69 @@ public abstract class HolidaysBuilder<E extends Holidays> {
     }
 
     public abstract E build();
+
+    public BusinessHourFrom businessHourFrom(int hour) {
+        return businessHourFrom(hour, 0);
+    }
+
+    public BusinessHourFrom businessHourFrom(int hour, int minutes) {
+        final BusinessHourFrom businessHourFrom = new BusinessHourFrom(hour, minutes, this);
+        businessHourFroms.add(businessHourFrom);
+        return businessHourFrom;
+    }
+
+    public BusinessHours getBusinessHours() {
+        return date -> {
+            if (businessHourFroms.size() == 0) {
+                return Collections.singletonList(new BusinessHourSlot(LocalDateTime.
+                        of(date, LocalTime.of(0, 0)),
+                        LocalDateTime.of(date.plus(1, ChronoUnit.DAYS), LocalTime.of(0, 0))));
+            }
+            return businessHourFroms.stream().map(e -> new BusinessHourSlot(LocalDateTime.
+                    of(date, LocalTime.of(e.fromHour, e.fromMinutes)),
+                    LocalDateTime.of(date, LocalTime.of(e.toHour, e.toMinutes)))).collect(Collectors.toList());
+        };
+    }
+
+    class BusinessHourFrom {
+        int fromHour;
+        int fromMinutes;
+        int toHour;
+        int toMinutes;
+        HolidaysBuilder<E> builder;
+
+        BusinessHourFrom(int fromHour, int fromMinutes, HolidaysBuilder<E> builder) {
+            checkParameter(0 <= fromHour, "value should be greater than or equals to 0, provided: " + fromHour);
+            checkParameter(fromHour <= 24, "value should be less than or equals to 24, provided: " + fromHour);
+            checkParameter(0 <= fromMinutes, "value should be greater than or equals to 0, provided: " + fromMinutes);
+            checkParameter(fromMinutes <= 59, "value should be less than 60, provided: " + fromMinutes);
+            this.fromHour = fromHour;
+            this.fromMinutes = fromMinutes;
+            this.builder = builder;
+        }
+
+        HolidaysBuilder<E> to(int hour) {
+            return to(hour, 0);
+        }
+
+        HolidaysBuilder<E> to(int hour, int minutes) {
+            checkParameter(0 <= hour, "value should be greater than or equals to 0, provided: " + hour);
+            checkParameter(hour < 24, "value should be less than 24, provided: " + hour);
+            checkParameter(0 <= minutes, "value should be greater than or equals to 0, provided: " + minutes);
+            checkParameter(minutes <= 59, "value should be less than 60, provided: " + minutes);
+            final LocalTime from = LocalTime.of(fromHour, fromMinutes);
+            final LocalTime to = LocalTime.of(hour, minutes);
+            checkParameter(from.isBefore(to), "from should be before to, provided: " + from + " / " + to);
+
+            this.toHour = hour;
+            this.toMinutes = minutes;
+            return builder;
+        }
+
+        void checkParameter(boolean expectedToBeTrue, String message) {
+            if (!expectedToBeTrue) {
+                throw new IllegalArgumentException(message);
+            }
+        }
+    }
 }

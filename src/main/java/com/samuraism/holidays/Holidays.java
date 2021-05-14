@@ -15,15 +15,20 @@
  */
 package com.samuraism.holidays;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Holidays {
     protected final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
+    protected final BusinessHours businessHours;
 
     protected final ResourceBundle resource;
 
@@ -31,6 +36,7 @@ public class Holidays {
         this.resource = ResourceBundle.getBundle(baseName, conf.locale);
         holidayLogics.addAll(conf.holidayLogics);
         this.holidayLogics.add(conf.customHolidayMap);
+        this.businessHours = conf.getBusinessHours();
     }
 
     /**
@@ -72,6 +78,127 @@ public class Holidays {
      */
     public boolean isBusinessDay() {
         return !isHoliday(LocalDate.now());
+    }
+
+    /**
+     * Test if specified time is during business hours
+     * @param dateTime time
+     * @return true is specified time is during business hours
+     * @since 1.8
+     */
+    public boolean isBusinessHour(@NotNull LocalDateTime dateTime) {
+        return businessHours.getSlots(dateTime.toLocalDate()).stream().anyMatch(e -> e.isBusinessHour(dateTime));
+    }
+
+    /**
+     * Test if it's during business hours
+     * @return true is it's during business hours
+     * @since 1.8
+     */
+    public boolean isBusinessHour() {
+        return isBusinessHour(LocalDateTime.now());
+    }
+
+    /**
+     * Returns when last business hours ended
+     * @param when origin
+     * @return the time when last business hours ended
+     * @since 1.8
+     */
+    public @NotNull
+    LocalDateTime lastBusinessHourEnd(@NotNull LocalDateTime when) {
+        final LocalDate date = when.toLocalDate();
+        LocalDateTime lastBusinessHourEnd = null;
+        if (isBusinessDay(date)) {
+            final List<BusinessHourSlot> slots = businessHours.getSlots(date);
+            final List<BusinessHourSlot> list = slots.stream().filter(e -> e.to.isBefore(when) || e.to.isEqual(when)).collect(Collectors.toList());
+            if (0 < list.size()) {
+                lastBusinessHourEnd = list.get(list.size() - 1).to;
+            }
+
+        }
+        if (lastBusinessHourEnd == null) {
+            final List<BusinessHourSlot> slots = businessHours.getSlots(lastBusinessDay(date.minus(1, ChronoUnit.DAYS)));
+            lastBusinessHourEnd = slots.get(slots.size() - 1).to;
+        }
+        return lastBusinessHourEnd;
+    }
+
+    /**
+     * Returns when next business hours end
+     * @param when origin
+     * @return the time when when next business hours end
+     * @since 1.8
+     */
+    public @NotNull
+    LocalDateTime nextBusinessHourEnd(@NotNull LocalDateTime when) {
+        final LocalDate date = when.toLocalDate();
+        LocalDateTime nextBusinessHourEnd = null;
+        if (isBusinessDay(date)) {
+            final List<BusinessHourSlot> slots = businessHours.getSlots(date);
+            final List<BusinessHourSlot> list = slots.stream().filter(e -> e.to.isAfter(when) || e.to.isEqual(when)).collect(Collectors.toList());
+            if (0 < list.size()) {
+                nextBusinessHourEnd = list.get(0).to;
+            }
+
+        }
+        if (nextBusinessHourEnd == null) {
+            final List<BusinessHourSlot> slots = businessHours.getSlots(firstBusinessDay(date.plus(1, ChronoUnit.DAYS)));
+            nextBusinessHourEnd = slots.get(0).to;
+        }
+
+        return nextBusinessHourEnd;
+    }
+
+    /**
+     * Returns when last business hours started
+     * @param when origin
+     * @return the time when last business hours started
+     * @since 1.8
+     */
+    public @NotNull
+    LocalDateTime lastBusinessHourStart(@NotNull LocalDateTime when) {
+        final LocalDate date = when.toLocalDate();
+        LocalDateTime lastBusinessHourStart = null;
+        if (isBusinessDay(date)) {
+            final List<BusinessHourSlot> slots = businessHours.getSlots(date);
+            final List<BusinessHourSlot> list = slots.stream().filter(e -> e.from.isBefore(when)).collect(Collectors.toList());
+            if (0 < list.size()) {
+                lastBusinessHourStart = list.get(list.size() - 1).from;
+            }
+
+        }
+        if (lastBusinessHourStart == null) {
+            final List<BusinessHourSlot> slots = businessHours.getSlots(lastBusinessDay(date.minus(1, ChronoUnit.DAYS)));
+            lastBusinessHourStart = slots.get(slots.size() - 1).from;
+        }
+        return lastBusinessHourStart;
+    }
+
+    /**
+     * Returns when next business hours start
+     * @param when origin
+     * @return the time when when next business hours start
+     * @since 1.8
+     */
+    public @NotNull
+    LocalDateTime nextBusinessHourStart(@NotNull LocalDateTime when) {
+        final LocalDate date = when.toLocalDate();
+        LocalDateTime nextBusinessHourStart = null;
+        if (isBusinessDay(date)) {
+            final List<BusinessHourSlot> slots = businessHours.getSlots(date);
+            final List<BusinessHourSlot> list = slots.stream().filter(e -> e.from.isAfter(when) || e.from.isEqual(when)).collect(Collectors.toList());
+            if (0 < list.size()) {
+                nextBusinessHourStart = list.get(0).from;
+            }
+
+        }
+        if (nextBusinessHourStart == null) {
+            final List<BusinessHourSlot> slots = businessHours.getSlots(firstBusinessDay(date.plus(1, ChronoUnit.DAYS)));
+            nextBusinessHourStart = slots.get(0).from;
+        }
+
+        return nextBusinessHourStart;
     }
 
     /**
