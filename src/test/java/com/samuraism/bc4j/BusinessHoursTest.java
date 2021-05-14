@@ -1,4 +1,4 @@
-package com.samuraism.holidays;
+package com.samuraism.bc4j;
 
 import org.junit.jupiter.api.Test;
 

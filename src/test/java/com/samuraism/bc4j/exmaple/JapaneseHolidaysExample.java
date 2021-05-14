@@ -13,11 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package com.samuraism.holidays.exmaple;
+package com.samuraism.bc4j.exmaple;
 
-import com.samuraism.holidays.BusinessCalendar;
-import com.samuraism.holidays.Holiday;
-import com.samuraism.holidays.Japan;
+import com.samuraism.bc4j.BusinessCalendar;
+import com.samuraism.bc4j.Holiday;
+import com.samuraism.bc4j.Japan;
 
 import java.time.LocalDate;
 import java.util.Locale;

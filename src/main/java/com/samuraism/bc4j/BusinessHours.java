@@ -13,26 +13,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package com.samuraism.holidays;
+package com.samuraism.bc4j;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
-import java.util.TreeMap;
-import java.util.function.Function;
+import java.util.List;
 
-class HolidayMap implements Function<LocalDate, String> {
-    /* intentionally package private for the test purpose  */
-    TreeMap<LocalDate, String> holidayMap;
-
-    HolidayMap(){
-        holidayMap = new TreeMap<>();
-    }
-
-    @Override
-    public String apply(LocalDate localDate) {
-        return holidayMap.get(localDate);
-    }
-
-    void addHoliday(LocalDate date, String name) {
-        holidayMap.put(date, name);
-    }
+public interface BusinessHours {
+    @NotNull
+    List<BusinessHourSlot> getSlots(@NotNull LocalDate date);
 }

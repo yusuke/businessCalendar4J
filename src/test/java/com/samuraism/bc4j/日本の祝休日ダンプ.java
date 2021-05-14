@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package com.samuraism.holidays;
+package com.samuraism.bc4j;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -24,38 +24,28 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import static com.samuraism.holidays.BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS;
-import static com.samuraism.holidays.Japan.PUBLIC_HOLIDAYS;
-
 /**
- * 第一営業日/最終営業日を向こう9年間計算してファイルにダンプ
+ * 来年以降の祝休日を向こう9年間計算してファイルにダンプ
  */
-public class 第一最終営業日ダンプ {
+public class 日本の祝休日ダンプ {
     public static void main(String[] args) {
         final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/M/d");
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d");
         final LocalDate start = LocalDate.of(1955, 1, 1);
         final LocalDate now = LocalDate.now();
         final LocalDate end = LocalDate.of(now.getYear() + 9, 12, 31);
-        final String shiftJisFileName = String.format("calculated/japan-first-last-business-days%s-%s-Shift_JIS.csv", start.format(formatter), end.format(formatter));
-        final String utf8FileName = String.format("calculated/japan-first-last-business-days%s-%s-UTF8.csv", start.format(formatter), end.format(formatter));
+        final String shiftJisFileName = String.format("calculated/japan-holidays%s-%s-Shift_JIS.csv", start.format(formatter), end.format(formatter));
+        final String utf8FileName = String.format("calculated/japan-holidays%s-%s-UTF8.csv", start.format(formatter), end.format(formatter));
         try (final BufferedWriter shiftJIS = Files.newBufferedWriter(Paths.get(shiftJisFileName), Charset.forName("Shift_JIS"));
              final BufferedWriter utf8 = Files.newBufferedWriter(Paths.get(utf8FileName), StandardCharsets.UTF_8)        ) {
-            final String header = "年月日,営業日\n";
+            final String header = "国民の祝日・休日月日,国民の祝日・休日名称\n";
             shiftJIS.write(header);
             utf8.write(header);
-            LocalDate cursor = start;
-            BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(PUBLIC_HOLIDAYS).holiday(CLOSED_ON_SATURDAYS_AND_SUNDAYS).build();
-            while (cursor.isBefore(end)) {
-                LocalDate 月末 = cursor.withDayOfMonth(cursor.lengthOfMonth());
-                LocalDate 最初営業日 = calendar.firstBusinessDay(cursor);
-                LocalDate 最終営業日 = calendar.lastBusinessDay(月末);
-                final String line = String.format("%s,%s\n%s,%s\n",最初営業日.format(dateTimeFormatter),"第一営業日",
-                        最終営業日.format(dateTimeFormatter), "最終営業日");
+            for (Holiday holiday : BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).build().getHolidaysBetween️(start, end)) {
+                final String line = String.format("%s,%s\n", holiday.date.format(dateTimeFormatter), holiday.name);
                 System.out.print(line);
                 shiftJIS.write(line);
                 utf8.write(line);
-                cursor = cursor.plusMonths(1);
             }
         } catch (IOException e) {
             e.printStackTrace();

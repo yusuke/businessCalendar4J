@@ -13,11 +13,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package com.samuraism.holidays.exmaple;
+package com.samuraism.bc4j.exmaple;
 
-import com.samuraism.holidays.BusinessCalendar;
-import com.samuraism.holidays.Holiday;
-import com.samuraism.holidays.UnitedStates;
+import com.samuraism.bc4j.BusinessCalendar;
+import com.samuraism.bc4j.UnitedStates;
 
 import java.time.LocalDate;
 
@@ -35,8 +34,8 @@ public class UnitedStatesHolidaysExample {
                 + calendar.isBusinessDay(LocalDate.of(2021, 1, 1)));
 
         // get Martin Luther King Jr. Day
-        Holiday holiday = calendar.getHoliday(LocalDate.of(2021, 1, 18));
-        System.out.println("What is Jan, 18 2021?: " + holiday);
+        System.out.println("What is Jan, 18 2021?: " 
+                + calendar.getHoliday(LocalDate.of(2021, 1, 18)));
 
         System.out.println("List of holidays in 2021: ");
         calendar.getHolidaysBetween️(LocalDate.of(2021, 1, 1)

@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package com.samuraism.holidays;
+package com.samuraism.bc4j;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -24,7 +24,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-import static com.samuraism.holidays.UnitedStates.*;
+import static com.samuraism.bc4j.UnitedStates.*;
 
 /**
  * Dump United States holidays

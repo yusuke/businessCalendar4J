@@ -13,14 +13,23 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package com.samuraism.holidays;
+package com.samuraism.bc4j;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalDateTime;
 
-public interface BusinessHours {
-    @NotNull
-    List<BusinessHourSlot> getSlots(@NotNull LocalDate date);
+public class BusinessHourSlot {
+    final LocalDateTime from, to;
+
+    BusinessHourSlot(@NotNull LocalDateTime from, @NotNull LocalDateTime to) {
+        assert to.isAfter(from);
+        this.from = from;
+        this.to = to;
+    }
+
+    boolean isBusinessHour(@NotNull LocalDateTime time) {
+        return time.isEqual(from) || (from.isBefore(time) && to.isAfter(time));
+    }
 }
+

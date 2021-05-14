@@ -1,4 +1,4 @@
-package com.samuraism.holidays;
+package com.samuraism.bc4j;
 
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.samuraism.holidays.UnitedStates.*;
+import static com.samuraism.bc4j.UnitedStates.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings({"ConstantConditions"})
