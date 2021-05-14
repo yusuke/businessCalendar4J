@@ -19,7 +19,6 @@ import com.samuraism.holidays.Holiday;
 import com.samuraism.holidays.ビジネスカレンダー;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 public class ビジネスカレンダーExample {
     public static void main(String[] args) {
@@ -33,8 +32,8 @@ public class ビジネスカレンダーExample {
                 + calendar.is営業日(LocalDate.of(2021, 1, 1)));
 
         // 成人の日を取得
-        Optional<Holiday> holiday = calendar.get祝休日(LocalDate.of(2021, 1, 11));
-        holiday.ifPresent(e -> System.out.println("2021年1月11日は何の日？: " + e.name));
+        Holiday holiday = calendar.get祝休日(LocalDate.of(2021, 1, 11));
+        System.out.println("2021年1月11日は何の日？: " + holiday);
 
         System.out.println("2021年5月の祝休日一覧: ");
         // 2021-05-03:憲法記念日、2021-05-04:みどりの日、2021-05-05:こどもの日 を表示

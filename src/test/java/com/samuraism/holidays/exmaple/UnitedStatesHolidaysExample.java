@@ -20,7 +20,6 @@ import com.samuraism.holidays.Holiday;
 import com.samuraism.holidays.UnitedStates;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 public class UnitedStatesHolidaysExample {
     public static void main(String[] args) {
@@ -36,8 +35,8 @@ public class UnitedStatesHolidaysExample {
                 + calendar.isBusinessDay(LocalDate.of(2021, 1, 1)));
 
         // get Martin Luther King Jr. Day
-        Optional<Holiday> holiday = calendar.getHoliday(LocalDate.of(2021, 1, 18));
-        holiday.ifPresent(e -> System.out.println("What is Jan, 18 2021?: " + e.name));
+        Holiday holiday = calendar.getHoliday(LocalDate.of(2021, 1, 18));
+        System.out.println("What is Jan, 18 2021?: " + holiday);
 
         System.out.println("List of holidays in 2021: ");
         calendar.getHolidaysBetween️(LocalDate.of(2021, 1, 1)

@@ -16,6 +16,7 @@
 package com.samuraism.holidays;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,7 +39,9 @@ public final class BusinessCalendar {
         this.holidayLogics.add(conf.customHolidayMap);
         this.businessHours = conf.getBusinessHours();
     }
-    public static BusinessCalendarBuilder newBuilder(){
+
+    @NotNull
+    public static BusinessCalendarBuilder newBuilder() {
         return new BusinessCalendarBuilder();
     }
 
@@ -64,7 +67,7 @@ public final class BusinessCalendar {
      * @param date date
      * @return true if the specified date is a holiday
      */
-    public boolean isHoliday(LocalDate date) {
+    public boolean isHoliday(@NotNull LocalDate date) {
         return holidayLogics.stream().anyMatch(e -> e.apply(date) != null);
     }
 
@@ -85,7 +88,7 @@ public final class BusinessCalendar {
      * @param date date
      * @return true if the specified date is a business day
      */
-    public boolean isBusinessDay(LocalDate date) {
+    public boolean isBusinessDay(@NotNull LocalDate date) {
         return !isHoliday(date);
     }
 
@@ -101,6 +104,7 @@ public final class BusinessCalendar {
 
     /**
      * Test if specified time is during business hours
+     *
      * @param dateTime time
      * @return true is specified time is during business hours
      * @since 1.8
@@ -111,6 +115,7 @@ public final class BusinessCalendar {
 
     /**
      * Test if it's during business hours
+     *
      * @return true is it's during business hours
      * @since 1.8
      */
@@ -120,12 +125,13 @@ public final class BusinessCalendar {
 
     /**
      * Returns when last business hours ended
+     *
      * @param when origin
      * @return the time when last business hours ended
      * @since 1.8
      */
-    public @NotNull
-    LocalDateTime lastBusinessHourEnd(@NotNull LocalDateTime when) {
+    @NotNull
+    public LocalDateTime lastBusinessHourEnd(@NotNull LocalDateTime when) {
         final LocalDate date = when.toLocalDate();
         LocalDateTime lastBusinessHourEnd = null;
         if (isBusinessDay(date)) {
@@ -145,12 +151,13 @@ public final class BusinessCalendar {
 
     /**
      * Returns when next business hours end
+     *
      * @param when origin
      * @return the time when when next business hours end
      * @since 1.8
      */
-    public @NotNull
-    LocalDateTime nextBusinessHourEnd(@NotNull LocalDateTime when) {
+    @NotNull
+    public LocalDateTime nextBusinessHourEnd(@NotNull LocalDateTime when) {
         final LocalDate date = when.toLocalDate();
         LocalDateTime nextBusinessHourEnd = null;
         if (isBusinessDay(date)) {
@@ -171,12 +178,13 @@ public final class BusinessCalendar {
 
     /**
      * Returns when last business hours started
+     *
      * @param when origin
      * @return the time when last business hours started
      * @since 1.8
      */
-    public @NotNull
-    LocalDateTime lastBusinessHourStart(@NotNull LocalDateTime when) {
+    @NotNull
+    public LocalDateTime lastBusinessHourStart(@NotNull LocalDateTime when) {
         final LocalDate date = when.toLocalDate();
         LocalDateTime lastBusinessHourStart = null;
         if (isBusinessDay(date)) {
@@ -196,12 +204,13 @@ public final class BusinessCalendar {
 
     /**
      * Returns when next business hours start
+     *
      * @param when origin
      * @return the time when when next business hours start
      * @since 1.8
      */
-    public @NotNull
-    LocalDateTime nextBusinessHourStart(@NotNull LocalDateTime when) {
+    @NotNull
+    public LocalDateTime nextBusinessHourStart(@NotNull LocalDateTime when) {
         final LocalDate date = when.toLocalDate();
         LocalDateTime nextBusinessHourStart = null;
         if (isBusinessDay(date)) {
@@ -226,15 +235,16 @@ public final class BusinessCalendar {
      * @param date date
      * @return Holiday
      */
-    public Optional<Holiday> getHoliday(LocalDate date) {
+    @Nullable
+    public Holiday getHoliday(@NotNull LocalDate date) {
         final Optional<String> first = holidayLogics.stream()
                 .map(e -> e.apply(date)).filter(Objects::nonNull).findFirst();
-        return first.map(s -> new Holiday(date, toHolidayString(s)));
+        return first.map(s -> new Holiday(date, toHolidayString(s))).orElse(null);
     }
 
     Pattern p = Pattern.compile("\\$\\{([a-z.A-Z]+)}");
-
-    private String toHolidayString(String key) {
+    @NotNull
+    private String toHolidayString(@NotNull String key) {
         if (resource.containsKey(key)) {
             return resource.getString(key);
         }
@@ -257,7 +267,8 @@ public final class BusinessCalendar {
      * @param date specific date
      * @return last business day by the specified date
      */
-    public LocalDate lastBusinessDay(LocalDate date) {
+    @NotNull
+    public LocalDate lastBusinessDay(@NotNull LocalDate date) {
         LocalDate check = date;
         while (isHoliday(check)) {
             check = check.minus(1, ChronoUnit.DAYS);
@@ -271,6 +282,7 @@ public final class BusinessCalendar {
      * @return last business day by the specified date
      * @since 1.4
      */
+    @NotNull
     public LocalDate lastBusinessDay() {
         return lastBusinessDay(LocalDate.now());
     }
@@ -281,7 +293,8 @@ public final class BusinessCalendar {
      * @param date specific date
      * @return first business day on and after the specified date
      */
-    public LocalDate firstBusinessDay(LocalDate date) {
+    @NotNull
+    public LocalDate firstBusinessDay(@NotNull LocalDate date) {
         LocalDate check = date;
         while (isHoliday(check)) {
             check = check.plus(1, ChronoUnit.DAYS);
@@ -295,6 +308,7 @@ public final class BusinessCalendar {
      * @return first business day after today
      * @since 1.4
      */
+    @NotNull
     public LocalDate firstBusinessDay() {
         return firstBusinessDay(LocalDate.now());
     }
@@ -305,13 +319,16 @@ public final class BusinessCalendar {
      * @param date specific date
      * @return last holiday by the specified date
      */
-    public Holiday lastHoliday(LocalDate date) {
+    @NotNull
+    public Holiday lastHoliday(@NotNull LocalDate date) {
         LocalDate check = date;
         while (!isHoliday(check)) {
+            if (check.equals(LocalDate.MIN)) {
+                return new Holiday(LocalDate.MIN, "min");
+            }
             check = check.minus(1, ChronoUnit.DAYS);
         }
-        //noinspection OptionalGetWithoutIsPresent
-        return getHoliday(check).get();
+        return Objects.requireNonNull(getHoliday(check));
     }
 
     /**
@@ -320,6 +337,7 @@ public final class BusinessCalendar {
      * @return last holiday by today
      * @since 1.4
      */
+    @NotNull
     public Holiday lastHoliday() {
         return lastHoliday(LocalDate.now());
     }
@@ -330,13 +348,16 @@ public final class BusinessCalendar {
      * @param date specific date
      * @return first holiday on or after the specified date
      */
-    public Holiday firstHoliday(LocalDate date) {
+    @NotNull
+    public Holiday firstHoliday(@NotNull LocalDate date) {
         LocalDate check = date;
         while (!isHoliday(check)) {
+            if (check.equals(LocalDate.MAX)) {
+                return new Holiday(LocalDate.MAX, "max");
+            }
             check = check.plus(1, ChronoUnit.DAYS);
         }
-        //noinspection OptionalGetWithoutIsPresent
-        return getHoliday(check).get();
+        return Objects.requireNonNull(getHoliday(check));
     }
 
     /**
@@ -344,6 +365,7 @@ public final class BusinessCalendar {
      *
      * @return first holiday on or after the specified date
      */
+    @NotNull
     public Holiday firstHoliday() {
         return firstHoliday(LocalDate.now());
     }
@@ -355,13 +377,16 @@ public final class BusinessCalendar {
      * @param to   to date (inclusive)
      * @return List of holidays between the specified period
      */
-    public List<Holiday> getHolidaysBetween️(LocalDate from, LocalDate to) {
+    @NotNull
+    public List<Holiday> getHolidaysBetween️(@NotNull LocalDate from, @NotNull LocalDate to) {
         List<Holiday> list = new ArrayList<>();
         LocalDate start = from.isBefore(to) ? from : to;
         LocalDate end = (to.isAfter(from) ? to : from).plus(1, ChronoUnit.DAYS);
         while (start.isBefore(end)) {
-            final Optional<Holiday> holiday = getHoliday(start);
-            holiday.ifPresent(list::add);
+            final Holiday holiday = getHoliday(start);
+            if (holiday != null) {
+                list.add(holiday);
+            }
             start = start.plus(1, ChronoUnit.DAYS);
         }
         return list;

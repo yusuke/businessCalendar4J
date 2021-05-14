@@ -21,7 +21,6 @@ import com.samuraism.holidays.Japan;
 
 import java.time.LocalDate;
 import java.util.Locale;
-import java.util.Optional;
 
 public class JapaneseHolidaysExample {
     public static void main(String[] args) {
@@ -35,8 +34,8 @@ public class JapaneseHolidaysExample {
                 + businessCalendar.isBusinessDay(LocalDate.of(2021, 1, 1)));
 
         // Gets Coming-of-Age Day
-        Optional<Holiday> holiday = businessCalendar.getHoliday(LocalDate.of(2021, 1, 11));
-        holiday.ifPresent(e -> System.out.println("What day is January 11, 2021?: " + e.name));
+        Holiday holiday = businessCalendar.getHoliday(LocalDate.of(2021, 1, 11));
+        System.out.println("What day is January 11, 2021?: " + holiday);
 
         System.out.println("List of holidays in May 2021: ");
         // 2021-05-03:Constitution Memorial Day、2021-05-04:Greenery day、2021-05-05:Children's day を表示

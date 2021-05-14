@@ -24,7 +24,7 @@ import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SuppressWarnings("OptionalGetWithoutIsPresent")
+@SuppressWarnings({"ConstantConditions"})
 class ビジネスカレンダーTest {
     @Test
     void is祝日() {
@@ -65,11 +65,11 @@ class ビジネスカレンダーTest {
     @Test
     void get名称() {
         BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE).build();
-        assertFalse(calendar.getHoliday(LocalDate.of(1954, 1, 15)).isPresent());
-        assertEquals("元日", calendar.getHoliday(LocalDate.of(1955, 1, 1)).get().name);
-        assertEquals("成人の日", calendar.getHoliday(LocalDate.of(2021, 1, 11)).get().name);
-        assertFalse(calendar.getHoliday(LocalDate.of(2021, 1, 13)).isPresent());
-        assertEquals("勤労感謝の日", calendar.getHoliday(LocalDate.of(2021, 11, 23)).get().name);
+        assertNull(calendar.getHoliday(LocalDate.of(1954, 1, 15)));
+        assertEquals("元日", calendar.getHoliday(LocalDate.of(1955, 1, 1)).name);
+        assertEquals("成人の日", calendar.getHoliday(LocalDate.of(2021, 1, 11)).name);
+        assertNull(calendar.getHoliday(LocalDate.of(2021, 1, 13)));
+        assertEquals("勤労感謝の日", calendar.getHoliday(LocalDate.of(2021, 11, 23)).name);
     }
 
     @Test
@@ -77,7 +77,7 @@ class ビジネスカレンダーTest {
         BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE)
                 .holiday(LocalDate.of(1977, 6, 17), "休みたいから休む").build();
         assertTrue(calendar.isHoliday(LocalDate.of(1977, 6, 17)));
-        assertEquals("休みたいから休む", calendar.getHoliday(LocalDate.of(1977, 6, 17)).get().name);
+        assertEquals("休みたいから休む", calendar.getHoliday(LocalDate.of(1977, 6, 17)).name);
     }
 
     @Test
@@ -87,10 +87,10 @@ class ビジネスカレンダーTest {
                 .holiday(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "日曜日" : null).build();
         assertTrue(calendar.isHoliday(LocalDate.of(2021, 1, 23)));
         assertTrue(calendar.isHoliday(LocalDate.of(2021, 1, 24)));
-        assertEquals("土曜日", calendar.getHoliday(LocalDate.of(2021, 1, 23)).get().name);
-        assertEquals("日曜日", calendar.getHoliday(LocalDate.of(2021, 1, 24)).get().name);
-        assertEquals("土曜日", calendar.getHoliday(LocalDate.of(2022, 8, 27)).get().name);
-        assertEquals("日曜日", calendar.getHoliday(LocalDate.of(2022, 8, 28)).get().name);
+        assertEquals("土曜日", calendar.getHoliday(LocalDate.of(2021, 1, 23)).name);
+        assertEquals("日曜日", calendar.getHoliday(LocalDate.of(2021, 1, 24)).name);
+        assertEquals("土曜日", calendar.getHoliday(LocalDate.of(2022, 8, 27)).name);
+        assertEquals("日曜日", calendar.getHoliday(LocalDate.of(2022, 8, 28)).name);
 
         calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE)
                 .holiday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "土曜日" : null)
@@ -98,7 +98,7 @@ class ビジネスカレンダーTest {
                 .holiday(e -> e.getMonthValue() == 6 && e.getDayOfMonth() == 17 ? "山本裕介誕生日" : null)
                 .build();
         assertTrue(calendar.isHoliday(LocalDate.of(2011, 6, 17)));
-        assertEquals("山本裕介誕生日", calendar.getHoliday(LocalDate.of(2021, 6, 17)).get().name);
+        assertEquals("山本裕介誕生日", calendar.getHoliday(LocalDate.of(2021, 6, 17)).name);
     }
 
     @Test

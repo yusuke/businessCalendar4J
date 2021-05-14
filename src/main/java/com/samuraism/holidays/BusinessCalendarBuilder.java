@@ -15,6 +15,8 @@
  */
 package com.samuraism.holidays;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -56,25 +58,30 @@ public class BusinessCalendarBuilder {
      * @param name name
      * @return This instance
      */
-    public BusinessCalendarBuilder holiday(LocalDate date, String name) {
+    @NotNull
+    public BusinessCalendarBuilder holiday(@NotNull LocalDate date, @NotNull String name) {
         customHolidayMap.addHoliday(date, name);
         return this;
     }
 
-    public BusinessCalendar build(){
+    @NotNull
+    public BusinessCalendar build() {
         return new BusinessCalendar(this);
     }
 
+    @NotNull
     public BusinessHourFrom businessHourFrom(int hour) {
         return businessHourFrom(hour, 0);
     }
 
+    @NotNull
     public BusinessHourFrom businessHourFrom(int hour, int minutes) {
         final BusinessHourFrom businessHourFrom = new BusinessHourFrom(hour, minutes, this);
         businessHourFroms.add(businessHourFrom);
         return businessHourFrom;
     }
 
+    @NotNull
     public BusinessHours getBusinessHours() {
         return date -> {
             if (businessHourFroms.size() == 0) {
@@ -95,7 +102,7 @@ public class BusinessCalendarBuilder {
         int toMinutes;
         BusinessCalendarBuilder builder;
 
-        BusinessHourFrom(int fromHour, int fromMinutes, BusinessCalendarBuilder builder) {
+        BusinessHourFrom(int fromHour, int fromMinutes, @NotNull BusinessCalendarBuilder builder) {
             checkParameter(0 <= fromHour, "value should be greater than or equals to 0, provided: " + fromHour);
             checkParameter(fromHour <= 24, "value should be less than or equals to 24, provided: " + fromHour);
             checkParameter(0 <= fromMinutes, "value should be greater than or equals to 0, provided: " + fromMinutes);
@@ -105,10 +112,12 @@ public class BusinessCalendarBuilder {
             this.builder = builder;
         }
 
+        @NotNull
         BusinessCalendarBuilder to(int hour) {
             return to(hour, 0);
         }
 
+        @NotNull
         BusinessCalendarBuilder to(int hour, int minutes) {
             checkParameter(0 <= hour, "value should be greater than or equals to 0, provided: " + hour);
             checkParameter(hour < 24, "value should be less than 24, provided: " + hour);
@@ -123,7 +132,7 @@ public class BusinessCalendarBuilder {
             return builder;
         }
 
-        void checkParameter(boolean expectedToBeTrue, String message) {
+        void checkParameter(boolean expectedToBeTrue, @NotNull String message) {
             if (!expectedToBeTrue) {
                 throw new IllegalArgumentException(message);
             }

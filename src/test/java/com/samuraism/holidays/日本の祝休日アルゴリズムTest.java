@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SuppressWarnings({"OptionalGetWithoutIsPresent", "AccessStaticViaInstance"})
+@SuppressWarnings({"AccessStaticViaInstance", "ConstantConditions"})
 public class 日本の祝休日アルゴリズムTest {
     static TreeMap<LocalDate, String> testCases;
     final static BusinessCalendar CALENDAR = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE).build();
@@ -150,7 +150,7 @@ public class 日本の祝休日アルゴリズムTest {
             if (holiday.isAfter(from)
                     && holiday.isBefore(to)) {
                 try {
-                    assertEquals(祝日名, CALENDAR.getHoliday(holiday).get().name, holiday.toString());
+                    assertEquals(祝日名, CALENDAR.getHoliday(holiday).name, holiday.toString());
                 } catch (NoSuchElementException e) {
                     fail(holiday.toString());
                 }
@@ -178,7 +178,7 @@ public class 日本の祝休日アルゴリズムTest {
         for (LocalDate holiday : list) {
             if (holiday.isAfter(LocalDate.of(2007, 1, 1))) {
                 try {
-                    assertEquals("休日", CALENDAR.getHoliday(holiday).get().name, holiday.toString());
+                    assertEquals("休日", CALENDAR.getHoliday(holiday).name, holiday.toString());
                 } catch (NoSuchElementException e) {
                     if (
                         // 以前の天皇誕生日の振替休日
@@ -211,7 +211,7 @@ public class 日本の祝休日アルゴリズムTest {
         assertFalse(businessCalendar.isHoliday(LocalDate.of(2022, 1, 3)));
 
         // 2007/2/11日が建国記念の日で日曜日なので2007/年2月12日は振替休日。カスタム祝休日の名称は出てこない
-        assertEquals("休日", businessCalendar.getHoliday(LocalDate.of(2007, 2, 12)).get().name);
+        assertEquals("休日", businessCalendar.getHoliday(LocalDate.of(2007, 2, 12)).name);
         assertFalse(businessCalendar.isHoliday(LocalDate.of(2007, 2, 13)));
 
     }

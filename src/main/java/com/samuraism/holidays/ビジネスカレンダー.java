@@ -15,9 +15,11 @@
  */
 package com.samuraism.holidays;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 
 public class ビジネスカレンダー {
@@ -49,6 +51,7 @@ public class ビジネスカレンダー {
 
     /**
      * 大晦日を休業とするアルゴリズム
+     *
      * @since 1.5
      */
     public static final Function<LocalDate, String> 土日休業 = BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS;
@@ -57,7 +60,7 @@ public class ビジネスカレンダー {
         this.businessCalendar = businessCalendar;
     }
 
-    public static ビジネスカレンダーBuilder newBuilder(){
+    public static @NotNull ビジネスカレンダーBuilder newBuilder() {
         return new ビジネスカレンダーBuilder();
     }
 
@@ -67,7 +70,7 @@ public class ビジネスカレンダー {
      * @param date 日付
      * @return 指定した日が祝休日であればtrue
      */
-    public boolean is祝休日(LocalDate date) {
+    public boolean is祝休日(@NotNull LocalDate date) {
         return businessCalendar.isHoliday(date);
     }
 
@@ -87,7 +90,7 @@ public class ビジネスカレンダー {
      * @param date 日付
      * @return 指定した日が営業日であればtrue
      */
-    public boolean is営業日(LocalDate date) {
+    public boolean is営業日(@NotNull LocalDate date) {
         return businessCalendar.isBusinessDay(date);
     }
 
@@ -107,7 +110,8 @@ public class ビジネスカレンダー {
      * @param date 日付
      * @return 祝日・休日
      */
-    public Optional<Holiday> get祝休日(LocalDate date) {
+    @Nullable
+    public Holiday get祝休日(@NotNull LocalDate date) {
         return businessCalendar.getHoliday(date);
     }
 
@@ -118,7 +122,8 @@ public class ビジネスカレンダー {
      * @return 今日以前の営業日
      * @since 1.4
      */
-    public LocalDate 最後の営業日(LocalDate date) {
+    @NotNull
+    public LocalDate 最後の営業日(@NotNull LocalDate date) {
         return businessCalendar.lastBusinessDay(date);
     }
 
@@ -128,6 +133,7 @@ public class ビジネスカレンダー {
      * @return 今日以前の営業日
      * @since 1.4
      */
+    @NotNull
     public LocalDate 最後の営業日() {
         return businessCalendar.lastBusinessDay();
     }
@@ -138,7 +144,8 @@ public class ビジネスカレンダー {
      * @param date 指定日
      * @return 指定した日以降の営業日
      */
-    public LocalDate 最初の営業日(LocalDate date) {
+    @NotNull
+    public LocalDate 最初の営業日(@NotNull LocalDate date) {
         return businessCalendar.firstBusinessDay(date);
     }
 
@@ -148,6 +155,7 @@ public class ビジネスカレンダー {
      * @return 今日以降の営業日
      * @since 1.4
      */
+    @NotNull
     public LocalDate 最初の営業日() {
         return businessCalendar.firstBusinessDay();
     }
@@ -158,7 +166,8 @@ public class ビジネスカレンダー {
      * @param date 指定日
      * @return 指定した日以前の祝休日
      */
-    public Holiday 最後の祝休日(LocalDate date) {
+    @NotNull
+    public Holiday 最後の祝休日(@NotNull LocalDate date) {
         return businessCalendar.lastHoliday(date);
     }
 
@@ -168,6 +177,7 @@ public class ビジネスカレンダー {
      * @return 今日以前の祝休日
      * @since 1.4
      */
+    @NotNull
     public Holiday 最後の祝休日() {
         return businessCalendar.lastHoliday();
     }
@@ -178,7 +188,8 @@ public class ビジネスカレンダー {
      * @param date 指定日
      * @return 指定した日以前の祝休日
      */
-    public Holiday 最初の祝休日(LocalDate date) {
+    @NotNull
+    public Holiday 最初の祝休日(@NotNull LocalDate date) {
         return businessCalendar.firstHoliday(date);
     }
 
@@ -188,6 +199,7 @@ public class ビジネスカレンダー {
      * @return 今日以降の祝休日
      * @since 1.4
      */
+    @NotNull
     public Holiday 最初の祝休日() {
         return businessCalendar.firstHoliday();
     }
@@ -199,7 +211,8 @@ public class ビジネスカレンダー {
      * @param 終了日 指定終了日。この日も含む。
      * @return 指定期間内の祝休日のリスト。
      */
-    public List<Holiday> get指定期間内の祝休日(LocalDate 開始日, LocalDate 終了日) {
+    @NotNull
+    public List<Holiday> get指定期間内の祝休日(@NotNull LocalDate 開始日, @NotNull LocalDate 終了日) {
         return businessCalendar.getHolidaysBetween️(開始日, 終了日);
     }
 
@@ -209,7 +222,8 @@ public class ビジネスカレンダー {
      * @return 内閣府で公表されている祝休日情報の初日
      * @since 1.4
      */
-    public LocalDate get内閣府公表祝休日初日(){
+    @NotNull
+    public LocalDate get内閣府公表祝休日初日() {
         return Japan.getCabinetOfficialHolidayDataFirstDay();
     }
 
@@ -219,7 +233,8 @@ public class ビジネスカレンダー {
      * @return 内閣府で公表されている祝休日情報の最終日
      * @since 1.4
      */
-    public LocalDate get内閣府公表祝休日最終日(){
+    @NotNull
+    public LocalDate get内閣府公表祝休日最終日() {
         return Japan.getCabinetOfficialHolidayDataLastDay();
     }
 }
