@@ -240,4 +240,11 @@ class BusinessCalendarTest {
         assertNotNull(BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS.apply(LocalDate.of(2021, 1, 3)));
         assertNull(BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS.apply(LocalDate.of(2021, 1, 4)));
     }
+
+    @Test
+    void alreadyBuilt() {
+        final BusinessCalendarBuilder builder = BusinessCalendar.newBuilder();
+        builder.build();
+        assertThrows(IllegalStateException.class, builder::build);
+    }
 }
