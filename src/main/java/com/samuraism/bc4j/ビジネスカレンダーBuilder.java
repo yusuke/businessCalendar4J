@@ -16,22 +16,17 @@
 package com.samuraism.bc4j;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 
 public final class ビジネスカレンダーBuilder {
-    final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
-    final HolidayMap customHolidayMap = new HolidayMap();
-    Locale locale = Locale.getDefault();
+    final BusinessCalendarBuilder builder = BusinessCalendar.newBuilder();
 
     ビジネスカレンダーBuilder() {
     }
 
     public final ビジネスカレンダーBuilder locale(Locale locale) {
-        this.locale = locale;
+        builder.locale(locale);
         return this;
     }
 
@@ -43,7 +38,7 @@ public final class ビジネスカレンダーBuilder {
      */
     @SafeVarargs
     public final ビジネスカレンダーBuilder 祝休日(Function<LocalDate, String>... logics) {
-        Collections.addAll(holidayLogics, logics);
+        builder.holiday(logics);
         return this;
     }
 
@@ -55,15 +50,11 @@ public final class ビジネスカレンダーBuilder {
      * @return このインスタンス
      */
     public ビジネスカレンダーBuilder 祝休日(LocalDate 日付, String 名称) {
-        customHolidayMap.addHoliday(日付, 名称);
+        builder.holiday(日付,名称);
         return this;
     }
 
     public ビジネスカレンダー build() {
-        final BusinessCalendarBuilder builder = BusinessCalendar.newBuilder();
-        builder.locale(this.locale);
-        builder.holidayLogics = this.holidayLogics;
-        builder.customHolidayMap = this.customHolidayMap;
         return new ビジネスカレンダー(builder.build());
     }
 }
