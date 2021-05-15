@@ -1,7 +1,7 @@
 # [&#35;businessCalendar4J](https://twitter.com/search?q=%23businessCalendar4J&src=typed_query&f=live)
 This library provides information about businessCalendar and observances in the United States and Japan.
 It is also possible to get information like "Name of the holiday on a specified date", "First business day after a specified date", and "List of businessCalendar in a specified period.".
-With [HolidayConfiguration](https://github.com/yusuke/businessCalendar/blob/main/src/main/java/com/samuraism/businessCalendar/HolidayConfiguration.java), you can specify non-business dates flexibly with lambda expressions, or specify fixed non-business dates at configuration time.
+With [HolidayConfiguration](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/HolidayConfiguration.java), you can specify non-business dates flexibly with lambda expressions, or specify fixed non-business dates at configuration time.
 
 ## Hashtag
 [&#35;businessCalendar4J](https://twitter.com/intent/tweet?text=https://github.com/yusuke/businessCalendar4J/+%23businessCalendar4J)
@@ -32,7 +32,7 @@ dependencies {
 }
 ```
 ## How to use
-See [JapaneseHolidaysExample](https://github.com/yusuke/businessCalendar4j/blob/main/src/test/java/com/samuraism/businessCalendar/exmaple/JapaneseHolidaysExample.java) for Japanese businessCalendar, [UnitedStatesHolidaysExample](https://github.com/yusuke/businessCalendar/blob/main/src/test/java/com/samuraism/businessCalendar/exmaple/UnitedStatesHolidaysExample.java) for the United States businessCalendar.
+See [JapaneseHolidaysExample](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/JapaneseHolidaysExample.java) for Japanese businessCalendar, [UnitedStatesHolidaysExample](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/UnitedStatesHolidaysExample.java) for the United States businessCalendar.
 
 ```java
 import com.samuraism.bc4j.BusinessCalendar;

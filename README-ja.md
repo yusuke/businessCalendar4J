@@ -37,7 +37,7 @@ dependencies {
 ## 利用方法
 日本の祝日については[JapaneseHolidays](https://github.com/yusuke/businessCalendar4j/blob/main/src/main/java/com/samuraism/businessCalendar/JapaneseHolidays.java) の他、日本語のAPIである [日本の祝休日](https://github.com/yusuke/businessCalendar/blob/main/src/main/java/com/samuraism/businessCalendar/日本の祝休日.java) もあります。
 
-サンプルコードは日本の祝日の処理方法については [JapaneseHolidaysExample.java (英語語API)](https://github.com/yusuke/businessCalendar/blob/main/src/test/java/com/samuraism/businessCalendar/exmaple/JapaneseHolidaysExample.java),  [ビジネスカレンダーExample.java (日本語API)](https://github.com/yusuke/businessCalendar/blob/main/src/test/java/com/samuraism/businessCalendar/exmaple/ビジネスカレンダーExample.java) を、アメリカ合衆国の祝日の処理方法については [UnitedStatesHolidaysExample](https://github.com/yusuke/businessCalendar/blob/main/src/test/java/com/samuraism/businessCalendar/exmaple/UnitedStatesHolidaysExample.java) をご覧ください。
+サンプルコードは日本の祝日の処理方法については [JapaneseHolidaysExample.java (英語語API)](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/JapaneseHolidaysExample.java),  [ビジネスカレンダーExample.java (日本語API)](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/ビジネスカレンダーExample.java) を、アメリカ合衆国の祝日の処理方法については [UnitedStatesHolidaysExample](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/UnitedStatesHolidaysExample.java) をご覧ください。
 
 ```java
 import com.samuraism.bc4j.ビジネスカレンダー;
