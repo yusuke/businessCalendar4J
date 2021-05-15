@@ -39,7 +39,7 @@ public class JapaneseHolidaysExample {
 
         System.out.println("List of holidays in May 2021: ");
         // 2021-05-03:Constitution Memorial Day、2021-05-04:Greenery day、2021-05-05:Children's day を表示
-        businessCalendar.getHolidaysBetween️(LocalDate.of(2021, 5, 1)
+        businessCalendar.getHolidaysBetween(LocalDate.of(2021, 5, 1)
                 , LocalDate.of(2021, 5, 31))
                 .forEach(e -> System.out.println(e.date + ": " + e.name));
 

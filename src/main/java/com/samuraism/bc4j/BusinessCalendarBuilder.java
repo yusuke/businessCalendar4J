@@ -29,12 +29,14 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class BusinessCalendarBuilder {
+    boolean built = false;
     List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
     HolidayMap customHolidayMap = new HolidayMap();
     Locale locale = Locale.getDefault();
     List<BusinessHourFromTo> businessHourFromTos = new ArrayList<>();
 
     public final BusinessCalendarBuilder locale(Locale locale) {
+        ensureNotBuilt();
         this.locale = locale;
         return this;
     }
@@ -47,6 +49,7 @@ public class BusinessCalendarBuilder {
      */
     @SafeVarargs
     public final BusinessCalendarBuilder holiday(Function<LocalDate, String>... logics) {
+        ensureNotBuilt();
         Collections.addAll(holidayLogics, logics);
         return this;
     }
@@ -60,27 +63,32 @@ public class BusinessCalendarBuilder {
      */
     @NotNull
     public BusinessCalendarBuilder holiday(@NotNull LocalDate date, @NotNull String name) {
+        ensureNotBuilt();
         customHolidayMap.addHoliday(date, name);
         return this;
     }
 
     @NotNull
     public BusinessCalendar build() {
+        ensureNotBuilt();
+        built = true;
         return new BusinessCalendar(this);
     }
 
     @NotNull
     public BusinessHourFrom businessHourFrom(int hour) {
+        ensureNotBuilt();
         return businessHourFrom(hour, 0);
     }
 
     @NotNull
     public BusinessHourFrom businessHourFrom(int hour, int minutes) {
+        ensureNotBuilt();
         return new BusinessHourFrom(hour, minutes, this);
     }
 
     @NotNull
-    public Function<LocalDate ,List<BusinessHourSlot>> getBusinessHours() {
+    Function<LocalDate ,List<BusinessHourSlot>> getBusinessHours() {
         return (date)-> {
             if (businessHourFromTos.size() == 0) {
                 return Collections.singletonList(new BusinessHourSlot(LocalDateTime.
@@ -91,6 +99,11 @@ public class BusinessCalendarBuilder {
                     of(date, e.from),
                     LocalDateTime.of(date, e.to))).collect(Collectors.toList());
         };
+    }
+    private void ensureNotBuilt(){
+        if (built) {
+            throw new IllegalStateException("Already built");
+        }
     }
 
     class BusinessHourFrom {
@@ -115,6 +128,7 @@ public class BusinessCalendarBuilder {
 
         @NotNull
         BusinessCalendarBuilder to(int hour, int minutes) {
+            ensureNotBuilt();
             checkParameter(0 <= hour, "value should be greater than or equals to 0, provided: " + hour);
             checkParameter(hour < 24, "value should be less than 24, provided: " + hour);
             checkParameter(0 <= minutes, "value should be greater than or equals to 0, provided: " + minutes);

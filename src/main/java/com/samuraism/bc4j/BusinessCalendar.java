@@ -378,7 +378,7 @@ public final class BusinessCalendar {
      * @return List of holidays between the specified period
      */
     @NotNull
-    public List<Holiday> getHolidaysBetween️(@NotNull LocalDate from, @NotNull LocalDate to) {
+    public List<Holiday> getHolidaysBetween(@NotNull LocalDate from, @NotNull LocalDate to) {
         List<Holiday> list = new ArrayList<>();
         LocalDate start = from.isBefore(to) ? from : to;
         LocalDate end = (to.isAfter(from) ? to : from).plus(1, ChronoUnit.DAYS);

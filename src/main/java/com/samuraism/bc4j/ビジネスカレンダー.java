@@ -284,7 +284,7 @@ public class ビジネスカレンダー {
      */
     @NotNull
     public List<Holiday> get指定期間内の祝休日(@NotNull LocalDate 開始日, @NotNull LocalDate 終了日) {
-        return businessCalendar.getHolidaysBetween️(開始日, 終了日);
+        return businessCalendar.getHolidaysBetween(開始日, 終了日);
     }
 
     /**

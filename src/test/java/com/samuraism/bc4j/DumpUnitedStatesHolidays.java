@@ -51,7 +51,7 @@ public class DumpUnitedStatesHolidays {
                             THANKS_GIVING_DAY,
                             CHRISTMAS_DAY)
                     .build()
-                    .getHolidaysBetween️(start, end)) {
+                    .getHolidaysBetween(start, end)) {
                 final String line = String.format("%s,%s\n", holiday.date.format(dateTimeFormatter), holiday.name);
                 System.out.print(line);
                 utf8.write(line);

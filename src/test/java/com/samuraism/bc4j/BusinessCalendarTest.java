@@ -102,11 +102,11 @@ class BusinessCalendarTest {
     }
 
     @Test
-    void getHolidaysBetween️() {
+    void getHolidaysBetween() {
         assertAll(
                 () -> {
                     BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
-                    final List<Holiday> HolidayList = calendar.getHolidaysBetween️(LocalDate.of(1955, 1, 1),
+                    final List<Holiday> HolidayList = calendar.getHolidaysBetween(LocalDate.of(1955, 1, 1),
                             LocalDate.of(1955, 1, 16));
                     assertEquals(2, HolidayList.size());
                     assertEquals("New Year's Day", HolidayList.get(0).name);
@@ -115,7 +115,7 @@ class BusinessCalendarTest {
                 () -> {
                     BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
                     // from / to will be flipped if necessary
-                    final List<Holiday> HolidayList = calendar.getHolidaysBetween️(LocalDate.of(1955, 1, 16),
+                    final List<Holiday> HolidayList = calendar.getHolidaysBetween(LocalDate.of(1955, 1, 16),
                             LocalDate.of(1954, 12, 31));
                     assertEquals(2, HolidayList.size());
                     assertEquals("New Year's Day", HolidayList.get(0).name);
@@ -123,7 +123,7 @@ class BusinessCalendarTest {
                 },
                 () -> {
                     BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
-                    final List<Holiday> HolidayList = calendar.getHolidaysBetween️(LocalDate.of(1955, 1, 1),
+                    final List<Holiday> HolidayList = calendar.getHolidaysBetween(LocalDate.of(1955, 1, 1),
                             LocalDate.of(2021, 12, 31));
                     assertEquals(959, HolidayList.size());
                     assertEquals("New Year's Day", HolidayList.get(0).name);
@@ -135,7 +135,7 @@ class BusinessCalendarTest {
                             .holiday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "Saturday" : null)
                             .holiday(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "Sunday" : null)
                             .build();
-                    final List<Holiday> HolidayList = calendar.getHolidaysBetween️(LocalDate.of(1955, 1, 1),
+                    final List<Holiday> HolidayList = calendar.getHolidaysBetween(LocalDate.of(1955, 1, 1),
                             LocalDate.of(1955, 1, 16));
                     assertEquals(6, HolidayList.size());
                     assertEquals("New Year's Day", HolidayList.get(0).name);
@@ -149,7 +149,7 @@ class BusinessCalendarTest {
                 () -> {
                     // no holidays during the specified period
                     BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
-                    final List<Holiday> HolidayList = calendar.getHolidaysBetween️(LocalDate.of(2021, 1, 2),
+                    final List<Holiday> HolidayList = calendar.getHolidaysBetween(LocalDate.of(2021, 1, 2),
                             LocalDate.of(2021, 1, 2));
                     assertEquals(0, HolidayList.size());
                 });
@@ -239,5 +239,12 @@ class BusinessCalendarTest {
         assertNotNull(BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS.apply(LocalDate.of(2021, 1, 2)));
         assertNotNull(BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS.apply(LocalDate.of(2021, 1, 3)));
         assertNull(BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS.apply(LocalDate.of(2021, 1, 4)));
+    }
+
+    @Test
+    void alreadyBuilt() {
+        final BusinessCalendarBuilder builder = BusinessCalendar.newBuilder();
+        builder.build();
+        assertThrows(IllegalStateException.class, builder::build);
     }
 }
