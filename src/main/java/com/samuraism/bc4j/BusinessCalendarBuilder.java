@@ -32,7 +32,7 @@ public class BusinessCalendarBuilder {
     List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
     HolidayMap customHolidayMap = new HolidayMap();
     Locale locale = Locale.getDefault();
-    List<BusinessHourFrom> businessHourFroms = new ArrayList<>();
+    List<BusinessHourFromTo> businessHourFromTos = new ArrayList<>();
 
     public final BusinessCalendarBuilder locale(Locale locale) {
         this.locale = locale;
@@ -76,30 +76,26 @@ public class BusinessCalendarBuilder {
 
     @NotNull
     public BusinessHourFrom businessHourFrom(int hour, int minutes) {
-        final BusinessHourFrom businessHourFrom = new BusinessHourFrom(hour, minutes, this);
-        businessHourFroms.add(businessHourFrom);
-        return businessHourFrom;
+        return new BusinessHourFrom(hour, minutes, this);
     }
 
     @NotNull
-    public BusinessHours getBusinessHours() {
-        return date -> {
-            if (businessHourFroms.size() == 0) {
+    public Function<LocalDate ,List<BusinessHourSlot>> getBusinessHours() {
+        return (date)-> {
+            if (businessHourFromTos.size() == 0) {
                 return Collections.singletonList(new BusinessHourSlot(LocalDateTime.
                         of(date, LocalTime.of(0, 0)),
                         LocalDateTime.of(date.plus(1, ChronoUnit.DAYS), LocalTime.of(0, 0))));
             }
-            return businessHourFroms.stream().map(e -> new BusinessHourSlot(LocalDateTime.
-                    of(date, LocalTime.of(e.fromHour, e.fromMinutes)),
-                    LocalDateTime.of(date, LocalTime.of(e.toHour, e.toMinutes)))).collect(Collectors.toList());
+            return businessHourFromTos.stream().map(e -> new BusinessHourSlot(LocalDateTime.
+                    of(date, e.from),
+                    LocalDateTime.of(date, e.to))).collect(Collectors.toList());
         };
     }
 
-    static class BusinessHourFrom {
+    class BusinessHourFrom {
         int fromHour;
         int fromMinutes;
-        int toHour;
-        int toMinutes;
         BusinessCalendarBuilder builder;
 
         BusinessHourFrom(int fromHour, int fromMinutes, @NotNull BusinessCalendarBuilder builder) {
@@ -126,9 +122,7 @@ public class BusinessCalendarBuilder {
             final LocalTime from = LocalTime.of(fromHour, fromMinutes);
             final LocalTime to = LocalTime.of(hour, minutes);
             checkParameter(from.isBefore(to), "from should be before to, provided: " + from + " / " + to);
-
-            this.toHour = hour;
-            this.toMinutes = minutes;
+            businessHourFromTos.add(new BusinessHourFromTo(LocalTime.of(fromHour, fromMinutes), LocalTime.of(hour, minutes)));
             return builder;
         }
 
@@ -137,5 +131,15 @@ public class BusinessCalendarBuilder {
                 throw new IllegalArgumentException(message);
             }
         }
+    }
+}
+
+class BusinessHourFromTo {
+    LocalTime from;
+    LocalTime to;
+
+    public BusinessHourFromTo(LocalTime from, LocalTime to) {
+        this.from = from;
+        this.to = to;
     }
 }
