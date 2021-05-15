@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 the original author or authors.
+   Copyright 2021 the 起点al author or authors.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Function;
 
@@ -60,7 +61,8 @@ public class ビジネスカレンダー {
         this.businessCalendar = businessCalendar;
     }
 
-    public static @NotNull ビジネスカレンダーBuilder newBuilder() {
+    public static @NotNull
+    ビジネスカレンダーBuilder newBuilder() {
         return new ビジネスカレンダーBuilder();
     }
 
@@ -102,6 +104,75 @@ public class ビジネスカレンダー {
      */
     public boolean is営業日() {
         return businessCalendar.isBusinessDay();
+    }
+
+    /**
+     * 指定した時刻が営業時間かどうか判定する
+     *
+     * @param dateTime 時刻
+     * @return 指定した時刻が営業時間であればtrueを返す
+     * @since 1.8
+     */
+    public boolean is営業時間(@NotNull LocalDateTime dateTime) {
+        return businessCalendar.isBusinessHour(dateTime);
+    }
+
+    /**
+     * 現在が営業時間か判定する
+     *
+     * @return 現在が営業時間であればtrueを返す
+     * @since 1.8
+     */
+    public boolean is営業時間() {
+        return businessCalendar.isBusinessHour();
+    }
+
+    /**
+     * 指定した時刻以前の営業終了時間を返す
+     *
+     * @param when 起点
+     * @return 指定した時刻以前の営業終了時間
+     * @since 1.8
+     */
+    @NotNull
+    public LocalDateTime 前の営業終了時間(@NotNull LocalDateTime when) {
+        return businessCalendar.lastBusinessHourEnd(when);
+    }
+
+    /**
+     * 指定した時刻以降の営業終了時間を返す
+     *
+     * @param when 起点
+     * @return 指定した時刻以降の営業終了時間
+     * @since 1.8
+     */
+    @NotNull
+    public LocalDateTime 次の営業終了時間(@NotNull LocalDateTime when) {
+        return businessCalendar.nextBusinessHourEnd(when);
+    }
+
+    /**
+     * 指定した時刻以前の営業開始時間を返す
+     *
+     * @param when 起点
+     * @return 指定した時刻以前の営業開始時間
+     * @since 1.8
+     */
+    @NotNull
+    public LocalDateTime 前の営業開始時間(@NotNull LocalDateTime when) {
+        return businessCalendar.lastBusinessHourStart(when);
+    }
+
+    /**
+     * 指定した時刻以降の営業開始時間を返す
+     *
+     * @param when 起点
+     * @return 指定した時刻以降の営業開始時間
+     * @since 1.8
+     */
+    @NotNull
+    public LocalDateTime 次の営業開始時間(@NotNull LocalDateTime when) {
+        return businessCalendar.nextBusinessHourStart(when);
     }
 
     /**

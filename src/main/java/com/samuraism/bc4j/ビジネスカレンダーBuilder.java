@@ -15,6 +15,8 @@
  */
 package com.samuraism.bc4j;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.function.Function;
@@ -25,7 +27,8 @@ public final class ビジネスカレンダーBuilder {
     ビジネスカレンダーBuilder() {
     }
 
-    public final ビジネスカレンダーBuilder locale(Locale locale) {
+    @NotNull
+    public final ビジネスカレンダーBuilder locale(@NotNull Locale locale) {
         builder.locale(locale);
         return this;
     }
@@ -37,7 +40,8 @@ public final class ビジネスカレンダーBuilder {
      * @return このインスタンス
      */
     @SafeVarargs
-    public final ビジネスカレンダーBuilder 祝休日(Function<LocalDate, String>... logics) {
+    @NotNull
+    public final ビジネスカレンダーBuilder 祝休日(@NotNull Function<LocalDate, String>... logics) {
         builder.holiday(logics);
         return this;
     }
@@ -49,12 +53,46 @@ public final class ビジネスカレンダーBuilder {
      * @param 名称 名称
      * @return このインスタンス
      */
-    public ビジネスカレンダーBuilder 祝休日(LocalDate 日付, String 名称) {
-        builder.holiday(日付,名称);
+    @NotNull
+    public ビジネスカレンダーBuilder 祝休日(@NotNull LocalDate 日付, @NotNull String 名称) {
+        builder.holiday(日付, 名称);
         return this;
     }
 
+    @NotNull
+    public 営業時間From 営業時間(int hour) {
+        return 営業時間(hour, 0);
+    }
+
+    @NotNull
+    public 営業時間From 営業時間(int hour, int minutes) {
+        return new 営業時間From(builder.businessHourFrom(hour, minutes), this);
+    }
+
+    @NotNull
     public ビジネスカレンダー build() {
         return new ビジネスカレンダー(builder.build());
+    }
+
+    static class 営業時間From {
+        private final BusinessCalendarBuilder.BusinessHourFrom businessHourFrom;
+        private final ビジネスカレンダーBuilder builder;
+
+
+        public 営業時間From(@NotNull BusinessCalendarBuilder.BusinessHourFrom businessHourFrom, @NotNull ビジネスカレンダーBuilder builder) {
+            this.businessHourFrom = businessHourFrom;
+            this.builder = builder;
+        }
+
+        @NotNull
+        ビジネスカレンダーBuilder から(int 時) {
+            return から(時, 0);
+        }
+
+        @NotNull
+        ビジネスカレンダーBuilder から(int 時, int 分) {
+            this.businessHourFrom.to(時, 分);
+            return builder;
+        }
     }
 }
