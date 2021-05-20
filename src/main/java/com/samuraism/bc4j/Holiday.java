@@ -18,7 +18,8 @@ package com.samuraism.bc4j;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public final class Holiday implements Comparable<Holiday> {
+public final class Holiday implements Comparable<Holiday>, java.io.Serializable {
+    private static final long serialVersionUID = 3372083406725976821L;
     public final LocalDate date;
     public final String name;
 

@@ -21,11 +21,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 
-public final class BusinessHourSlot {
+public final class BusinessHourSlot implements java.io.Serializable {
+    private static final long serialVersionUID = -102401732734407839L;
+    @NotNull
     public final LocalDateTime from, to;
 
-    BusinessHourSlot(@NotNull LocalDate baseDate, LocalTime from, @NotNull LocalTime to) {
+    BusinessHourSlot(@NotNull LocalDate baseDate, @NotNull LocalTime from, @NotNull LocalTime to) {
         this.from = LocalDateTime.of(baseDate, from);
         this.to = to.getHour() == 0 && to.getMinute() == 0 ? LocalDateTime.of(baseDate.plus(1, ChronoUnit.DAYS), to)
                 : LocalDateTime.of(baseDate, to);
@@ -33,6 +36,27 @@ public final class BusinessHourSlot {
 
     boolean isBusinessHour(@NotNull LocalDateTime time) {
         return time.isEqual(from) || (from.isBefore(time) && to.isAfter(time));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BusinessHourSlot that = (BusinessHourSlot) o;
+        return from.equals(that.from) && to.equals(that.to);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(from, to);
+    }
+
+    @Override
+    public String toString() {
+        return "BusinessHourSlot{" +
+                "from=" + from +
+                ", to=" + to +
+                '}';
     }
 }
 
