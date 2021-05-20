@@ -124,6 +124,22 @@ public final class BusinessCalendar {
     }
 
     /**
+     * Returns a list of BusinessHourSlot on a specific date
+     *
+     * @param date date
+     * @return list of business hour slots on a specified date
+     * @since 1.9
+     */
+    @NotNull
+    public List<BusinessHourSlot> getBusinessHourSlots(@NotNull LocalDate date) {
+        if (isHoliday()) {
+            return Collections.emptyList();
+        } else {
+            return businessHours.apply(date).stream().sorted(Comparator.comparing(e -> e.from)).collect(Collectors.toList());
+        }
+    }
+
+    /**
      * Returns when last business hours ended
      *
      * @param when origin
@@ -243,6 +259,7 @@ public final class BusinessCalendar {
     }
 
     Pattern p = Pattern.compile("\\$\\{([a-z.A-Z]+)}");
+
     @NotNull
     private String toHolidayString(@NotNull String key) {
         if (resource.containsKey(key)) {

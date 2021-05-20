@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,8 +26,8 @@ class BusinessHoursTest {
         final BusinessCalendar build = BusinessCalendar.newBuilder()
                 .holiday(LocalDate.of(2021,5,14),"just holiday")
                 // Monday, Wednesday 2pm to 3pm
-                .businessHourFrom(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, 14).to(15)
                 .businessHourFrom(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, 22).to(23, 30)
+                .businessHourFrom(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, 14).to(15)
                 // Saturday 10am 12, 1:30pm to 5pm
                 .businessHourFrom(DayOfWeek.SATURDAY, 10).to(12)
                 .businessHourFrom(DayOfWeek.SATURDAY, 13, 30).to(17)
@@ -38,6 +39,27 @@ class BusinessHoursTest {
         // Monday
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 10, 13, 45, 0)));
         assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 11, 13, 45, 0)));
+
+        final List<BusinessHourSlot> businessHourSlotsMonday = build.getBusinessHourSlots(LocalDate.of(2021, 5, 10));
+        assertEquals(2, businessHourSlotsMonday.size());
+        assertEquals(LocalDateTime.of(2021,5,10,14,0), businessHourSlotsMonday.get(0).from);
+        assertEquals(LocalDateTime.of(2021,5,10,15,0), businessHourSlotsMonday.get(0).to);
+        assertEquals(LocalDateTime.of(2021,5,10,22,0), businessHourSlotsMonday.get(1).from);
+        assertEquals(LocalDateTime.of(2021,5,10,23,30), businessHourSlotsMonday.get(1).to);
+
+        final List<BusinessHourSlot> businessHourSlotsTuesday = build.getBusinessHourSlots(LocalDate.of(2021, 5, 11));
+        assertEquals(1, businessHourSlotsTuesday.size());
+        assertEquals(LocalDateTime.of(2021,5,11,9,0), businessHourSlotsTuesday.get(0).from);
+        assertEquals(LocalDateTime.of(2021,5,11,18,0), businessHourSlotsTuesday.get(0).to);
+
+
+        final List<BusinessHourSlot> businessHourSlotsWednesday = build.getBusinessHourSlots(LocalDate.of(2021, 5, 12));
+        assertEquals(2, businessHourSlotsWednesday.size());
+        assertEquals(LocalDateTime.of(2021,5,12,14,0), businessHourSlotsWednesday.get(0).from);
+        assertEquals(LocalDateTime.of(2021,5,12,15,0), businessHourSlotsWednesday.get(0).to);
+        assertEquals(LocalDateTime.of(2021,5,12,22,0), businessHourSlotsWednesday.get(1).from);
+        assertEquals(LocalDateTime.of(2021,5,12,23,30), businessHourSlotsWednesday.get(1).to);
+
         // Wednesday
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 12, 13, 45, 0)));
         assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 13, 13, 45, 0)));

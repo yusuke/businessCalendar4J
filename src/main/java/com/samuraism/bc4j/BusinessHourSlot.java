@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDateTime;
 
 public class BusinessHourSlot {
-    final LocalDateTime from, to;
+    public final LocalDateTime from, to;
 
     BusinessHourSlot(@NotNull LocalDateTime from, @NotNull LocalDateTime to) {
         assert to.isAfter(from);
