@@ -131,6 +131,20 @@ class BusinessHoursTest {
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 18, 0, 1)));
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 18, 1, 0)));
     }
+    @Test
+    void until24() {
+        // opens 13, closes 24
+        final BusinessCalendar build = BusinessCalendar.newBuilder()
+                .holiday(BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS)
+                .businessHourFrom(13).to(24).build();
+        assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 21, 12, 59)));
+        assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 21, 13, 0)));
+        assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 21, 13, 1)));
+        assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 21, 23, 59)));
+        assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 21, 23, 59)));
+        assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 22, 0, 0)));
+        assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 22, 0, 1)));
+    }
 
     @Test
     void businessHourFrom10to12and13to17() {
@@ -182,8 +196,10 @@ class BusinessHoursTest {
             BusinessCalendar.newBuilder()
                     .businessHourFrom(0).to(23, 59).build();
         });
-        assertThrows(IllegalArgumentException.class, () -> BusinessCalendar.newBuilder()
-                .businessHourFrom(0).to(24).build());
+        assertDoesNotThrow(() -> {
+            BusinessCalendar.newBuilder()
+                    .businessHourFrom(0).to(24, 0).build();
+        });
         assertThrows(IllegalArgumentException.class, () -> BusinessCalendar.newBuilder()
                 .businessHourFrom(-1).to(9).build());
         assertThrows(IllegalArgumentException.class, () -> BusinessCalendar.newBuilder()

@@ -17,15 +17,18 @@ package com.samuraism.bc4j;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 
-public class BusinessHourSlot {
+public final class BusinessHourSlot {
     public final LocalDateTime from, to;
 
-    BusinessHourSlot(@NotNull LocalDateTime from, @NotNull LocalDateTime to) {
-        assert to.isAfter(from);
-        this.from = from;
-        this.to = to;
+    BusinessHourSlot(@NotNull LocalDate baseDate, LocalTime from, @NotNull LocalTime to) {
+        this.from = LocalDateTime.of(baseDate, from);
+        this.to = to.getHour() == 0 && to.getMinute() == 0 ? LocalDateTime.of(baseDate.plus(1, ChronoUnit.DAYS), to)
+                : LocalDateTime.of(baseDate, to);
     }
 
     boolean isBusinessHour(@NotNull LocalDateTime time) {

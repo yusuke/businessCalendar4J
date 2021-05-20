@@ -19,9 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -182,21 +180,17 @@ public class BusinessCalendarBuilder {
     Function<LocalDate, List<BusinessHourSlot>> getBusinessHours() {
         return (date) -> {
             if (businessHourFromTos.size() == 0) {
-                return Collections.singletonList(new BusinessHourSlot(LocalDateTime.
-                        of(date, LocalTime.of(0, 0)),
-                        LocalDateTime.of(date.plus(1, ChronoUnit.DAYS), LocalTime.of(0, 0))));
+                return Collections.singletonList(new BusinessHourSlot(date, LocalTime.of(0, 0), LocalTime.of(0, 0)));
             }
             // Day of week specific algorithm
 
             if (businessHourFromTos.stream().anyMatch(e -> e.isSpecificTo(date.getDayOfWeek()))) {
-                return businessHourFromTos.stream().filter(e -> e.isSpecificTo(date.getDayOfWeek())).map(e -> new BusinessHourSlot(LocalDateTime.
-                        of(date, e.from),
-                        LocalDateTime.of(date, e.to))).collect(Collectors.toList());
+                return businessHourFromTos.stream().filter(e -> e.isSpecificTo(date.getDayOfWeek()))
+                        .map(e -> new BusinessHourSlot(date, e.from, e.to)).collect(Collectors.toList());
 
-            } else{
-                return businessHourFromTos.stream().filter(BusinessHourFromTo::dayOfWeekNotSpecified).map(e -> new BusinessHourSlot(LocalDateTime.
-                        of(date, e.from),
-                        LocalDateTime.of(date, e.to))).collect(Collectors.toList());
+            } else {
+                return businessHourFromTos.stream().filter(BusinessHourFromTo::dayOfWeekNotSpecified)
+                        .map(e -> new BusinessHourSlot(date, e.from, e.to)).collect(Collectors.toList());
             }
         };
     }
@@ -234,13 +228,14 @@ public class BusinessCalendarBuilder {
         public BusinessCalendarBuilder to(int hour, int minutes) {
             ensureNotBuilt();
             checkParameter(0 <= hour, "value should be greater than or equals to 0, provided: " + hour);
-            checkParameter(hour < 24, "value should be less than 24, provided: " + hour);
+            checkParameter(hour <= 24, "value should be less than or equals to 24, provided: " + hour);
             checkParameter(0 <= minutes, "value should be greater than or equals to 0, provided: " + minutes);
             checkParameter(minutes <= 59, "value should be less than 60, provided: " + minutes);
             final LocalTime from = LocalTime.of(fromHour, fromMinutes);
-            final LocalTime to = LocalTime.of(hour, minutes);
-            checkParameter(from.isBefore(to), "from should be before to, provided: " + from + " / " + to);
-            businessHourFromTos.add(new BusinessHourFromTo(LocalTime.of(fromHour, fromMinutes), LocalTime.of(hour, minutes), dayOfWeeks));
+            final boolean toIsEndOfTheDay = hour == 24 && minutes == 0;
+            final LocalTime to = toIsEndOfTheDay ? LocalTime.of(0,0) : LocalTime.of(hour, minutes);
+            checkParameter(from.isBefore(to) || toIsEndOfTheDay, "from should be before to, provided: " + from + " / " + to);
+            businessHourFromTos.add(new BusinessHourFromTo(LocalTime.of(fromHour, fromMinutes), to, dayOfWeeks));
             return builder;
 
         }
