@@ -192,7 +192,7 @@ public class BusinessCalendarBuilder {
                 return businessHourFromTos.stream().filter(e -> e.isSpecificTo(date.getDayOfWeek())).map(e -> new BusinessHourSlot(LocalDateTime.
                         of(date, e.from),
                         LocalDateTime.of(date, e.to))).collect(Collectors.toList());
-                
+
             } else{
                 return businessHourFromTos.stream().filter(BusinessHourFromTo::dayOfWeekNotSpecified).map(e -> new BusinessHourSlot(LocalDateTime.
                         of(date, e.from),
@@ -207,7 +207,7 @@ public class BusinessCalendarBuilder {
         }
     }
 
-    class BusinessHourFrom {
+    public class BusinessHourFrom {
         DayOfWeek[] dayOfWeeks;
         int fromHour;
         int fromMinutes;
@@ -226,12 +226,12 @@ public class BusinessCalendarBuilder {
         }
 
         @NotNull
-        BusinessCalendarBuilder to(int hour) {
+        public BusinessCalendarBuilder to(int hour) {
             return to(hour, 0);
         }
 
         @NotNull
-        BusinessCalendarBuilder to(int hour, int minutes) {
+        public BusinessCalendarBuilder to(int hour, int minutes) {
             ensureNotBuilt();
             checkParameter(0 <= hour, "value should be greater than or equals to 0, provided: " + hour);
             checkParameter(hour < 24, "value should be less than 24, provided: " + hour);

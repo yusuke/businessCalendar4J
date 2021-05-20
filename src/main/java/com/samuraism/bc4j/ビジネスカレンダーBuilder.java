@@ -161,7 +161,7 @@ public final class ビジネスカレンダーBuilder {
         return new ビジネスカレンダー(builder.build());
     }
 
-    static class 営業時間From {
+    public static class 営業時間From {
         private final BusinessCalendarBuilder.BusinessHourFrom businessHourFrom;
         private final ビジネスカレンダーBuilder builder;
 
@@ -172,12 +172,12 @@ public final class ビジネスカレンダーBuilder {
         }
 
         @NotNull
-        ビジネスカレンダーBuilder から(int 時) {
+        public ビジネスカレンダーBuilder から(int 時) {
             return から(時, 0);
         }
 
         @NotNull
-        ビジネスカレンダーBuilder から(int 時, int 分) {
+        public ビジネスカレンダーBuilder から(int 時, int 分) {
             this.businessHourFrom.to(時, 分);
             return builder;
         }
