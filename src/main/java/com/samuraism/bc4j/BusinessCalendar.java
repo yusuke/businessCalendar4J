@@ -110,7 +110,7 @@ public final class BusinessCalendar {
      * @since 1.8
      */
     public boolean isBusinessHour(@NotNull LocalDateTime dateTime) {
-        return businessHours.apply(dateTime.toLocalDate()).stream().anyMatch(e -> e.isBusinessHour(dateTime));
+        return isBusinessDay(dateTime.toLocalDate()) && businessHours.apply(dateTime.toLocalDate()).stream().anyMatch(e -> e.isBusinessHour(dateTime));
     }
 
     /**

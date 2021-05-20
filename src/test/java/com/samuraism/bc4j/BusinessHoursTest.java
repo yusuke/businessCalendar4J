@@ -3,6 +3,7 @@ package com.samuraism.bc4j;
 import org.junit.jupiter.api.Test;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -22,7 +23,7 @@ class BusinessHoursTest {
     void businessSaturdayShort() {
         // opens 9, closes 18
         final BusinessCalendar build = BusinessCalendar.newBuilder()
-
+                .holiday(LocalDate.of(2021,5,14),"just holiday")
                 // Monday, Wednesday 2pm to 3pm
                 .businessHourFrom(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, 14).to(15)
                 .businessHourFrom(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, 22).to(23, 30)
@@ -40,7 +41,7 @@ class BusinessHoursTest {
         // Wednesday
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 12, 13, 45, 0)));
         assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 13, 13, 45, 0)));
-        assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 13, 45, 0)));
+        assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 13, 45, 0)));
         assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 15, 13, 45, 0)));
         assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 16, 13, 45, 0)));
         
@@ -55,16 +56,16 @@ class BusinessHoursTest {
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 16, 22, 45, 0)));
 
 
-        // Friday
+        // Friday (holiday)
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 8, 59, 0)));
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 8, 59, 59)));
-        assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 9, 0, 0)));
-        assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 9, 0, 1)));
+        assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 9, 0, 0)));
+        assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 9, 0, 1)));
 
-        assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 12, 0, 0)));
+        assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 12, 0, 0)));
 
-        assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 17, 59, 0)));
-        assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 17, 59, 59)));
+        assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 17, 59, 0)));
+        assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 17, 59, 59)));
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 18, 0, 0)));
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 18, 0, 1)));
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 18, 1, 0)));
