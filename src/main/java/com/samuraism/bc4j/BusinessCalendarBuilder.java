@@ -32,6 +32,7 @@ public class BusinessCalendarBuilder {
     List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
     HolidayMap customHolidayMap = new HolidayMap();
     Locale locale = Locale.getDefault();
+    List<Function<LocalDate, List<BusinessHourSlot>>> businessHourSlotsProvider = new ArrayList<>();
     List<BusinessHourFromTo> businessHourFromTos = new ArrayList<>();
 
     public final BusinessCalendarBuilder locale(Locale locale) {
@@ -71,6 +72,25 @@ public class BusinessCalendarBuilder {
     public BusinessCalendar build() {
         ensureNotBuilt();
         built = true;
+        if (businessHourFromTos.size() == 0) {
+            businessHourFromTos.add(new BusinessHourFromTo(LocalTime.of(0, 0), LocalTime.of(0, 0), new DayOfWeek[0]));
+        }
+        final List<BusinessHourFromTo> dayOfWeekSpecified = businessHourFromTos.stream().filter(e -> !e.dayOfWeekNotSpecified()).collect(Collectors.toList());
+        if (dayOfWeekSpecified.size() != 0) {
+            // Day of week specific algorithm
+            businessHourSlotsProvider.add(date -> {
+                if (dayOfWeekSpecified.stream().anyMatch(e -> e.isSpecificTo(date.getDayOfWeek()))) {
+                    return businessHourFromTos.stream().filter(e -> e.isSpecificTo(date.getDayOfWeek()))
+                            .map(e -> new BusinessHourSlot(date, e.from, e.to)).collect(Collectors.toList());
+                } else {
+                    return null;
+                }
+            });
+        }
+        final List<BusinessHourFromTo> dayOfWeekNotSpecified = businessHourFromTos.stream().filter(BusinessHourFromTo::dayOfWeekNotSpecified).collect(Collectors.toList());
+        businessHourSlotsProvider.add(date -> dayOfWeekNotSpecified.stream()
+                .map(e -> new BusinessHourSlot(date, e.from, e.to)).collect(Collectors.toList()));
+
         return new BusinessCalendar(this);
     }
 
@@ -179,19 +199,14 @@ public class BusinessCalendarBuilder {
     @NotNull
     Function<LocalDate, List<BusinessHourSlot>> getBusinessHours() {
         return (date) -> {
-            if (businessHourFromTos.size() == 0) {
-                return Collections.singletonList(new BusinessHourSlot(date, LocalTime.of(0, 0), LocalTime.of(0, 0)));
+            List<BusinessHourSlot> slots = null;
+            for (Function<LocalDate, List<BusinessHourSlot>> provider : businessHourSlotsProvider) {
+                slots = provider.apply(date);
+                if (slots != null && slots.size() != 0) {
+                    break;
+                }
             }
-            // Day of week specific algorithm
-
-            if (businessHourFromTos.stream().anyMatch(e -> e.isSpecificTo(date.getDayOfWeek()))) {
-                return businessHourFromTos.stream().filter(e -> e.isSpecificTo(date.getDayOfWeek()))
-                        .map(e -> new BusinessHourSlot(date, e.from, e.to)).collect(Collectors.toList());
-
-            } else {
-                return businessHourFromTos.stream().filter(BusinessHourFromTo::dayOfWeekNotSpecified)
-                        .map(e -> new BusinessHourSlot(date, e.from, e.to)).collect(Collectors.toList());
-            }
+            return slots;
         };
     }
 
@@ -233,7 +248,7 @@ public class BusinessCalendarBuilder {
             checkParameter(minutes <= 59, "value should be less than 60, provided: " + minutes);
             final LocalTime from = LocalTime.of(fromHour, fromMinutes);
             final boolean toIsEndOfTheDay = hour == 24 && minutes == 0;
-            final LocalTime to = toIsEndOfTheDay ? LocalTime.of(0,0) : LocalTime.of(hour, minutes);
+            final LocalTime to = toIsEndOfTheDay ? LocalTime.of(0, 0) : LocalTime.of(hour, minutes);
             checkParameter(from.isBefore(to) || toIsEndOfTheDay, "from should be before to, provided: " + from + " / " + to);
             businessHourFromTos.add(new BusinessHourFromTo(LocalTime.of(fromHour, fromMinutes), to, dayOfWeeks));
             return builder;
@@ -270,6 +285,7 @@ class BusinessHourFromTo {
         }
         return false;
     }
+
     boolean dayOfWeekNotSpecified() {
         return dayOfWeeks.length == 0;
     }
