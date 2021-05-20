@@ -4,7 +4,7 @@
 
 日本の祝日については内閣府の公開している情報を直接取得して、かつ定期的に更新してるため正確です。内閣府で公開している確定情報の範囲よりも後の日付については現行の法律をベースにしたアルゴリズムと国立天文台の情報を元に休祝日を推定します。
 
-また [HolidayConfiguration](https://github.com/yusuke/businessCalendar/blob/main/src/main/java/com/samuraism/businessCalendar/HolidayConfiguration.java) より固定の日、またはlambda式で柔軟に「土日を祝日扱いにする」、「特定の日を祝休日扱いにする」、などの定義が行えるので事業等の実態に合わせた営業日の導出が行えます。
+また [BusinessCalenderBuilder](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/BusinessCalendarBuilder.java) より固定の日、またはlambda式で柔軟に「土日を祝日扱いにする」、「特定の日を祝休日扱いにする」、などの定義が行えるので事業等の実態に合わせた営業日の導出が行えます。
 
 ## ハッシュタグ
 ご意見、ご感想などは [&#35;businessCalendar4J](https://twitter.com/intent/tweet?text=https://github.com/yusuke/businessCalendar4j/+%23businessCalendar4J) を使ってツイートしていただければ幸いです。
