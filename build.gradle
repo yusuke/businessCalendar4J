@@ -34,12 +34,12 @@ test {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = 'holidays'
+            artifactId = 'businessCalendar4j'
             from components.java
             pom {
-                name = 'holidays'
-                description = 'holidays'
-                url = 'https://github.com/yusuke/holidays'
+                name = 'businessCalendar4j'
+                description = 'businessCalendar4j'
+                url = 'https://github.com/yusuke/businessCalendar4j'
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
@@ -54,9 +54,9 @@ publishing {
                     }
                 }
                 scm {
-                    url = 'https://github.com/yusuke/holidays'
-                    connection = 'scm:git:git://github.com/yusuke/holidays.git'
-                    developerConnection = 'scm:git:git@github.com:yusuke/holidays.git'
+                    url = 'https://github.com/yusuke/businessCalendar4j'
+                    connection = 'scm:git:git://github.com/yusuke/businessCalendar4j.git'
+                    developerConnection = 'scm:git:git@github.com:yusuke/businessCalendar4j.git'
                 }
             }
         }
