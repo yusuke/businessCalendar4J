@@ -101,15 +101,15 @@ public class 営業時間Example {
     public static void main(String[] args) {
         ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder()
                 // 月曜〜金曜は9時〜18時営業
-                .営業時間(9).から(18)
+                .開始(9).終了(18)
                 // 土日は10時〜16:30営業
-                .営業時間(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY, 10).から(16, 30)
+                .曜日(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).開始(10).終了(16, 30)
                 .build();
         // true をプリント
-        System.out.println("2021年5月20(木) 9:30 は営業時間？ :" + 
+        System.out.println("2021年5月20(木) 9:30 は営業時間？ :" +
                 calendar.is営業時間(LocalDateTime.of(2021, 5, 20, 9, 30)));
         // false をプリント
-        System.out.println("2021年5月22(土) 9:30 は営業時間？ :" + 
+        System.out.println("2021年5月22(土) 9:30 は営業時間？ :" +
                 calendar.is営業時間(LocalDateTime.of(2021, 5, 22, 9, 30)));
     }
 }

@@ -24,15 +24,15 @@ class BusinessHoursTest {
     void businessSaturdayShort() {
         // opens 9, closes 18
         final BusinessCalendar build = BusinessCalendar.newBuilder()
-                .holiday(LocalDate.of(2021,5,14),"just holiday")
+                .holiday(LocalDate.of(2021, 5, 14), "just holiday")
                 // Monday, Wednesday 2pm to 3pm
-                .businessHourFrom(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, 22).to(23, 30)
-                .businessHourFrom(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, 14).to(15)
+                .on(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY).from(22).to(23, 30)
+                .on(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY).from(14).to(15)
                 // Saturday 10am 12, 1:30pm to 5pm
-                .businessHourFrom(DayOfWeek.SATURDAY, 10).to(12)
-                .businessHourFrom(DayOfWeek.SATURDAY, 13, 30).to(17)
+                .on(DayOfWeek.SATURDAY).from(10).to(12)
+                .on(DayOfWeek.SATURDAY).from(13, 30).to(17)
                 // Other than Monday, Wednesday, and Saturday: 9am to 6pm
-                .businessHourFrom(9).to(18)
+                .from(9).to(18)
                 .build();
 
         // On Monday and wednesday, opens from 2pm to 3pm, 10pm to 11:30pm
@@ -42,23 +42,23 @@ class BusinessHoursTest {
 
         final List<BusinessHourSlot> businessHourSlotsMonday = build.getBusinessHourSlots(LocalDate.of(2021, 5, 10));
         assertEquals(2, businessHourSlotsMonday.size());
-        assertEquals(LocalDateTime.of(2021,5,10,14,0), businessHourSlotsMonday.get(0).from);
-        assertEquals(LocalDateTime.of(2021,5,10,15,0), businessHourSlotsMonday.get(0).to);
-        assertEquals(LocalDateTime.of(2021,5,10,22,0), businessHourSlotsMonday.get(1).from);
-        assertEquals(LocalDateTime.of(2021,5,10,23,30), businessHourSlotsMonday.get(1).to);
+        assertEquals(LocalDateTime.of(2021, 5, 10, 14, 0), businessHourSlotsMonday.get(0).from);
+        assertEquals(LocalDateTime.of(2021, 5, 10, 15, 0), businessHourSlotsMonday.get(0).to);
+        assertEquals(LocalDateTime.of(2021, 5, 10, 22, 0), businessHourSlotsMonday.get(1).from);
+        assertEquals(LocalDateTime.of(2021, 5, 10, 23, 30), businessHourSlotsMonday.get(1).to);
 
         final List<BusinessHourSlot> businessHourSlotsTuesday = build.getBusinessHourSlots(LocalDate.of(2021, 5, 11));
         assertEquals(1, businessHourSlotsTuesday.size());
-        assertEquals(LocalDateTime.of(2021,5,11,9,0), businessHourSlotsTuesday.get(0).from);
-        assertEquals(LocalDateTime.of(2021,5,11,18,0), businessHourSlotsTuesday.get(0).to);
+        assertEquals(LocalDateTime.of(2021, 5, 11, 9, 0), businessHourSlotsTuesday.get(0).from);
+        assertEquals(LocalDateTime.of(2021, 5, 11, 18, 0), businessHourSlotsTuesday.get(0).to);
 
 
         final List<BusinessHourSlot> businessHourSlotsWednesday = build.getBusinessHourSlots(LocalDate.of(2021, 5, 12));
         assertEquals(2, businessHourSlotsWednesday.size());
-        assertEquals(LocalDateTime.of(2021,5,12,14,0), businessHourSlotsWednesday.get(0).from);
-        assertEquals(LocalDateTime.of(2021,5,12,15,0), businessHourSlotsWednesday.get(0).to);
-        assertEquals(LocalDateTime.of(2021,5,12,22,0), businessHourSlotsWednesday.get(1).from);
-        assertEquals(LocalDateTime.of(2021,5,12,23,30), businessHourSlotsWednesday.get(1).to);
+        assertEquals(LocalDateTime.of(2021, 5, 12, 14, 0), businessHourSlotsWednesday.get(0).from);
+        assertEquals(LocalDateTime.of(2021, 5, 12, 15, 0), businessHourSlotsWednesday.get(0).to);
+        assertEquals(LocalDateTime.of(2021, 5, 12, 22, 0), businessHourSlotsWednesday.get(1).from);
+        assertEquals(LocalDateTime.of(2021, 5, 12, 23, 30), businessHourSlotsWednesday.get(1).to);
 
         // Wednesday
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 12, 13, 45, 0)));
@@ -66,7 +66,7 @@ class BusinessHoursTest {
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 13, 45, 0)));
         assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 15, 13, 45, 0)));
         assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 16, 13, 45, 0)));
-        
+
         // Monday
         assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 10, 22, 45, 0)));
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 11, 22, 45, 0)));
@@ -117,7 +117,7 @@ class BusinessHoursTest {
     void businessHourFrom9to18() {
         // opens 9, closes 18
         final BusinessCalendar build = BusinessCalendar.newBuilder()
-                .businessHourFrom(9).to(18).build();
+                .from(9).to(18).build();
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 8, 59, 0)));
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 8, 59, 59)));
         assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 9, 0, 0)));
@@ -131,12 +131,13 @@ class BusinessHoursTest {
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 18, 0, 1)));
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 18, 1, 0)));
     }
+
     @Test
     void until24() {
         // opens 13, closes 24
         final BusinessCalendar build = BusinessCalendar.newBuilder()
                 .holiday(BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS)
-                .businessHourFrom(13).to(24).build();
+                .from(13).to(24).build();
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 21, 12, 59)));
         assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 21, 13, 0)));
         assertTrue(build.isBusinessHour(LocalDateTime.of(2021, 5, 21, 13, 1)));
@@ -150,8 +151,8 @@ class BusinessHoursTest {
     void businessHourFrom10to12and13to17() {
         // opens 9, closes 18
         final BusinessCalendar build = BusinessCalendar.newBuilder()
-                .businessHourFrom(10).to(12)
-                .businessHourFrom(13).to(17).build();
+                .from(10).to(12)
+                .from(13).to(17).build();
         // business hour starts from 10
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 9, 59, 0)));
         assertFalse(build.isBusinessHour(LocalDateTime.of(2021, 5, 14, 9, 59, 59)));
@@ -185,25 +186,25 @@ class BusinessHoursTest {
     @Test
     void fromShouldBeforeTo() {
         assertThrows(IllegalArgumentException.class, () -> BusinessCalendar.newBuilder()
-                .businessHourFrom(10).to(10).build());
+                .from(10).to(10).build());
         assertThrows(IllegalArgumentException.class, () -> BusinessCalendar.newBuilder()
-                .businessHourFrom(10).to(9).build());
+                .from(10).to(9).build());
     }
 
     @Test
     void hourShouldBe0to24() {
         assertDoesNotThrow(() -> {
             BusinessCalendar.newBuilder()
-                    .businessHourFrom(0).to(23, 59).build();
+                    .from(0).to(23, 59).build();
         });
         assertDoesNotThrow(() -> {
             BusinessCalendar.newBuilder()
-                    .businessHourFrom(0).to(24, 0).build();
+                    .from(0).to(24, 0).build();
         });
         assertThrows(IllegalArgumentException.class, () -> BusinessCalendar.newBuilder()
-                .businessHourFrom(-1).to(9).build());
+                .from(-1).to(9).build());
         assertThrows(IllegalArgumentException.class, () -> BusinessCalendar.newBuilder()
-                .businessHourFrom(10).to(25).build());
+                .from(10).to(25).build());
     }
 
     @Test
@@ -222,8 +223,8 @@ class BusinessHoursTest {
         {
             // 2021/7/4 and 2021/7/5 are holiday
             final BusinessCalendar build = BusinessCalendar.newBuilder().holiday(UnitedStates.INDEPENDENCE_DAY)
-                    .businessHourFrom(9).to(12)
-                    .businessHourFrom(13).to(18).build();
+                    .from(9).to(12)
+                    .from(13).to(18).build();
 
             assertEquals(LocalDateTime.of(2021, 7, 6, 12, 0),
                     build.nextBusinessHourEnd(LocalDateTime.of(2021, 7, 6, 9, 30)));
@@ -257,8 +258,8 @@ class BusinessHoursTest {
         {
             // 2021/7/4 and 2021/7/5 are holiday
             final BusinessCalendar build = BusinessCalendar.newBuilder().holiday(UnitedStates.INDEPENDENCE_DAY)
-                    .businessHourFrom(9).to(12, 5)
-                    .businessHourFrom(13).to(18, 45).build();
+                    .from(9).to(12, 5)
+                    .from(13).to(18, 45).build();
 
             assertEquals(LocalDateTime.of(2021, 7, 3, 18, 45),
                     build.lastBusinessHourEnd(LocalDateTime.of(2021, 7, 6, 9, 30)));
@@ -292,8 +293,8 @@ class BusinessHoursTest {
         {
             // 2021/7/4 and 2021/7/5 are holiday
             final BusinessCalendar build = BusinessCalendar.newBuilder().holiday(UnitedStates.INDEPENDENCE_DAY)
-                    .businessHourFrom(9).to(12)
-                    .businessHourFrom(13).to(18).build();
+                    .from(9).to(12)
+                    .from(13).to(18).build();
 
             assertEquals(LocalDateTime.of(2021, 7, 6, 9, 0),
                     build.lastBusinessHourStart(LocalDateTime.of(2021, 7, 6, 9, 30)));
@@ -330,8 +331,8 @@ class BusinessHoursTest {
         {
             // 2021/7/4 and 2021/7/5 are holiday
             final BusinessCalendar build = BusinessCalendar.newBuilder().holiday(UnitedStates.INDEPENDENCE_DAY)
-                    .businessHourFrom(9, 5).to(12)
-                    .businessHourFrom(13, 30).to(18).build();
+                    .from(9, 5).to(12)
+                    .from(13, 30).to(18).build();
 
             assertEquals(LocalDateTime.of(2021, 7, 6, 13, 30),
                     build.nextBusinessHourStart(LocalDateTime.of(2021, 7, 6, 9, 30)));

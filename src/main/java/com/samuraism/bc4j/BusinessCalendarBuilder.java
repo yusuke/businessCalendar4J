@@ -95,105 +95,19 @@ public class BusinessCalendarBuilder {
     }
 
     @NotNull
-    public BusinessHourFrom businessHourFrom(int hour) {
-        return businessHourFrom(hour, 0);
+    public BusinessHourFrom from(int hour) {
+        return from(hour, 0);
     }
 
     @NotNull
-    public BusinessHourFrom businessHourFrom(@NotNull DayOfWeek dayOfWeek, int hour) {
-        return businessHourFrom(dayOfWeek, hour, 0);
-    }
-
-    @NotNull
-    public BusinessHourFrom businessHourFrom(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2, int hour) {
-        return businessHourFrom(dayOfWeek1, dayOfWeek2, hour, 0);
-    }
-
-    @NotNull
-    public BusinessHourFrom businessHourFrom(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2,
-                                             @NotNull DayOfWeek dayOfWeek3, int hour) {
-        return businessHourFrom(dayOfWeek1, dayOfWeek2, dayOfWeek3, hour, 0);
-    }
-
-    @NotNull
-    public BusinessHourFrom businessHourFrom(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2,
-                                             @NotNull DayOfWeek dayOfWeek3, @NotNull DayOfWeek dayOfWeek4, int hour) {
-        return businessHourFrom(dayOfWeek1, dayOfWeek2, dayOfWeek3, dayOfWeek4, hour, 0);
-    }
-
-    @NotNull
-    public BusinessHourFrom businessHourFrom(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2,
-                                             @NotNull DayOfWeek dayOfWeek3, @NotNull DayOfWeek dayOfWeek4,
-                                             @NotNull DayOfWeek dayOfWeek5, int hour) {
-        return businessHourFrom(dayOfWeek1, dayOfWeek2, dayOfWeek3, dayOfWeek4, dayOfWeek5, hour, 0);
-    }
-
-    @NotNull
-    public BusinessHourFrom businessHourFrom(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2,
-                                             @NotNull DayOfWeek dayOfWeek3, @NotNull DayOfWeek dayOfWeek4,
-                                             @NotNull DayOfWeek dayOfWeek5, @NotNull DayOfWeek dayOfWeek6, int hour) {
-        return businessHourFrom(dayOfWeek1, dayOfWeek2, dayOfWeek3, dayOfWeek4, dayOfWeek5, dayOfWeek6, hour, 0);
-    }
-
-    @NotNull
-    public BusinessHourFrom businessHourFrom(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2,
-                                             @NotNull DayOfWeek dayOfWeek3, @NotNull DayOfWeek dayOfWeek4,
-                                             @NotNull DayOfWeek dayOfWeek5, @NotNull DayOfWeek dayOfWeek6,
-                                             @NotNull DayOfWeek dayOfWeek7, int hour) {
-        return businessHourFrom(dayOfWeek1, dayOfWeek2, dayOfWeek3, dayOfWeek4, dayOfWeek5, dayOfWeek6, dayOfWeek7, hour, 0);
-    }
-
-    @NotNull
-    public BusinessHourFrom businessHourFrom(int hour, int minutes) {
+    public BusinessHourFrom from(int hour, int minutes) {
         return new BusinessHourFrom(new DayOfWeek[0], hour, minutes, this);
     }
 
     @NotNull
-    public BusinessHourFrom businessHourFrom(@NotNull DayOfWeek dayOfWeek, int hour, int minutes) {
+    public BusinessHour on(@NotNull DayOfWeek... dayOfWeek) {
         ensureNotBuilt();
-        return new BusinessHourFrom(new DayOfWeek[]{dayOfWeek}, hour, minutes, this);
-    }
-
-    @NotNull
-    public BusinessHourFrom businessHourFrom(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2, int hour,
-                                             int minutes) {
-        return new BusinessHourFrom(new DayOfWeek[]{dayOfWeek1, dayOfWeek2}, hour, minutes, this);
-    }
-
-    @NotNull
-    public BusinessHourFrom businessHourFrom(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2,
-                                             @NotNull DayOfWeek dayOfWeek3, int hour, int minutes) {
-        return new BusinessHourFrom(new DayOfWeek[]{dayOfWeek1, dayOfWeek2, dayOfWeek3}, hour, minutes, this);
-    }
-
-    @NotNull
-    public BusinessHourFrom businessHourFrom(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2,
-                                             @NotNull DayOfWeek dayOfWeek3, @NotNull DayOfWeek dayOfWeek4, int hour,
-                                             int minutes) {
-        return new BusinessHourFrom(new DayOfWeek[]{dayOfWeek1, dayOfWeek2, dayOfWeek3, dayOfWeek4}, hour, minutes, this);
-    }
-
-    @NotNull
-    public BusinessHourFrom businessHourFrom(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2,
-                                             @NotNull DayOfWeek dayOfWeek3, @NotNull DayOfWeek dayOfWeek4,
-                                             @NotNull DayOfWeek dayOfWeek5, int hour, int minutes) {
-        return new BusinessHourFrom(new DayOfWeek[]{dayOfWeek1, dayOfWeek2, dayOfWeek3, dayOfWeek4, dayOfWeek5}, hour, minutes, this);
-    }
-
-    @NotNull
-    public BusinessHourFrom businessHourFrom(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2,
-                                             @NotNull DayOfWeek dayOfWeek3, @NotNull DayOfWeek dayOfWeek4,
-                                             @NotNull DayOfWeek dayOfWeek5, @NotNull DayOfWeek dayOfWeek6, int hour,
-                                             int minutes) {
-        return new BusinessHourFrom(new DayOfWeek[]{dayOfWeek1, dayOfWeek2, dayOfWeek3, dayOfWeek4, dayOfWeek5, dayOfWeek6}, hour, minutes, this);
-    }
-
-    @NotNull
-    public BusinessHourFrom businessHourFrom(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2,
-                                             @NotNull DayOfWeek dayOfWeek3, @NotNull DayOfWeek dayOfWeek4,
-                                             @NotNull DayOfWeek dayOfWeek5, @NotNull DayOfWeek dayOfWeek6,
-                                             @NotNull DayOfWeek dayOfWeek7, int hour, int minutes) {
-        return new BusinessHourFrom(new DayOfWeek[]{dayOfWeek1, dayOfWeek2, dayOfWeek3, dayOfWeek4, dayOfWeek5, dayOfWeek6, dayOfWeek7}, hour, minutes, this);
+        return new BusinessHour(this, dayOfWeek);
     }
 
     @NotNull
@@ -216,11 +130,31 @@ public class BusinessCalendarBuilder {
         }
     }
 
+    public class BusinessHour {
+        private final BusinessCalendarBuilder builder;
+        private final DayOfWeek[] dayOfWeeks;
+
+        BusinessHour(@NotNull BusinessCalendarBuilder builder, @NotNull DayOfWeek... dayOfWeeks) {
+            this.builder = builder;
+            this.dayOfWeeks = dayOfWeeks;
+        }
+
+        @NotNull
+        public BusinessHourFrom from(int hour) {
+            return from(hour, 0);
+        }
+
+        @NotNull
+        public BusinessHourFrom from(int hour, int minutes) {
+            return new BusinessHourFrom(dayOfWeeks, hour, minutes, builder);
+        }
+    }
+
     public class BusinessHourFrom {
-        DayOfWeek[] dayOfWeeks;
-        int fromHour;
-        int fromMinutes;
-        BusinessCalendarBuilder builder;
+        private final DayOfWeek[] dayOfWeeks;
+        private final int fromHour;
+        private final int fromMinutes;
+        private final BusinessCalendarBuilder builder;
 
         BusinessHourFrom(DayOfWeek[] dayOfWeeks, int fromHour, int fromMinutes, @NotNull BusinessCalendarBuilder builder) {
             ensureNotBuilt();

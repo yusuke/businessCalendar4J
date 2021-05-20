@@ -24,15 +24,15 @@ public class BusinessHoursExample {
     public static void main(String[] args) {
         BusinessCalendar calendar = BusinessCalendar.newBuilder()
                 // from Monday to Friday: 9am to 6pm
-                .businessHourFrom(9).to(18)
+                .from(9).to(18)
                 // Saturday and Sunday: 10am to 4:30pm
-                .businessHourFrom(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY, 10).to(16, 30)
+                .on(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).from(10).to(16, 30)
                 .build();
         // prints true
-        System.out.println("May 20, 2021(Thu) 9:30 on business? :" + 
+        System.out.println("May 20, 2021(Thu) 9:30 on business? :" +
                 calendar.isBusinessHour(LocalDateTime.of(2021, 5, 20, 9, 30)));
         // prints false
-        System.out.println("May 22, 2021(Sat) 9:30 on business? :" + 
+        System.out.println("May 22, 2021(Sat) 9:30 on business? :" +
                 calendar.isBusinessHour(LocalDateTime.of(2021, 5, 22, 9, 30)));
     }
 }

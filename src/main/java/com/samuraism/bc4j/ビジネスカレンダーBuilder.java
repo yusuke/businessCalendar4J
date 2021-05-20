@@ -61,105 +61,48 @@ public final class ビジネスカレンダーBuilder {
     }
 
     @NotNull
-    public 営業時間From 営業時間(int hour) {
-        return 営業時間(hour, 0);
+    public 営業時間From 開始(int hour) {
+        return 開始(hour, 0);
     }
 
     @NotNull
-    public 営業時間From 営業時間(@NotNull DayOfWeek dayOfWeek1, int hour) {
-        return 営業時間(dayOfWeek1, hour, 0);
+    public 営業時間From 開始(int hour, int minutes) {
+        return new 営業時間From(builder.from(hour, minutes), this);
     }
 
-    @NotNull
-    public 営業時間From 営業時間(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2, int hour) {
-        return 営業時間(dayOfWeek1, dayOfWeek2, hour, 0);
-    }
 
     @NotNull
-    public 営業時間From 営業時間(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2, @NotNull DayOfWeek dayOfWeek3, int hour) {
-        return 営業時間(dayOfWeek1, dayOfWeek2, dayOfWeek3, hour, 0);
-    }
-
-    @NotNull
-    public 営業時間From 営業時間(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2,
-                         @NotNull DayOfWeek dayOfWeek3, @NotNull DayOfWeek dayOfWeek4, int hour) {
-        return 営業時間(dayOfWeek1, dayOfWeek2, dayOfWeek3, dayOfWeek4, hour, 0);
-    }
-
-    @NotNull
-    public 営業時間From 営業時間(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2,
-                         @NotNull DayOfWeek dayOfWeek3, @NotNull DayOfWeek dayOfWeek4, @NotNull DayOfWeek dayOfWeek5,
-                         int hour) {
-        return 営業時間(dayOfWeek1, dayOfWeek2, dayOfWeek3, dayOfWeek4, dayOfWeek5, hour, 0);
-    }
-
-    @NotNull
-    public 営業時間From 営業時間(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2,
-                         @NotNull DayOfWeek dayOfWeek3, @NotNull DayOfWeek dayOfWeek4, @NotNull DayOfWeek dayOfWeek5,
-                         @NotNull DayOfWeek dayOfWeek6, int hour) {
-        return 営業時間(dayOfWeek1, dayOfWeek2, dayOfWeek3, dayOfWeek4, dayOfWeek5, dayOfWeek6, hour, 0);
-    }
-
-    @NotNull
-    public 営業時間From 営業時間(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2,
-                         @NotNull DayOfWeek dayOfWeek3, @NotNull DayOfWeek dayOfWeek4, @NotNull DayOfWeek dayOfWeek5,
-                         @NotNull DayOfWeek dayOfWeek6, @NotNull DayOfWeek dayOfWeek7, int hour) {
-        return 営業時間(dayOfWeek1, dayOfWeek2, dayOfWeek3, dayOfWeek4, dayOfWeek5, dayOfWeek6, dayOfWeek7, hour, 0);
-    }
-
-    @NotNull
-    public 営業時間From 営業時間(int hour, int minutes) {
-        return new 営業時間From(builder.businessHourFrom(hour, minutes), this);
-    }
-
-    @NotNull
-    public 営業時間From 営業時間(@NotNull DayOfWeek dayOfWeek1, int hour, int minutes) {
-        return new 営業時間From(builder.businessHourFrom(dayOfWeek1, hour, minutes), this);
-    }
-
-    @NotNull
-    public 営業時間From 営業時間(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2, int hour, int minutes) {
-        return new 営業時間From(builder.businessHourFrom(dayOfWeek1, dayOfWeek2, hour, minutes), this);
-    }
-
-    @NotNull
-    public 営業時間From 営業時間(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2,
-                         @NotNull DayOfWeek dayOfWeek3, int hour, int minutes) {
-        return new 営業時間From(builder.businessHourFrom(dayOfWeek1, dayOfWeek2, dayOfWeek3, hour, minutes), this);
-    }
-
-    @NotNull
-    public 営業時間From 営業時間(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2,
-                         @NotNull DayOfWeek dayOfWeek3, @NotNull DayOfWeek dayOfWeek4, int hour, int minutes) {
-        return new 営業時間From(builder.businessHourFrom(dayOfWeek1, dayOfWeek2, dayOfWeek3, dayOfWeek4, hour, minutes), this);
-    }
-
-    @NotNull
-    public 営業時間From 営業時間(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2,
-                         @NotNull DayOfWeek dayOfWeek3, @NotNull DayOfWeek dayOfWeek4, @NotNull DayOfWeek dayOfWeek5,
-                         int hour, int minutes) {
-        return new 営業時間From(builder.businessHourFrom(dayOfWeek1, dayOfWeek2, dayOfWeek3, dayOfWeek4, dayOfWeek5,
-                hour, minutes), this);
-    }
-
-    @NotNull
-    public 営業時間From 営業時間(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2,
-                         @NotNull DayOfWeek dayOfWeek3, @NotNull DayOfWeek dayOfWeek4, @NotNull DayOfWeek dayOfWeek5,
-                         @NotNull DayOfWeek dayOfWeek6, int hour, int minutes) {
-        return new 営業時間From(builder.businessHourFrom(dayOfWeek1, dayOfWeek2, dayOfWeek3, dayOfWeek4, dayOfWeek5, dayOfWeek6, hour, minutes), this);
-    }
-
-    @NotNull
-    public 営業時間From 営業時間(@NotNull DayOfWeek dayOfWeek1, @NotNull DayOfWeek dayOfWeek2,
-                         @NotNull DayOfWeek dayOfWeek3, @NotNull DayOfWeek dayOfWeek4, @NotNull DayOfWeek dayOfWeek5,
-                         @NotNull DayOfWeek dayOfWeek6, @NotNull DayOfWeek dayOfWeek7, int hour, int minutes) {
-        return new 営業時間From(builder.businessHourFrom(dayOfWeek1, dayOfWeek2, dayOfWeek3, dayOfWeek4, dayOfWeek5, dayOfWeek6, dayOfWeek7, hour, minutes), this);
+    public 営業時間 曜日(@NotNull DayOfWeek... dayOfWeeks) {
+        return new 営業時間(this, dayOfWeeks);
     }
 
     @NotNull
     public ビジネスカレンダー build() {
         return new ビジネスカレンダー(builder.build());
     }
+
+    public static class 営業時間 {
+        DayOfWeek[] dayOfWeeks;
+        private final ビジネスカレンダーBuilder builder;
+        final BusinessCalendarBuilder.BusinessHour businessHour;
+
+        public 営業時間(@NotNull ビジネスカレンダーBuilder builder, @NotNull DayOfWeek... dayOfWeeks) {
+            this.dayOfWeeks = dayOfWeeks;
+            this.builder = builder;
+            businessHour = builder.builder.on(dayOfWeeks);
+        }
+
+        @NotNull
+        public 営業時間From 開始(int 時) {
+            return 開始(時, 0);
+        }
+
+        @NotNull
+        public 営業時間From 開始(int 時, int 分) {
+            return new 営業時間From(businessHour.from(時, 分), builder);
+        }
+    }
+
 
     public static class 営業時間From {
         private final BusinessCalendarBuilder.BusinessHourFrom businessHourFrom;
@@ -172,12 +115,12 @@ public final class ビジネスカレンダーBuilder {
         }
 
         @NotNull
-        public ビジネスカレンダーBuilder から(int 時) {
-            return から(時, 0);
+        public ビジネスカレンダーBuilder 終了(int 時) {
+            return 終了(時, 0);
         }
 
         @NotNull
-        public ビジネスカレンダーBuilder から(int 時, int 分) {
+        public ビジネスカレンダーBuilder 終了(int 時, int 分) {
             this.businessHourFrom.to(時, 分);
             return builder;
         }
