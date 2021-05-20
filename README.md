@@ -34,6 +34,8 @@ dependencies {
 ## How to use
 See [JapaneseHolidaysExample](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/JapaneseHolidaysExample.java) for Japanese businessCalendar, [UnitedStatesHolidaysExample](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/UnitedStatesHolidaysExample.java) for the United States businessCalendar.
 
+### business day and holiday
+
 ```java
 import com.samuraism.bc4j.BusinessCalendar;
 import com.samuraism.bc4j.UnitedStates;
@@ -89,6 +91,32 @@ public class UnitedStatesHolidaysExample {
         System.out.println(customCalendar.firstHoliday(LocalDate.of(2021, 12, 20)));
         // Last holiday by Nov 12, 2021 →  Nov 11 (Veterans Day)
         System.out.println(customCalendar.lastHoliday(LocalDate.of(2021, 11, 12)));
+    }
+}
+```
+
+### business hour
+
+```java
+import com.samuraism.bc4j.BusinessCalendar;
+
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+
+public class BusinessHoursExample {
+    public static void main(String[] args) {
+        BusinessCalendar calendar = BusinessCalendar.newBuilder()
+                // from Monday to Friday: 9am to 6pm
+                .businessHourFrom(9).to(18)
+                // Saturday and Sunday: 10am to 4:30pm
+                .businessHourFrom(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY, 10).to(16, 30)
+                .build();
+        // prints true
+        System.out.println("May 20, 2021(Thu) 9:30 on business? :" + 
+                calendar.isBusinessHour(LocalDateTime.of(2021, 5, 20, 9, 30)));
+        // prints false
+        System.out.println("May 22, 2021(Sat) 9:30 on business? :" + 
+                calendar.isBusinessHour(LocalDateTime.of(2021, 5, 22, 9, 30)));
     }
 }
 ```

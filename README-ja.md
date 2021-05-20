@@ -39,6 +39,7 @@ dependencies {
 
 サンプルコードは日本の祝日の処理方法については [JapaneseHolidaysExample.java (英語語API)](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/JapaneseHolidaysExample.java),  [ビジネスカレンダーExample.java (日本語API)](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/ビジネスカレンダーExample.java) を、アメリカ合衆国の祝日の処理方法については [UnitedStatesHolidaysExample](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/UnitedStatesHolidaysExample.java) をご覧ください。
 
+### 営業日の例
 ```java
 import com.samuraism.bc4j.ビジネスカレンダー;
 
@@ -84,6 +85,32 @@ public class ビジネスカレンダーExample {
         System.out.println(calendar.最初の祝休日(LocalDate.of(2021, 2, 22)));
         // 2021年2月26日以前最初の祝日を取得→ 2月23日 天皇誕生日
         System.out.println(calendar.最後の祝休日(LocalDate.of(2021, 2, 26)));
+    }
+}
+```
+
+### 営業時間の例
+
+```java
+import com.samuraism.bc4j.ビジネスカレンダー;
+
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+
+public class 営業時間Example {
+    public static void main(String[] args) {
+        ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder()
+                // 月曜〜金曜は9時〜18時営業
+                .営業時間(9).から(18)
+                // 土日は10時〜16:30営業
+                .営業時間(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY, 10).から(16, 30)
+                .build();
+        // true をプリント
+        System.out.println("2021年5月20(木) 9:30 は営業時間？ :" + 
+                calendar.is営業時間(LocalDateTime.of(2021, 5, 20, 9, 30)));
+        // false をプリント
+        System.out.println("2021年5月22(土) 9:30 は営業時間？ :" + 
+                calendar.is営業時間(LocalDateTime.of(2021, 5, 22, 9, 30)));
     }
 }
 ```
