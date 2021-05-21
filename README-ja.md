@@ -103,7 +103,7 @@ public class 営業時間Example {
                 // 大晦日は10時半〜12時、午後1時〜午後3時
                 .日(12, 31).営業時間("午前10時半〜正午,13時から15pm")
                 // 土日は10時〜12時、13時〜16:30
-                .曜日(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).営業時間("10:00 A.M. - 11:30 am, 正午から午後4:30")
+                .曜日(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).営業時間("10:00 A.M. - 11:30 am, 正午から午後4時半")
                 // 月曜〜金曜は9時〜午後6時
                 .営業時間("9-18")
                 .build();
