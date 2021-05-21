@@ -21,14 +21,14 @@ Add a dependency declaration to pom.xml, or build.gradle as follows:
     <dependency>
         <groupId>com.samuraism</groupId>
         <artifactId>businessCalendar4j</artifactId>
-        <version>1.10</version>
+        <version>1.11</version>
     </dependency>
 </dependencies>
 ```
 ### Gradle
 ```text
 dependencies {
-    compile 'com.samuraism:businessCalendar4j:1.10'
+    compile 'com.samuraism:businessCalendar4j:1.11'
 }
 ```
 ## How to use
@@ -74,10 +74,9 @@ public class UnitedStatesHolidaysExample {
                         UnitedStates.VETERANS_DAY,
                         UnitedStates.THANKS_GIVING_DAY,
                         UnitedStates.CHRISTMAS_DAY,
-                        BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS,
-                        // Specify logic based custom holidays. returns a string if the day is a holiday
-                        e -> e.getMonthValue() == 5 && e.getDayOfMonth() == 19 ? "James Gosling's birthday" : null)
-                .holiday(LocalDate.of(1995, 5, 23), "Java public debut")
+                        BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS)
+                .on(5, 19).holiday("James Gosling's birthday")
+                .on(1995, 5, 23).holiday("Java public debut")
                 .build();
 
         // Gets the last business day of Jan, 2021 → the answer is Jan 29 since Jan 30, 31 are weekend
@@ -107,10 +106,10 @@ import java.time.LocalDateTime;
 public class BusinessHoursExample {
     public static void main(String[] args) {
         BusinessCalendar calendar = BusinessCalendar.newBuilder()
-                // opens 10am to 2pm on New Year's Eve
-                .on(date -> date.getMonthValue() == 12 && date.getDayOfMonth() == 31).hours("10-14")
-                // Saturday and Sunday: 10am to 4:30pm
-                .on(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).hours("10-16:30")
+                // opens 10am to 12pm, 1pm to 3pm on New Year's Eve
+                .on(date -> date.getMonthValue() == 12 && date.getDayOfMonth() == 31).hours("10 - 12, 13-15")
+                // Saturday and Sunday: 10am to 12pm, 1pm to 4:30pm
+                .on(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).hours("10AM-11:30 a.m., 12 noon to 4:30pm")
                 // from Monday to Friday: 9am to 6pm
                 .hours("9-18")
                 .build();

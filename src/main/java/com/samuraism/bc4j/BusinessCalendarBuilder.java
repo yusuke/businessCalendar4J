@@ -29,11 +29,11 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class BusinessCalendarBuilder {
-    boolean built = false;
+    private boolean built = false;
     List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
     HolidayMap customHolidayMap = new HolidayMap();
     Locale locale = Locale.getDefault();
-    List<BusinessHours> businessHours = new ArrayList<>();
+    private List<BusinessHours> businessHours = new ArrayList<>();
 
     public final BusinessCalendarBuilder locale(Locale locale) {
         ensureNotBuilt();
@@ -76,12 +76,13 @@ public class BusinessCalendarBuilder {
     @NotNull
     public BusinessCalendarPredicate on(int year, int month, int day) {
         ensureNotBuilt();
-        return new BusinessCalendarPredicate(e->e.getYear() == year && e.getMonthValue() == month && e.getDayOfMonth() == day, this);
+        return new BusinessCalendarPredicate(e -> e.getYear() == year && e.getMonthValue() == month && e.getDayOfMonth() == day, this);
     }
+
     @NotNull
     public BusinessCalendarPredicate on(int month, int day) {
         ensureNotBuilt();
-        return new BusinessCalendarPredicate(e-> e.getMonthValue() == month && e.getDayOfMonth() == day, this);
+        return new BusinessCalendarPredicate(e -> e.getMonthValue() == month && e.getDayOfMonth() == day, this);
     }
 
     @NotNull
@@ -136,7 +137,8 @@ public class BusinessCalendarBuilder {
             businessHours.add(new BusinessHours(predicate, businessHour));
             return builder;
         }
-        public BusinessCalendarBuilder holiday(String name){
+
+        public BusinessCalendarBuilder holiday(String name) {
             return builder.holiday(date -> predicate.test(date) ? name : null);
         }
     }
@@ -147,25 +149,42 @@ public class BusinessCalendarBuilder {
 
         public BusinessHours(Predicate<LocalDate> predicate, String businessHour) {
             this.predicate = predicate;
-            final String[] slots = businessHour.replaceAll(" ", "").split(",");
+            final String[] slots = businessHour.replaceAll(" ", "").replaceAll("、", ",").split(",");
 
             for (String slot : slots) {
-                final String[] split = slot.split("-");
+                final String[] split = slot.replaceAll("to", "-")
+                        .replaceAll("から", "-")
+                        .replaceAll("~", "-")
+                        .replaceAll("〜", "-")
+                        .split("-");
                 final LocalTime from = toLocalTime(split[0]);
                 final LocalTime to = toLocalTime(split[1]);
                 checkParameter(from.isBefore(to) || to.equals(LocalTime.of(0, 0)), "from should be before to, provided: " + slot);
                 businessHourFromTos.add(new BusinessHourFromTo(from, to));
             }
         }
-        public List<BusinessHourSlot> getSlots(LocalDate date){
+
+        public List<BusinessHourSlot> getSlots(LocalDate date) {
             return businessHourFromTos.stream()
                     .map(e -> new BusinessHourSlot(date, e.from, e.to)).collect(Collectors.toList());
         }
 
-
         private LocalTime toLocalTime(String timeStr) {
+            final String ampm = timeStr.replaceAll("[0-9.:時]", "").toLowerCase();
+            timeStr = timeStr.replaceAll("[^0-9:]", "");
             final String[] split = timeStr.split(":");
-            int hour = Integer.parseInt(split[0]);
+
+            int hour = ampm.matches("(noon|正午)") ? 12 : Integer.parseInt(split[0]);
+            if (ampm.matches("(a|am|午前)") && hour == 12) {
+                hour = 0;
+            }
+            if (ampm.matches("(p|pm|午後)") && hour != 12) {
+                hour += 12;
+            }
+            if (ampm.matches("midnight")) {
+                hour = 24;
+            }
+
             int minutes = 0;
             if (2 <= split.length) {
                 minutes = Integer.parseInt(split[1]);

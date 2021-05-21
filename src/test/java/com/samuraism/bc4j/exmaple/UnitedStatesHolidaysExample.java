@@ -52,9 +52,8 @@ public class UnitedStatesHolidaysExample {
                         UnitedStates.VETERANS_DAY,
                         UnitedStates.THANKS_GIVING_DAY,
                         UnitedStates.CHRISTMAS_DAY,
-                        BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS,
-                        // Specify logic based custom holidays. returns a string if the day is a holiday
-                        e -> e.getMonthValue() == 5 && e.getDayOfMonth() == 19 ? "James Gosling's birthday" : null)
+                        BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS)
+                .on(5, 19).holiday("James Gosling's birthday")
                 .on(1995, 5, 23).holiday("Java public debut")
                 .build();
 

@@ -23,11 +23,14 @@ import java.time.LocalDateTime;
 public class 営業時間Example {
     public static void main(String[] args) {
         ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder()
-                // 土日は10時〜12時、13時〜16:30営業
-                .曜日(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).営業時間("10-12,13-16:30")
-                // 月曜〜金曜は9時〜18時営業
+                // 大晦日は10時〜12時、午後1時〜午後3時
+                .日(12, 31).営業時間("午前10時〜正午,13時から15pm")
+                // 土日は10時〜12時、13時〜16:30
+                .曜日(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).営業時間("10:00 A.M. - 11:30 am, 正午から午後4:30")
+                // 月曜〜金曜は9時〜午後6時
                 .営業時間("9-18")
                 .build();
+
         // true をプリント
         System.out.println("2021年5月20(木) 9:30 は営業時間？ :" +
                 calendar.is営業時間(LocalDateTime.of(2021, 5, 20, 9, 30)));

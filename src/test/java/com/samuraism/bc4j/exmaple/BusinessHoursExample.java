@@ -24,10 +24,10 @@ import java.time.LocalDateTime;
 public class BusinessHoursExample {
     public static void main(String[] args) {
         BusinessCalendar calendar = BusinessCalendar.newBuilder()
-                // opens 10am to 2pm on New Year's Eve
-                .on(date -> date.getMonthValue() == 12 && date.getDayOfMonth() == 31).hours("10-14")
-                // Saturday and Sunday: 10am to 4:30pm
-                .on(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).hours("10-16:30")
+                // opens 10am to 12pm, 1pm to 3pm on New Year's Eve
+                .on(date -> date.getMonthValue() == 12 && date.getDayOfMonth() == 31).hours("10 - 12, 13-15")
+                // Saturday and Sunday: 10am to 12pm, 1pm to 4:30pm
+                .on(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).hours("10AM-11:30 a.m., 12 noon to 4:30pm")
                 // from Monday to Friday: 9am to 6pm
                 .hours("9-18")
                 .build();
