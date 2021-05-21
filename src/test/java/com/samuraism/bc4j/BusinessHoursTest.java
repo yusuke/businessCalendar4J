@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,6 +40,62 @@ class BusinessHoursTest {
         assertEquals(1, businessHourSlots1231.size());
         assertEquals(LocalDateTime.of(2021, 12, 31, 10, 0), businessHourSlots1231.get(0).from);
         assertEquals(LocalDateTime.of(2021, 12, 31, 14, 0), businessHourSlots1231.get(0).to);
+
+    }
+
+    @Test
+    void everyNdayOfWeek() {
+        {
+            BusinessCalendar cal = BusinessCalendar.newBuilder()
+                    .on(1, DayOfWeek.MONDAY).holiday("every first monday is a holiday")
+                    .build();
+            final List<Holiday> holidays = cal.getHolidaysBetween(LocalDate.of(2021, 1, 1), LocalDate.of(2021, 12, 31));
+            assertEquals(12, holidays.size());
+            assertEquals(LocalDate.of(2021, 1, 4), holidays.get(0).date);
+            assertEquals(LocalDate.of(2021, 2, 1), holidays.get(1).date);
+            assertEquals(LocalDate.of(2021, 3, 1), holidays.get(2).date);
+            assertEquals(LocalDate.of(2021, 4, 5), holidays.get(3).date);
+            assertEquals(LocalDate.of(2021, 5, 3), holidays.get(4).date);
+            assertEquals(LocalDate.of(2021, 6, 7), holidays.get(5).date);
+            assertEquals(LocalDate.of(2021, 7, 5), holidays.get(6).date);
+            assertEquals(LocalDate.of(2021, 8, 2), holidays.get(7).date);
+            assertEquals(LocalDate.of(2021, 9, 6), holidays.get(8).date);
+            assertEquals(LocalDate.of(2021, 10, 4), holidays.get(9).date);
+            assertEquals(LocalDate.of(2021, 11, 1), holidays.get(10).date);
+            assertEquals(LocalDate.of(2021, 12, 6), holidays.get(11).date);
+        }
+        {
+            BusinessCalendar cal = BusinessCalendar.newBuilder()
+                    .on(2, DayOfWeek.TUESDAY, DayOfWeek.SATURDAY).holiday("every second Tuesday and Saturday are holidays")
+                    .build();
+            final List<Holiday> holidays = cal.getHolidaysBetween(LocalDate.of(2021, 1, 1), LocalDate.of(2021, 12, 31));
+            assertEquals(24, holidays.size());
+            final List<LocalDate> days = holidays.stream().map(e -> e.date).collect(Collectors.toList());
+            assertTrue(days.contains(LocalDate.of(2021, 1, 9)));
+            assertTrue(days.contains(LocalDate.of(2021, 1, 12)));
+            assertTrue(days.contains(LocalDate.of(2021, 2, 9)));
+            assertTrue(days.contains(LocalDate.of(2021, 2, 13)));
+            assertTrue(days.contains(LocalDate.of(2021, 3, 9)));
+            assertTrue(days.contains(LocalDate.of(2021, 3, 13)));
+            assertTrue(days.contains(LocalDate.of(2021, 4, 13)));
+            assertTrue(days.contains(LocalDate.of(2021, 4, 10)));
+            assertTrue(days.contains(LocalDate.of(2021, 5, 11)));
+            assertTrue(days.contains(LocalDate.of(2021, 5, 8)));
+            assertTrue(days.contains(LocalDate.of(2021, 6, 8)));
+            assertTrue(days.contains(LocalDate.of(2021, 6, 12)));
+            assertTrue(days.contains(LocalDate.of(2021, 7, 13)));
+            assertTrue(days.contains(LocalDate.of(2021, 7, 10)));
+            assertTrue(days.contains(LocalDate.of(2021, 8, 10)));
+            assertTrue(days.contains(LocalDate.of(2021, 8, 14)));
+            assertTrue(days.contains(LocalDate.of(2021, 9, 14)));
+            assertTrue(days.contains(LocalDate.of(2021, 9, 11)));
+            assertTrue(days.contains(LocalDate.of(2021, 10, 12)));
+            assertTrue(days.contains(LocalDate.of(2021, 10, 9)));
+            assertTrue(days.contains(LocalDate.of(2021, 11, 9)));
+            assertTrue(days.contains(LocalDate.of(2021, 11, 13)));
+            assertTrue(days.contains(LocalDate.of(2021, 12, 14)));
+            assertTrue(days.contains(LocalDate.of(2021, 12, 11)));
+        }
 
     }
 

@@ -61,6 +61,12 @@ public final class ビジネスカレンダーBuilder {
     }
 
     @NotNull
+    public ビジネスカレンダーPredicate 曜日(int n番目, @NotNull DayOfWeek... dayOfWeeks) {
+        final BusinessCalendarBuilder.BusinessCalendarPredicate businessCalendarPredicate = builder.on(n番目, dayOfWeeks);
+        return new ビジネスカレンダーPredicate(this, businessCalendarPredicate);
+    }
+
+    @NotNull
     public ビジネスカレンダーPredicate 年月日(int 年, int 月, int 日) {
         final BusinessCalendarBuilder.BusinessCalendarPredicate businessCalendarPredicate = builder.on(年,月,日);
         return new ビジネスカレンダーPredicate(this, businessCalendarPredicate);

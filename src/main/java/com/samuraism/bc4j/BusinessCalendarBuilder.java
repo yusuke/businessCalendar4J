@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -74,6 +75,12 @@ public class BusinessCalendarBuilder {
     }
 
     @NotNull
+    public BusinessCalendarPredicate on(int ordinal, @NotNull DayOfWeek... dayOfWeek) {
+        ensureNotBuilt();
+        return new BusinessCalendarPredicate(this, ordinal, dayOfWeek);
+    }
+
+    @NotNull
     public BusinessCalendarPredicate on(int year, int month, int day) {
         ensureNotBuilt();
         return new BusinessCalendarPredicate(e -> e.getYear() == year && e.getMonthValue() == month && e.getDayOfMonth() == day, this);
@@ -116,7 +123,23 @@ public class BusinessCalendarBuilder {
         private final BusinessCalendarBuilder builder;
         private final Predicate<LocalDate> predicate;
 
-        BusinessCalendarPredicate(BusinessCalendarBuilder builder, DayOfWeek... dayOfWeeks) {
+        BusinessCalendarPredicate(@NotNull BusinessCalendarBuilder builder, int ordinal, @NotNull DayOfWeek... dayOfWeeks) {
+            this.predicate = e -> {
+                for (DayOfWeek dayOfWeek : dayOfWeeks) {
+                    if (dayOfWeek == e.getDayOfWeek()) {
+                        int day = e.with(TemporalAdjusters
+                                .dayOfWeekInMonth(ordinal, dayOfWeek))
+                                .getDayOfMonth();
+                        if(e.getDayOfMonth() == day){
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            };
+            this.builder = builder;
+        }
+        BusinessCalendarPredicate(@NotNull BusinessCalendarBuilder builder, @NotNull DayOfWeek... dayOfWeeks) {
             this.predicate = e -> {
                 for (DayOfWeek dayOfWeek : dayOfWeeks) {
                     if (dayOfWeek == e.getDayOfWeek()) {
@@ -128,7 +151,7 @@ public class BusinessCalendarBuilder {
             this.builder = builder;
         }
 
-        BusinessCalendarPredicate(Predicate<LocalDate> predicate, BusinessCalendarBuilder builder) {
+        BusinessCalendarPredicate(@NotNull Predicate<LocalDate> predicate,@NotNull BusinessCalendarBuilder builder) {
             this.predicate = predicate;
             this.builder = builder;
         }
