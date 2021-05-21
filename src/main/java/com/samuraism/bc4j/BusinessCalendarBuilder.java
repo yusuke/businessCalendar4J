@@ -152,11 +152,7 @@ public class BusinessCalendarBuilder {
             final String[] slots = businessHour.replaceAll(" ", "").replaceAll("、", ",").split(",");
 
             for (String slot : slots) {
-                final String[] split = slot.replaceAll("to", "-")
-                        .replaceAll("から", "-")
-                        .replaceAll("~", "-")
-                        .replaceAll("〜", "-")
-                        .split("-");
+                final String[] split = slot.replaceAll("(to|から|〜|~)", "-").split("-");
                 final LocalTime from = toLocalTime(split[0]);
                 final LocalTime to = toLocalTime(split[1]);
                 checkParameter(from.isBefore(to) || to.equals(LocalTime.of(0, 0)), "from should be before to, provided: " + slot);
