@@ -1,6 +1,7 @@
 # [&#35;businessCalendar4J](https://twitter.com/search?q=%23businessCalendar4J&src=typed_query&f=live)
-This library provides information about businessCalendar and observances in the United States and Japan.
-It is also possible to get information like "Name of the holiday on a specified date", "First business day after a specified date", and "List of businessCalendar in a specified period.".
+BusinessCalendar4J is a 100% pure Java business calendar library. You can configure holidays and business hours flexibly, and use predefined public holidays in United States and Japan. Need support for other countries' public holidays?  
+It is also possible to get information like "Name of the holiday on a specified date", "First business day after a specified date", and "List of holidays in a specified period.".
+
 With [BusinessCalenderBuilder](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/BusinessCalendarBuilder.java), you can specify non-business dates flexibly with lambda expressions, or specify fixed non-business dates at configuration time.
 
 ## Hashtag
@@ -21,14 +22,14 @@ Add a dependency declaration to pom.xml, or build.gradle as follows:
     <dependency>
         <groupId>com.samuraism</groupId>
         <artifactId>businessCalendar4j</artifactId>
-        <version>1.13</version>
+        <version>1.14</version>
     </dependency>
 </dependencies>
 ```
 ### Gradle
 ```text
 dependencies {
-    compile 'com.samuraism:businessCalendar4j:1.13'
+    compile 'com.samuraism:businessCalendar4j:1.14'
 }
 ```
 ## How to use
