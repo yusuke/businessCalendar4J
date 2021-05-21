@@ -21,6 +21,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public final class ビジネスカレンダーBuilder {
     final BusinessCalendarBuilder builder = BusinessCalendar.newBuilder();
@@ -60,13 +61,20 @@ public final class ビジネスカレンダーBuilder {
     }
 
     @NotNull
-    public ビジネスカレンダーPredicate 日(int 年, int 月, int 日) {
+    public ビジネスカレンダーPredicate 年月日(int 年, int 月, int 日) {
         final BusinessCalendarBuilder.BusinessCalendarPredicate businessCalendarPredicate = builder.on(年,月,日);
         return new ビジネスカレンダーPredicate(this, businessCalendarPredicate);
     }
+
     @NotNull
-    public ビジネスカレンダーPredicate 日(int 月, int 日) {
+    public ビジネスカレンダーPredicate 月日(int 月, int 日) {
         final BusinessCalendarBuilder.BusinessCalendarPredicate businessCalendarPredicate = builder.on(月,日);
+        return new ビジネスカレンダーPredicate(this, businessCalendarPredicate);
+    }
+
+    @NotNull
+    public ビジネスカレンダーPredicate 条件(@NotNull Predicate<LocalDate> predicate) {
+        final BusinessCalendarBuilder.BusinessCalendarPredicate businessCalendarPredicate = builder.on(predicate);
         return new ビジネスカレンダーPredicate(this, businessCalendarPredicate);
     }
 
