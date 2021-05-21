@@ -75,7 +75,7 @@ class BusinessCalendarTest {
     @Test
     void customHoliday() {
         BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH)
-                .holiday(LocalDate.of(1977, 6, 17), "just holiday").build();
+                .on(1977, 6, 17).holiday("just holiday").build();
         assertTrue(calendar.isHoliday(LocalDate.of(1977, 6, 17)));
         assertEquals("just holiday", calendar.getHoliday(LocalDate.of(1977, 6, 17)).name);
     }
@@ -209,7 +209,6 @@ class BusinessCalendarTest {
 
     @Test
     void getCabinetOfficialHolidayDataFirstLastDay() {
-        BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
         assertEquals(LocalDate.of(1955, 1, 1), Japan.getCabinetOfficialHolidayDataFirstDay());
         assertEquals(LocalDate.of(LocalDate.now().getYear() + 1, 11, 23), Japan.getCabinetOfficialHolidayDataLastDay());
         if (LocalDate.now().isAfter(LocalDate.of(2021, 12, 10))) {

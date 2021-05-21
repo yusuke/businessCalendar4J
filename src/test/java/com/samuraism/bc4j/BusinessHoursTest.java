@@ -46,7 +46,7 @@ class BusinessHoursTest {
     void businessSaturdayShort() {
         // opens 9, closes 18
         final BusinessCalendar build = BusinessCalendar.newBuilder()
-                .holiday(LocalDate.of(2021, 5, 14), "just holiday")
+                .on(2021, 5, 14).holiday("just holiday")
                 // Monday, Wednesday 2pm to 3pm
                 .on(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY).hours("22-23:30,14-15")
                 // Saturday 10am 12, 1:30pm to 5pm

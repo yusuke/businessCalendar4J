@@ -47,10 +47,9 @@ public class JapaneseHolidaysExample {
         businessCalendar = BusinessCalendar.newBuilder()
                 .locale(Locale.ENGLISH)
                 .holiday(Japan.PUBLIC_HOLIDAYS)
-                .holiday(LocalDate.of(1995, 5, 23), "Java public debut")
                 .holiday(BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS)
-                // ロジックベーのカスタム祝休日を設定。当該日が祝日ならば名称を、そうでなければnullを返す関数を指定する
-                .holiday(e -> e.getMonthValue() == 5 && e.getDayOfMonth() == 19 ? "James Gosling's birthday" : null)
+                .on(1995, 5, 23).holiday("Java public debut")
+                .on(5, 19).holiday("James Gosling's birthday")
                 .build();
 
         // Gets the last business day in January 2021

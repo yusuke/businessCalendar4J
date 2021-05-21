@@ -203,8 +203,8 @@ public class 日本の祝休日アルゴリズムTest {
     @Test
     void カスタム休日を指定しても休日算出が正しい() {
         BusinessCalendar businessCalendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE)
-                .holiday(LocalDate.of(2022, 1, 2), "休みたいから休む")
-                .holiday(LocalDate.of(2007, 2, 12), "休みたいから休む")
+                .on(2022, 1, 2).holiday("休みたいから休む")
+                .on(2007, 2, 12).holiday("休みたいから休む")
                 .build();
         // 2022/1/1が元旦、かつ日曜日なので2022/1/2が休日
         // カスタム休日を2022/1/2に設定しても振替休日は2022/1/3にはならない

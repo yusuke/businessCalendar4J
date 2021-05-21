@@ -54,20 +54,6 @@ public class BusinessCalendarBuilder {
         return this;
     }
 
-    /**
-     * Add fixed holiday
-     *
-     * @param date date
-     * @param name name
-     * @return This instance
-     */
-    @NotNull
-    public BusinessCalendarBuilder holiday(@NotNull LocalDate date, @NotNull String name) {
-        ensureNotBuilt();
-        customHolidayMap.addHoliday(date, name);
-        return this;
-    }
-
     @NotNull
     public BusinessCalendar build() {
         ensureNotBuilt();
@@ -88,9 +74,20 @@ public class BusinessCalendarBuilder {
     }
 
     @NotNull
-    public BusinessCalendarPredicate on(@NotNull Predicate<LocalDate> provider) {
+    public BusinessCalendarPredicate on(int year, int month, int day) {
         ensureNotBuilt();
-        return new BusinessCalendarPredicate(provider, this);
+        return new BusinessCalendarPredicate(e->e.getYear() == year && e.getMonthValue() == month && e.getDayOfMonth() == day, this);
+    }
+    @NotNull
+    public BusinessCalendarPredicate on(int month, int day) {
+        ensureNotBuilt();
+        return new BusinessCalendarPredicate(e-> e.getMonthValue() == month && e.getDayOfMonth() == day, this);
+    }
+
+    @NotNull
+    public BusinessCalendarPredicate on(@NotNull Predicate<LocalDate> predicate) {
+        ensureNotBuilt();
+        return new BusinessCalendarPredicate(predicate, this);
     }
 
 
@@ -138,6 +135,9 @@ public class BusinessCalendarBuilder {
         public BusinessCalendarBuilder hours(String businessHour) {
             businessHours.add(new BusinessHours(predicate, businessHour));
             return builder;
+        }
+        public BusinessCalendarBuilder holiday(String name){
+            return builder.holiday(date -> predicate.test(date) ? name : null);
         }
     }
 

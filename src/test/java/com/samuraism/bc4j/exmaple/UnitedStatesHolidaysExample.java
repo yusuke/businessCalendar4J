@@ -34,7 +34,7 @@ public class UnitedStatesHolidaysExample {
                 + calendar.isBusinessDay(LocalDate.of(2021, 1, 1)));
 
         // get Martin Luther King Jr. Day
-        System.out.println("What is Jan, 18 2021?: " 
+        System.out.println("What is Jan, 18 2021?: "
                 + calendar.getHoliday(LocalDate.of(2021, 1, 18)));
 
         System.out.println("List of holidays in 2021: ");
@@ -55,7 +55,7 @@ public class UnitedStatesHolidaysExample {
                         BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS,
                         // Specify logic based custom holidays. returns a string if the day is a holiday
                         e -> e.getMonthValue() == 5 && e.getDayOfMonth() == 19 ? "James Gosling's birthday" : null)
-                .holiday(LocalDate.of(1995, 5, 23), "Java public debut")
+                .on(1995, 5, 23).holiday("Java public debut")
                 .build();
 
         // Gets the last business day of Jan, 2021 → the answer is Jan 29 since Jan 30, 31 are weekend

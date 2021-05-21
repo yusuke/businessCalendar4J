@@ -47,29 +47,26 @@ public final class ビジネスカレンダーBuilder {
         return this;
     }
 
-    /**
-     * 固定の祝休日を追加する
-     *
-     * @param 日付 日付
-     * @param 名称 名称
-     * @return このインスタンス
-     */
-    @NotNull
-    public ビジネスカレンダーBuilder 祝休日(@NotNull LocalDate 日付, @NotNull String 名称) {
-        builder.holiday(日付, 名称);
-        return this;
-    }
-
     @NotNull
     public ビジネスカレンダーBuilder 営業時間(String 営業時間) {
         builder.hours(営業時間);
         return this;
     }
 
-
     @NotNull
     public ビジネスカレンダーPredicate 曜日(@NotNull DayOfWeek... dayOfWeeks) {
         final BusinessCalendarBuilder.BusinessCalendarPredicate businessCalendarPredicate = builder.on(dayOfWeeks);
+        return new ビジネスカレンダーPredicate(this, businessCalendarPredicate);
+    }
+
+    @NotNull
+    public ビジネスカレンダーPredicate 日(int 年, int 月, int 日) {
+        final BusinessCalendarBuilder.BusinessCalendarPredicate businessCalendarPredicate = builder.on(年,月,日);
+        return new ビジネスカレンダーPredicate(this, businessCalendarPredicate);
+    }
+    @NotNull
+    public ビジネスカレンダーPredicate 日(int 月, int 日) {
+        final BusinessCalendarBuilder.BusinessCalendarPredicate businessCalendarPredicate = builder.on(月,日);
         return new ビジネスカレンダーPredicate(this, businessCalendarPredicate);
     }
 
@@ -92,5 +89,12 @@ public final class ビジネスカレンダーBuilder {
             businessCalendarPredicate.hours(営業時間);
             return builder;
         }
+
+        @NotNull
+        public ビジネスカレンダーBuilder 祝休日(String 名称) {
+            businessCalendarPredicate.holiday(名称);
+            return builder;
+        }
+
     }
 }
