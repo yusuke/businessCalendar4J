@@ -24,14 +24,14 @@ Maven Central Repositoryにリリースされているため、以下のよう�
     <dependency>
         <groupId>com.samuraism</groupId>
         <artifactId>businessCalendar4j</artifactId>
-        <version>1.12</version>
+        <version>1.13</version>
     </dependency>
 </dependencies>
 ```
 ### Gradleの場合
 ```text
 dependencies {
-    compile 'com.samuraism:businessCalendar4j:1.12'
+    compile 'com.samuraism:businessCalendar4j:1.13'
 }
 ```
 ## 利用方法
@@ -69,10 +69,10 @@ public class ビジネスカレンダーExample {
         // 固定のカスタム祝休日を設定
         calendar = ビジネスカレンダー.newBuilder()
                 .祝休日(ビジネスカレンダー.日本の祝休日)
-                .日(1995, 5, 23).祝休日("Java誕生")
+                .年月日(1995, 5, 23).祝休日("Java誕生")
                 .祝休日(ビジネスカレンダー.土日休業)
                 // ロジックベーのカスタム祝休日を設定。当該日が祝日ならば名称を、そうでなければnullを返す関数を指定する
-                .日(5, 19).祝休日("ジェームズ・ゴスリン誕生日")
+                .月日(5, 19).祝休日("ジェームズ・ゴスリン誕生日")
                 .build();
 
         // 2021年1月最終営業日を取得→ 1月30日、31日が土日なので1月29日金曜日
