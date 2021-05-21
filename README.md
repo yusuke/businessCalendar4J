@@ -101,15 +101,18 @@ public class UnitedStatesHolidaysExample {
 import com.samuraism.bc4j.BusinessCalendar;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class BusinessHoursExample {
     public static void main(String[] args) {
         BusinessCalendar calendar = BusinessCalendar.newBuilder()
-                // from Monday to Friday: 9am to 6pm
-                .from(9).to(18)
+                // opens 10am to 2pm on New Year's Eve
+                .on(date -> date.getMonthValue() == 12 && date.getDayOfMonth() == 31).hours("10-14")
                 // Saturday and Sunday: 10am to 4:30pm
-                .on(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).from(10).to(16, 30)
+                .on(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).hours("10-16:30")
+                // from Monday to Friday: 9am to 6pm
+                .hours("9-18")
                 .build();
         // prints true
         System.out.println("May 20, 2021(Thu) 9:30 on business? :" +
@@ -117,6 +120,9 @@ public class BusinessHoursExample {
         // prints false
         System.out.println("May 22, 2021(Sat) 9:30 on business? :" +
                 calendar.isBusinessHour(LocalDateTime.of(2021, 5, 22, 9, 30)));
+        // prints [BusinessHourSlot{from=2021-12-31T10:00, to=2021-12-31T14:00}]
+        System.out.println("Business hours of Dec 31, 2021(Fri) :" +
+                calendar.getBusinessHourSlots(LocalDate.of(2021, 12, 31)));
     }
 }
 ```

@@ -100,10 +100,10 @@ import java.time.LocalDateTime;
 public class 営業時間Example {
     public static void main(String[] args) {
         ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder()
+                // 土日は10時〜12時、13時〜16:30営業
+                .曜日(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).営業時間("10-12,13-16:30")
                 // 月曜〜金曜は9時〜18時営業
-                .開始(9).終了(18)
-                // 土日は10時〜16:30営業
-                .曜日(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).開始(10).終了(16, 30)
+                .営業時間("9-18")
                 .build();
         // true をプリント
         System.out.println("2021年5月20(木) 9:30 は営業時間？ :" +

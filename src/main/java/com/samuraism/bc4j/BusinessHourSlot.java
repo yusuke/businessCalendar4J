@@ -28,7 +28,7 @@ public final class BusinessHourSlot implements java.io.Serializable {
     @NotNull
     public final LocalDateTime from, to;
 
-    BusinessHourSlot(@NotNull LocalDate baseDate, @NotNull LocalTime from, @NotNull LocalTime to) {
+    public BusinessHourSlot(@NotNull LocalDate baseDate, @NotNull LocalTime from, @NotNull LocalTime to) {
         this.from = LocalDateTime.of(baseDate, from);
         this.to = to.getHour() == 0 && to.getMinute() == 0 ? LocalDateTime.of(baseDate.plus(1, ChronoUnit.DAYS), to)
                 : LocalDateTime.of(baseDate, to);

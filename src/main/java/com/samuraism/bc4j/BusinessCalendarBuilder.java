@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class BusinessCalendarBuilder {
@@ -32,8 +33,7 @@ public class BusinessCalendarBuilder {
     List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
     HolidayMap customHolidayMap = new HolidayMap();
     Locale locale = Locale.getDefault();
-    List<Function<LocalDate, List<BusinessHourSlot>>> businessHourSlotsProvider = new ArrayList<>();
-    List<BusinessHourFromTo> businessHourFromTos = new ArrayList<>();
+    List<BusinessHours> businessHours = new ArrayList<>();
 
     public final BusinessCalendarBuilder locale(Locale locale) {
         ensureNotBuilt();
@@ -72,55 +72,39 @@ public class BusinessCalendarBuilder {
     public BusinessCalendar build() {
         ensureNotBuilt();
         built = true;
-        if (businessHourFromTos.size() == 0) {
-            businessHourFromTos.add(new BusinessHourFromTo(LocalTime.of(0, 0), LocalTime.of(0, 0), new DayOfWeek[0]));
-        }
-        final List<BusinessHourFromTo> dayOfWeekSpecified = businessHourFromTos.stream().filter(e -> !e.dayOfWeekNotSpecified()).collect(Collectors.toList());
-        if (dayOfWeekSpecified.size() != 0) {
-            // Day of week specific algorithm
-            businessHourSlotsProvider.add(date -> {
-                if (dayOfWeekSpecified.stream().anyMatch(e -> e.isSpecificTo(date.getDayOfWeek()))) {
-                    return businessHourFromTos.stream().filter(e -> e.isSpecificTo(date.getDayOfWeek()))
-                            .map(e -> new BusinessHourSlot(date, e.from, e.to)).collect(Collectors.toList());
-                } else {
-                    return null;
-                }
-            });
-        }
-        final List<BusinessHourFromTo> dayOfWeekNotSpecified = businessHourFromTos.stream().filter(BusinessHourFromTo::dayOfWeekNotSpecified).collect(Collectors.toList());
-        businessHourSlotsProvider.add(date -> dayOfWeekNotSpecified.stream()
-                .map(e -> new BusinessHourSlot(date, e.from, e.to)).collect(Collectors.toList()));
-
         return new BusinessCalendar(this);
     }
 
     @NotNull
-    public BusinessHourFrom from(int hour) {
-        return from(hour, 0);
+    public BusinessCalendarBuilder hours(String businessHour) {
+        businessHours.add(new BusinessHours(e -> true, businessHour));
+        return this;
     }
 
     @NotNull
-    public BusinessHourFrom from(int hour, int minutes) {
-        return new BusinessHourFrom(new DayOfWeek[0], hour, minutes, this);
-    }
-
-    @NotNull
-    public BusinessHour on(@NotNull DayOfWeek... dayOfWeek) {
+    public BusinessCalendarPredicate on(@NotNull DayOfWeek... dayOfWeek) {
         ensureNotBuilt();
-        return new BusinessHour(this, dayOfWeek);
+        return new BusinessCalendarPredicate(this, dayOfWeek);
     }
+
+    @NotNull
+    public BusinessCalendarPredicate on(@NotNull Predicate<LocalDate> provider) {
+        ensureNotBuilt();
+        return new BusinessCalendarPredicate(provider, this);
+    }
+
+
+    private final BusinessHours OPEN24HOURS = new BusinessHours(e -> true, "0-24");
 
     @NotNull
     Function<LocalDate, List<BusinessHourSlot>> getBusinessHours() {
         return (date) -> {
-            List<BusinessHourSlot> slots = null;
-            for (Function<LocalDate, List<BusinessHourSlot>> provider : businessHourSlotsProvider) {
-                slots = provider.apply(date);
-                if (slots != null && slots.size() != 0) {
-                    break;
+            for (BusinessHours bh : businessHours) {
+                if (bh.predicate.test(date)) {
+                    return bh.getSlots(date);
                 }
             }
-            return slots;
+            return OPEN24HOURS.getSlots(date);
         };
     }
 
@@ -130,63 +114,80 @@ public class BusinessCalendarBuilder {
         }
     }
 
-    public class BusinessHour {
+    public class BusinessCalendarPredicate {
         private final BusinessCalendarBuilder builder;
-        private final DayOfWeek[] dayOfWeeks;
+        private final Predicate<LocalDate> predicate;
 
-        BusinessHour(@NotNull BusinessCalendarBuilder builder, @NotNull DayOfWeek... dayOfWeeks) {
+        BusinessCalendarPredicate(BusinessCalendarBuilder builder, DayOfWeek... dayOfWeeks) {
+            this.predicate = e -> {
+                for (DayOfWeek dayOfWeek : dayOfWeeks) {
+                    if (dayOfWeek == e.getDayOfWeek()) {
+                        return true;
+                    }
+                }
+                return false;
+            };
             this.builder = builder;
-            this.dayOfWeeks = dayOfWeeks;
         }
 
-        @NotNull
-        public BusinessHourFrom from(int hour) {
-            return from(hour, 0);
+        BusinessCalendarPredicate(Predicate<LocalDate> predicate, BusinessCalendarBuilder builder) {
+            this.predicate = predicate;
+            this.builder = builder;
         }
 
-        @NotNull
-        public BusinessHourFrom from(int hour, int minutes) {
-            return new BusinessHourFrom(dayOfWeeks, hour, minutes, builder);
+        public BusinessCalendarBuilder hours(String businessHour) {
+            businessHours.add(new BusinessHours(predicate, businessHour));
+            return builder;
         }
     }
 
-    public class BusinessHourFrom {
-        private final DayOfWeek[] dayOfWeeks;
-        private final int fromHour;
-        private final int fromMinutes;
-        private final BusinessCalendarBuilder builder;
+    static class BusinessHours {
+        private final Predicate<LocalDate> predicate;
+        private final List<BusinessHourFromTo> businessHourFromTos = new ArrayList<>();
 
-        BusinessHourFrom(DayOfWeek[] dayOfWeeks, int fromHour, int fromMinutes, @NotNull BusinessCalendarBuilder builder) {
-            ensureNotBuilt();
-            checkParameter(0 <= fromHour, "value should be greater than or equals to 0, provided: " + fromHour);
-            checkParameter(fromHour <= 24, "value should be less than or equals to 24, provided: " + fromHour);
-            checkParameter(0 <= fromMinutes, "value should be greater than or equals to 0, provided: " + fromMinutes);
-            checkParameter(fromMinutes <= 59, "value should be less than 60, provided: " + fromMinutes);
-            this.dayOfWeeks = dayOfWeeks;
-            this.fromHour = fromHour;
-            this.fromMinutes = fromMinutes;
-            this.builder = builder;
+        public BusinessHours(Predicate<LocalDate> predicate, String businessHour) {
+            this.predicate = predicate;
+            final String[] slots = businessHour.replaceAll(" ", "").split(",");
+
+            for (String slot : slots) {
+                final String[] split = slot.split("-");
+                final LocalTime from = toLocalTime(split[0]);
+                final LocalTime to = toLocalTime(split[1]);
+                checkParameter(from.isBefore(to) || to.equals(LocalTime.of(0, 0)), "from should be before to, provided: " + slot);
+                businessHourFromTos.add(new BusinessHourFromTo(from, to));
+            }
+        }
+        public List<BusinessHourSlot> getSlots(LocalDate date){
+            return businessHourFromTos.stream()
+                    .map(e -> new BusinessHourSlot(date, e.from, e.to)).collect(Collectors.toList());
         }
 
-        @NotNull
-        public BusinessCalendarBuilder to(int hour) {
-            return to(hour, 0);
-        }
 
-        @NotNull
-        public BusinessCalendarBuilder to(int hour, int minutes) {
-            ensureNotBuilt();
-            checkParameter(0 <= hour, "value should be greater than or equals to 0, provided: " + hour);
-            checkParameter(hour <= 24, "value should be less than or equals to 24, provided: " + hour);
-            checkParameter(0 <= minutes, "value should be greater than or equals to 0, provided: " + minutes);
-            checkParameter(minutes <= 59, "value should be less than 60, provided: " + minutes);
-            final LocalTime from = LocalTime.of(fromHour, fromMinutes);
-            final boolean toIsEndOfTheDay = hour == 24 && minutes == 0;
-            final LocalTime to = toIsEndOfTheDay ? LocalTime.of(0, 0) : LocalTime.of(hour, minutes);
-            checkParameter(from.isBefore(to) || toIsEndOfTheDay, "from should be before to, provided: " + from + " / " + to);
-            businessHourFromTos.add(new BusinessHourFromTo(LocalTime.of(fromHour, fromMinutes), to, dayOfWeeks));
-            return builder;
+        private LocalTime toLocalTime(String timeStr) {
+            final String[] split = timeStr.split(":");
+            int hour = Integer.parseInt(split[0]);
+            int minutes = 0;
+            if (2 <= split.length) {
+                minutes = Integer.parseInt(split[1]);
+            }
+            int seconds = 0;
+            if (3 <= split.length) {
+                seconds = Integer.parseInt(split[2]);
+            }
+            if (hour == 24 && minutes == 0 && seconds == 0) {
+                return LocalTime.of(0, 0);
+            }
 
+            checkParameter(0 <= hour, "hour should be greater than or equals to 0, provided: " + timeStr);
+            checkParameter(hour <= 24, "hour should be less than or equals to 24, provided: " + timeStr);
+
+            checkParameter(0 <= minutes, "minutes should be greater than or equals to 0, provided: " + timeStr);
+            checkParameter(minutes <= 59, "minutes should be less than 60, provided: " + timeStr);
+
+            checkParameter(0 <= seconds, "seconds should be greater than or equals to 0, provided: " + timeStr);
+            checkParameter(seconds <= 59, "seconds should be less than 60, provided: " + timeStr);
+
+            return LocalTime.of(hour, minutes, seconds);
         }
 
         void checkParameter(boolean expectedToBeTrue, @NotNull String message) {
@@ -194,6 +195,7 @@ public class BusinessCalendarBuilder {
                 throw new IllegalArgumentException(message);
             }
         }
+
     }
 }
 
@@ -202,25 +204,9 @@ class BusinessHourFromTo {
     LocalTime from;
     @NotNull
     LocalTime to;
-    @NotNull
-    DayOfWeek[] dayOfWeeks;
 
-    public BusinessHourFromTo(@NotNull LocalTime from, @NotNull LocalTime to, @NotNull DayOfWeek[] dayOfWeeks) {
+    BusinessHourFromTo(@NotNull LocalTime from, @NotNull LocalTime to) {
         this.from = from;
         this.to = to;
-        this.dayOfWeeks = dayOfWeeks;
-    }
-
-    boolean isSpecificTo(DayOfWeek dayOfWeek) {
-        for (DayOfWeek dow : dayOfWeeks) {
-            if (dow == dayOfWeek) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    boolean dayOfWeekNotSpecified() {
-        return dayOfWeeks.length == 0;
     }
 }
