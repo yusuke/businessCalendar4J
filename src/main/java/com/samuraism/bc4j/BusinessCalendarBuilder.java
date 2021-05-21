@@ -149,7 +149,7 @@ public class BusinessCalendarBuilder {
 
         public BusinessHours(Predicate<LocalDate> predicate, String businessHour) {
             this.predicate = predicate;
-            final String[] slots = businessHour.replaceAll(" ", "").replaceAll("、", ",").split(",");
+            final String[] slots = businessHour.replaceAll(" ", "").replaceAll("[、&]", ",").split(",");
 
             for (String slot : slots) {
                 final String[] split = slot.replaceAll("(to|から|〜|~)", "-").split("-");
