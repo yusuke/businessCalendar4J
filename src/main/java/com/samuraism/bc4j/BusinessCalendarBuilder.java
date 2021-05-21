@@ -166,7 +166,8 @@ public class BusinessCalendarBuilder {
         }
 
         private LocalTime toLocalTime(String timeStr) {
-            final String ampm = timeStr.replaceAll("[0-9.:時]", "").toLowerCase();
+            final String ampm = timeStr.replaceAll("[0-9.:時半]", "").toLowerCase();
+            final boolean half = timeStr.contains("半");
             timeStr = timeStr.replaceAll("[^0-9:]", "");
             final String[] split = timeStr.split(":");
 
@@ -184,6 +185,9 @@ public class BusinessCalendarBuilder {
             int minutes = 0;
             if (2 <= split.length) {
                 minutes = Integer.parseInt(split[1]);
+            }
+            if (half) {
+                minutes = 30;
             }
             int seconds = 0;
             if (3 <= split.length) {

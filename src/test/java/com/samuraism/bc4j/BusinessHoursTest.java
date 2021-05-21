@@ -45,16 +45,16 @@ class BusinessHoursTest {
     @Test
     void humanFriendlySlotExpression() {
         final LocalDate now = LocalDate.now();
-        final List<BusinessHourSlot> slots = BusinessCalendar.newBuilder().hours("0-8,9-12,13:30-17,19:31-24")
+        final List<BusinessHourSlot> slots = BusinessCalendar.newBuilder().hours("0-8:30,9-12,13:30-17,19:31-24")
                 .build().getBusinessHourSlots(now);
 
         String[] equivalents = {
-                "0-8,9-12pm,1:30pm-5pm,7:31pm-12am",
-                "12 a.m. -8,9-12noon,1:30pm-5pm,7:31pm-12am",
-                "12 a.m. -8,9-noon12,1:30pm-5pm,7:31pm-12am",
-                "midnight12-8,9-noon12,1:30pm-5pm,7:31pm-12 midnight",
-                "12 a.m. to 8,9-12,1:30pm to 5pm,7:31pm-12am",
-                "午前12 から 8,9-正午,午後1:30~午後5時、午後7:31〜午前0時",
+                "0-8:30,9-12pm,1:30pm-5pm,7:31pm-12am",
+                "12 a.m. -8:30,9-12noon,1:30pm-5pm,7:31pm-12am",
+                "12 a.m. -8:30,9-noon12,1:30pm-5pm,7:31pm-12am",
+                "midnight12-8:30,9-noon12,1:30pm-5pm,7:31pm-12 midnight",
+                "12 a.m. to 8:30,9-12,1:30pm to 5pm,7:31pm-12am",
+                "午前12時 から 午前8時半,9-正午,午後1時半~午後5時、午後7:31〜午前0時",
         };
 
         for (String equivalent : equivalents) {
