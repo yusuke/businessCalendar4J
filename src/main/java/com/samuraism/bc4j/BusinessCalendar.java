@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Function;
@@ -431,4 +432,59 @@ public final class BusinessCalendar {
         return list;
     }
 
+    /**
+     * Dump holidays and business days in the specified period
+     * @param from from date (inclusive)
+     * @param to to date (inclusive)
+     * @return dumped information about holidays and business days in the specified period
+     * @since 1.15
+     */
+    public String dump(@NotNull LocalDate from, @NotNull LocalDate to) {
+        return dump(from, to , "yyyy/MM/dd");
+    }
+
+    /**
+     * Dump holidays and business days in the specified period
+     * @param from from date (inclusive)
+     * @param to to date (inclusive)
+     * @param dateFormat date format pattern
+     * @return dumped information about holidays and business days in the specified period
+     * @since 1.15
+     */
+    public String dump(@NotNull LocalDate from, @NotNull LocalDate to, String dateFormat) {
+        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
+        StringBuilder buf = new StringBuilder();
+        LocalDate start = from.isBefore(to) ? from : to;
+        LocalDate end = (to.isAfter(from) ? to : from).plus(1, ChronoUnit.DAYS);
+        while (start.isBefore(end)) {
+            if (isBusinessDay(start)) {
+                buf.append(start.format(dateFormatter)).append(" : ");
+                boolean first = true;
+                for (BusinessHourSlot slot : getBusinessHourSlots(start)) {
+                    if(!first){
+                        buf.append(", ");
+                    }
+                    first = false;
+                    buf.append(formatTime(slot.from)).append("-").append(formatTime(slot.to));
+                }
+            }else{
+                buf.append(String.format("%s : %s", start.format(dateFormatter), Objects.requireNonNull(getHoliday(start)).name));
+            }
+            buf.append("\n");
+            start = start.plus(1, ChronoUnit.DAYS);
+        }
+        return buf.toString();
+
+    }    
+
+    private static final DateTimeFormatter HHmm = DateTimeFormatter.ofPattern("HH:mm");
+    private static final DateTimeFormatter HHmmss = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+    private String formatTime(LocalDateTime time) {
+        if (time.getSecond() == 0) {
+            return time.format(HHmm);
+        } else {
+            return time.format(HHmmss);
+        }
+    }
 }
