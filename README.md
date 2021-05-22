@@ -22,14 +22,14 @@ Add a dependency declaration to pom.xml, or build.gradle as follows:
     <dependency>
         <groupId>com.samuraism</groupId>
         <artifactId>businessCalendar4j</artifactId>
-        <version>1.14</version>
+        <version>1.15</version>
     </dependency>
 </dependencies>
 ```
 ### Gradle
 ```text
 dependencies {
-    compile 'com.samuraism:businessCalendar4j:1.14'
+    compile 'com.samuraism:businessCalendar4j:1.15'
 }
 ```
 ## How to use
