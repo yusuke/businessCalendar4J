@@ -106,6 +106,7 @@ class BusinessHoursTest {
                 .build().getBusinessHourSlots(now);
 
         String[] equivalents = {
+                "0-8:30,9-12,13:30-17,19:31-0",
                 "0-8:30,9-12pm,1:30pm-5pm,7:31pm-12am",
                 "12 a.m. -8:30,9-12noon,1:30pm-5pm,7:31pm-12am",
                 "12 a.m. -8:30,9-noon12,1:30pm-5pm,7:31pm-12am",
