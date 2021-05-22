@@ -409,4 +409,26 @@ public final class BusinessCalendar {
         return list;
     }
 
+    /**
+     * Returns business days between specified period
+     *
+     * @param from from date (inclusive)
+     * @param to   to date (inclusive)
+     * @return List of business days between the specified period
+     * @since 1.15
+     */
+    @NotNull
+    public List<LocalDate> getBusinessDaysBetween(@NotNull LocalDate from, @NotNull LocalDate to) {
+        List<LocalDate> list = new ArrayList<>();
+        LocalDate start = from.isBefore(to) ? from : to;
+        LocalDate end = (to.isAfter(from) ? to : from).plus(1, ChronoUnit.DAYS);
+        while (start.isBefore(end)) {
+            if (isBusinessDay(start)) {
+                list.add(start);
+            }
+            start = start.plus(1, ChronoUnit.DAYS);
+        }
+        return list;
+    }
+
 }

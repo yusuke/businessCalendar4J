@@ -288,6 +288,19 @@ public class ビジネスカレンダー {
     }
 
     /**
+     * 指定期間内の営業日のリストを返す。リストは古い日から並べられている。指定期間内に営業日がない場合は空のリストを返す。
+     *
+     * @param 開始日 指定開始日。この日も含む。
+     * @param 終了日 指定終了日。この日も含む。
+     * @return 指定期間内の祝休日のリスト。
+     * @since 1.15
+     */
+    @NotNull
+    public List<LocalDate> get指定期間内の営業日(@NotNull LocalDate 開始日, @NotNull LocalDate 終了日) {
+        return businessCalendar.getBusinessDaysBetween(開始日, 終了日);
+    }
+
+    /**
      * <a href="https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html">内閣府で公表されている祝休日情報</a>の初日を返します。この日より前の祝休日は現行の法律、国立天文台の情報を元にアルゴリズムで求められた祝休日になります。
      *
      * @return 内閣府で公表されている祝休日情報の初日
