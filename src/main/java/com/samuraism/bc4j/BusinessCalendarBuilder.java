@@ -34,7 +34,7 @@ public class BusinessCalendarBuilder {
     List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
     HolidayMap customHolidayMap = new HolidayMap();
     Locale locale = Locale.getDefault();
-    private List<BusinessHours> businessHours = new ArrayList<>();
+    private final List<BusinessHours> businessHours = new ArrayList<>();
 
     public final BusinessCalendarBuilder locale(Locale locale) {
         ensureNotBuilt();
@@ -130,7 +130,7 @@ public class BusinessCalendarBuilder {
                         int day = e.with(TemporalAdjusters
                                 .dayOfWeekInMonth(ordinal, dayOfWeek))
                                 .getDayOfMonth();
-                        if(e.getDayOfMonth() == day){
+                        if (e.getDayOfMonth() == day) {
                             return true;
                         }
                     }
@@ -139,6 +139,7 @@ public class BusinessCalendarBuilder {
             };
             this.builder = builder;
         }
+
         BusinessCalendarPredicate(@NotNull BusinessCalendarBuilder builder, @NotNull DayOfWeek... dayOfWeeks) {
             this.predicate = e -> {
                 for (DayOfWeek dayOfWeek : dayOfWeeks) {
@@ -151,7 +152,7 @@ public class BusinessCalendarBuilder {
             this.builder = builder;
         }
 
-        BusinessCalendarPredicate(@NotNull Predicate<LocalDate> predicate,@NotNull BusinessCalendarBuilder builder) {
+        BusinessCalendarPredicate(@NotNull Predicate<LocalDate> predicate, @NotNull BusinessCalendarBuilder builder) {
             this.predicate = predicate;
             this.builder = builder;
         }
