@@ -1,6 +1,8 @@
 package com.samuraism.bc4j;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +20,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@Execution(ExecutionMode.CONCURRENT)
 class CSVBasedConfiguration {
     @Test
     void invalidFormat() throws IOException {
@@ -155,12 +158,12 @@ class CSVBasedConfiguration {
 
     }
 
-    private Path write(String content) throws IOException {
+    static Path write(String content) throws IOException {
         final Path path = File.createTempFile("test", "test").toPath();
         return write(path, content);
     }
 
-    private Path write(Path path, String content) {
+    static Path write(Path path, String content) {
         try (PrintWriter pw = new PrintWriter(Files.newBufferedWriter(path, StandardCharsets.UTF_8))) {
             pw.print(content);
         } catch (IOException e) {

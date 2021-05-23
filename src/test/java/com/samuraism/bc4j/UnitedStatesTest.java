@@ -1,6 +1,8 @@
 package com.samuraism.bc4j;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -12,7 +14,8 @@ import java.util.Map;
 import static com.samuraism.bc4j.UnitedStates.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SuppressWarnings({"ConstantConditions"})
+@Execution(ExecutionMode.CONCURRENT)
+@SuppressWarnings({"ConstantConditions", "serial"})
 class UnitedStatesTest {
     final BusinessCalendar calendar = BusinessCalendar.newBuilder().locale(Locale.ENGLISH)
             .holiday(
@@ -34,6 +37,7 @@ class UnitedStatesTest {
 
     @Test
     void martinLutherKingJrDay() {
+        //noinspection serial
         Map<Integer, Integer[]> myMap = new HashMap<Integer, Integer[]>() {
             {
                 put(21, new Integer[]{1991, 2002, 2008, 2013, 2019, 2030, 2036, 2041, 2047, 2058, 2064, 2069, 2075, 2086, 2092, 2097});
