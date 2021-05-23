@@ -259,7 +259,7 @@ public final class BusinessCalendar {
         return first.map(s -> new Holiday(date, toHolidayString(s))).orElse(null);
     }
 
-    Pattern p = Pattern.compile("\\$\\{([a-z.A-Z]+)}");
+    private final static Pattern p = Pattern.compile("\\$\\{([a-z.A-Z]+)}");
 
     @NotNull
     private String toHolidayString(@NotNull String key) {

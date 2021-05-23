@@ -16,15 +16,23 @@
 package com.samuraism.bc4j;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.ParseException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.MonthDay;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -87,6 +95,12 @@ public class BusinessCalendarBuilder {
     }
 
     @NotNull
+    public BusinessCalendarPredicate on(LocalDate date) {
+        ensureNotBuilt();
+        return new BusinessCalendarPredicate(date, this);
+    }
+
+    @NotNull
     public BusinessCalendarPredicate on(int month, int day) {
         ensureNotBuilt();
         return new BusinessCalendarPredicate(e -> e.getMonthValue() == month && e.getDayOfMonth() == day, this);
@@ -117,6 +131,115 @@ public class BusinessCalendarBuilder {
         if (built) {
             throw new IllegalStateException("Already built");
         }
+    }
+
+    public BusinessCalendarBuilder csv(Path path) {
+        try {
+            List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+            DateTimeFormatter ymdFormat = DateTimeFormatter.ofPattern("yyyy/M/d");
+            DateTimeFormatter mdFormat = DateTimeFormatter.ofPattern("M/d");
+            for (String line : lines) {
+                if (line.startsWith("#")) {
+                    continue;
+                }
+                final String[] split = line.split(",");
+                if (1 <= split.length) {
+                    switch (split[0]) {
+                        case "ymdFormat":
+                            ymdFormat = DateTimeFormatter.ofPattern(split[1]);
+                            break;
+                        case "mdFormat":
+                            mdFormat = DateTimeFormatter.ofPattern(split[1]);
+                            break;
+                        case "hours":
+                            on(ymdFormat, mdFormat, split, BusinessCalendarPredicate::hours);
+                            break;
+                        case "holiday":
+                            on(ymdFormat, mdFormat, split, BusinessCalendarPredicate::holiday);
+                            break;
+                        default:
+                            throw new RuntimeException(new ParseException(line, 0));
+                    }
+                }
+
+            }
+        } catch (IOException io) {
+            throw new UncheckedIOException(io);
+        }
+        return this;
+    }
+
+    private void on(@NotNull DateTimeFormatter ymdFormatter, @NotNull DateTimeFormatter mdFormatter,
+                    @NotNull String[] lines, BiConsumer<BusinessCalendarPredicate, String> consumer) {
+        // date
+        try {
+            try {
+                final LocalDate date = LocalDate.parse(lines[1], ymdFormatter);
+                consumer.accept(new BusinessCalendarPredicate(date, this), join(lines, 2));
+            }catch(DateTimeParseException dtpe1){
+                final MonthDay parsed = MonthDay.parse(lines[1], mdFormatter);
+                consumer.accept(new BusinessCalendarPredicate(date->date.getMonth() == parsed.getMonth()
+                        && date.getDayOfMonth() == parsed.getDayOfMonth(), this), join(lines, 2));
+            }
+        } catch (DateTimeParseException dtpe2) {
+            // ordinal
+            try {
+                parseWeekDays(lines, 2, Integer.valueOf(lines[1]), consumer);
+            } catch (NumberFormatException nfe) {
+                parseWeekDays(lines, 1, null, consumer);
+            }
+
+        }
+    }
+
+
+    @SuppressWarnings("serial")
+    static Map<String, String> convert = new HashMap<String, String>() {{
+        put("MON", "MONDAY");
+        put("TUE", "TUESDAY");
+        put("WED", "WEDNESDAY");
+        put("THU", "THURSDAY");
+        put("FRI", "FRIDAY");
+        put("SAT", "SATURDAY");
+        put("SUN", "SUNDAY");
+    }};
+
+    private void parseWeekDays(@NotNull String[] lines, int fromIndex, @Nullable Integer ordinal,
+                               BiConsumer<BusinessCalendarPredicate, String> consumer) {
+        List<DayOfWeek> dayOfWeeks = new ArrayList<>();
+        while ((fromIndex) < lines.length) {
+            final String uppercase = lines[fromIndex].toUpperCase(Locale.ENGLISH);
+            try {
+                dayOfWeeks.add(DayOfWeek.valueOf(convert.getOrDefault(uppercase, uppercase)));
+            } catch (IllegalArgumentException notDayOfWeek) {
+                break;
+            }
+            fromIndex++;
+        }
+        String buf = join(lines, fromIndex);
+        final DayOfWeek[] objects = dayOfWeeks.toArray(new DayOfWeek[0]);
+        if (ordinal == null) {
+            if (dayOfWeeks.size() == 0) {
+                consumer.accept(new BusinessCalendarPredicate(e -> true, this), buf);
+            } else {
+                consumer.accept(new BusinessCalendarPredicate(this, objects), buf);
+            }
+        } else {
+            consumer.accept(new BusinessCalendarPredicate(this, ordinal, objects), buf);
+        }
+    }
+
+    private String join(String[] split, int fromIndex) {
+        StringBuilder buf = new StringBuilder();
+        boolean first = true;
+        for (int i = fromIndex; i < split.length; i++) {
+            if (!first) {
+                buf.append(",");
+            }
+            buf.append(split[i]);
+            first = false;
+        }
+        return buf.toString();
     }
 
     public class BusinessCalendarPredicate {
@@ -154,6 +277,11 @@ public class BusinessCalendarBuilder {
 
         BusinessCalendarPredicate(@NotNull Predicate<LocalDate> predicate, @NotNull BusinessCalendarBuilder builder) {
             this.predicate = predicate;
+            this.builder = builder;
+        }
+
+        BusinessCalendarPredicate(@NotNull LocalDate date, @NotNull BusinessCalendarBuilder builder) {
+            this.predicate = e -> e.isEqual(date);
             this.builder = builder;
         }
 
