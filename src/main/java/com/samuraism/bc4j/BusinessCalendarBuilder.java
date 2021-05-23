@@ -39,15 +39,21 @@ import java.util.stream.Collectors;
 
 public class BusinessCalendarBuilder {
     private boolean built = false;
-    List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
-    HolidayMap customHolidayMap = new HolidayMap();
+    final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
+    private final HolidayMap customHolidayMap = new HolidayMap();
     Locale locale = Locale.getDefault();
     private final List<BusinessHours> businessHours = new ArrayList<>();
 
     public final BusinessCalendarBuilder locale(Locale locale) {
         ensureNotBuilt();
+        holidayLogics.add(customHolidayMap);
         this.locale = locale;
         return this;
+    }
+
+    Function<LocalDate, String> holiday(){
+        return date -> holidayLogics.stream()
+                .map(e -> e.apply(date)).filter(Objects::nonNull).findFirst().orElse(null);
     }
 
     /**
@@ -113,8 +119,6 @@ public class BusinessCalendarBuilder {
     }
 
 
-    private final BusinessHours OPEN24HOURS = new BusinessHours(e -> true, "0-24");
-
     @NotNull
     Function<LocalDate, List<BusinessHourSlot>> getBusinessHours() {
         return (date) -> {
@@ -123,7 +127,7 @@ public class BusinessCalendarBuilder {
                     return bh.getSlots(date);
                 }
             }
-            return OPEN24HOURS.getSlots(date);
+            return null;
         };
     }
 
@@ -310,6 +314,7 @@ public class BusinessCalendarBuilder {
                 checkParameter(from.isBefore(to) || to.equals(LocalTime.of(0, 0)), "from should be before to, provided: " + slot);
                 businessHourFromTos.add(new BusinessHourFromTo(from, to));
             }
+            businessHourFromTos.sort(Comparator.comparing(e -> e.from));
         }
 
         public List<BusinessHourSlot> getSlots(LocalDate date) {

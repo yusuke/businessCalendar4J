@@ -30,15 +30,14 @@ import java.util.stream.Collectors;
 
 public final class BusinessCalendar {
     private final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
-    private final Function<LocalDate, List<BusinessHourSlot>> businessHours;
+    private final List<Function<LocalDate, List<BusinessHourSlot>>> businessHours = new ArrayList<>();
 
     private final ResourceBundle resource;
 
     BusinessCalendar(BusinessCalendarBuilder conf) {
         this.resource = ResourceBundle.getBundle("holidays", conf.locale);
-        holidayLogics.addAll(conf.holidayLogics);
-        this.holidayLogics.add(conf.customHolidayMap);
-        this.businessHours = conf.getBusinessHours();
+        holidayLogics.add(conf.holiday());
+        this.businessHours.add(conf.getBusinessHours());
     }
 
     @NotNull
@@ -111,7 +110,7 @@ public final class BusinessCalendar {
      * @since 1.8
      */
     public boolean isBusinessHour(@NotNull LocalDateTime dateTime) {
-        return isBusinessDay(dateTime.toLocalDate()) && businessHours.apply(dateTime.toLocalDate()).stream().anyMatch(e -> e.isBusinessHour(dateTime));
+        return isBusinessDay(dateTime.toLocalDate()) && getBusinessHourSlots(dateTime.toLocalDate()).stream().anyMatch(e -> e.isBusinessHour(dateTime));
     }
 
     /**
@@ -124,6 +123,8 @@ public final class BusinessCalendar {
         return isBusinessHour(LocalDateTime.now());
     }
 
+    private final BusinessCalendarBuilder.BusinessHours OPEN24HOURS = new BusinessCalendarBuilder.BusinessHours(e -> true, "0-24");
+
     /**
      * Returns a list of BusinessHourSlot on a specific date
      *
@@ -133,10 +134,11 @@ public final class BusinessCalendar {
      */
     @NotNull
     public List<BusinessHourSlot> getBusinessHourSlots(@NotNull LocalDate date) {
-        if (isHoliday()) {
+        if (isHoliday(date)) {
             return Collections.emptyList();
         } else {
-            return businessHours.apply(date).stream().sorted(Comparator.comparing(e -> e.from)).collect(Collectors.toList());
+            return businessHours.stream().map(e -> e.apply(date)).filter(Objects::nonNull).findFirst()
+                    .orElseGet(() -> OPEN24HOURS.getSlots(date));
         }
     }
 
@@ -152,7 +154,7 @@ public final class BusinessCalendar {
         final LocalDate date = when.toLocalDate();
         LocalDateTime lastBusinessHourEnd = null;
         if (isBusinessDay(date)) {
-            final List<BusinessHourSlot> slots = businessHours.apply(date);
+            final List<BusinessHourSlot> slots = getBusinessHourSlots(date);
             final List<BusinessHourSlot> list = slots.stream().filter(e -> e.to.isBefore(when) || e.to.isEqual(when)).collect(Collectors.toList());
             if (0 < list.size()) {
                 lastBusinessHourEnd = list.get(list.size() - 1).to;
@@ -160,7 +162,7 @@ public final class BusinessCalendar {
 
         }
         if (lastBusinessHourEnd == null) {
-            final List<BusinessHourSlot> slots = businessHours.apply(lastBusinessDay(date.minus(1, ChronoUnit.DAYS)));
+            final List<BusinessHourSlot> slots = getBusinessHourSlots(lastBusinessDay(date.minus(1, ChronoUnit.DAYS)));
             lastBusinessHourEnd = slots.get(slots.size() - 1).to;
         }
         return lastBusinessHourEnd;
@@ -178,7 +180,7 @@ public final class BusinessCalendar {
         final LocalDate date = when.toLocalDate();
         LocalDateTime nextBusinessHourEnd = null;
         if (isBusinessDay(date)) {
-            final List<BusinessHourSlot> slots = businessHours.apply(date);
+            final List<BusinessHourSlot> slots = getBusinessHourSlots(date);
             final List<BusinessHourSlot> list = slots.stream().filter(e -> e.to.isAfter(when) || e.to.isEqual(when)).collect(Collectors.toList());
             if (0 < list.size()) {
                 nextBusinessHourEnd = list.get(0).to;
@@ -186,7 +188,7 @@ public final class BusinessCalendar {
 
         }
         if (nextBusinessHourEnd == null) {
-            final List<BusinessHourSlot> slots = businessHours.apply(firstBusinessDay(date.plus(1, ChronoUnit.DAYS)));
+            final List<BusinessHourSlot> slots = getBusinessHourSlots(firstBusinessDay(date.plus(1, ChronoUnit.DAYS)));
             nextBusinessHourEnd = slots.get(0).to;
         }
 
@@ -205,7 +207,7 @@ public final class BusinessCalendar {
         final LocalDate date = when.toLocalDate();
         LocalDateTime lastBusinessHourStart = null;
         if (isBusinessDay(date)) {
-            final List<BusinessHourSlot> slots = businessHours.apply(date);
+            final List<BusinessHourSlot> slots = getBusinessHourSlots(date);
             final List<BusinessHourSlot> list = slots.stream().filter(e -> e.from.isBefore(when)).collect(Collectors.toList());
             if (0 < list.size()) {
                 lastBusinessHourStart = list.get(list.size() - 1).from;
@@ -213,7 +215,7 @@ public final class BusinessCalendar {
 
         }
         if (lastBusinessHourStart == null) {
-            final List<BusinessHourSlot> slots = businessHours.apply(lastBusinessDay(date.minus(1, ChronoUnit.DAYS)));
+            final List<BusinessHourSlot> slots = getBusinessHourSlots(lastBusinessDay(date.minus(1, ChronoUnit.DAYS)));
             lastBusinessHourStart = slots.get(slots.size() - 1).from;
         }
         return lastBusinessHourStart;
@@ -231,7 +233,7 @@ public final class BusinessCalendar {
         final LocalDate date = when.toLocalDate();
         LocalDateTime nextBusinessHourStart = null;
         if (isBusinessDay(date)) {
-            final List<BusinessHourSlot> slots = businessHours.apply(date);
+            final List<BusinessHourSlot> slots = getBusinessHourSlots(date);
             final List<BusinessHourSlot> list = slots.stream().filter(e -> e.from.isAfter(when) || e.from.isEqual(when)).collect(Collectors.toList());
             if (0 < list.size()) {
                 nextBusinessHourStart = list.get(0).from;
@@ -239,7 +241,7 @@ public final class BusinessCalendar {
 
         }
         if (nextBusinessHourStart == null) {
-            final List<BusinessHourSlot> slots = businessHours.apply(firstBusinessDay(date.plus(1, ChronoUnit.DAYS)));
+            final List<BusinessHourSlot> slots = getBusinessHourSlots(firstBusinessDay(date.plus(1, ChronoUnit.DAYS)));
             nextBusinessHourStart = slots.get(0).from;
         }
 
@@ -434,19 +436,21 @@ public final class BusinessCalendar {
 
     /**
      * Dump holidays and business days in the specified period
+     *
      * @param from from date (inclusive)
-     * @param to to date (inclusive)
+     * @param to   to date (inclusive)
      * @return dumped information about holidays and business days in the specified period
      * @since 1.15
      */
     public String dump(@NotNull LocalDate from, @NotNull LocalDate to) {
-        return dump(from, to , "yyyy/MM/dd");
+        return dump(from, to, "yyyy/MM/dd");
     }
 
     /**
      * Dump holidays and business days in the specified period
-     * @param from from date (inclusive)
-     * @param to to date (inclusive)
+     *
+     * @param from       from date (inclusive)
+     * @param to         to date (inclusive)
      * @param dateFormat date format pattern
      * @return dumped information about holidays and business days in the specified period
      * @since 1.15
@@ -461,13 +465,13 @@ public final class BusinessCalendar {
                 buf.append(start.format(dateFormatter)).append(" : ");
                 boolean first = true;
                 for (BusinessHourSlot slot : getBusinessHourSlots(start)) {
-                    if(!first){
+                    if (!first) {
                         buf.append(", ");
                     }
                     first = false;
                     buf.append(formatTime(slot.from)).append("-").append(formatTime(slot.to));
                 }
-            }else{
+            } else {
                 buf.append(String.format("%s : %s", start.format(dateFormatter), Objects.requireNonNull(getHoliday(start)).name));
             }
             buf.append("\n");
@@ -475,7 +479,7 @@ public final class BusinessCalendar {
         }
         return buf.toString();
 
-    }    
+    }
 
     private static final DateTimeFormatter HHmm = DateTimeFormatter.ofPattern("HH:mm");
     private static final DateTimeFormatter HHmmss = DateTimeFormatter.ofPattern("HH:mm:ss");
