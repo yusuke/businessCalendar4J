@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Execution(ExecutionMode.CONCURRENT)
+@Execution(ExecutionMode.SAME_THREAD)
 @SuppressWarnings({"AccessStaticViaInstance", "ConstantConditions"})
 public class 日本の祝休日アルゴリズムTest {
     static TreeMap<LocalDate, String> testCases;

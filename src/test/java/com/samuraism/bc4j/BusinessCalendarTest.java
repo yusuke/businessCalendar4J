@@ -19,17 +19,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
-import java.nio.file.Paths;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
-import static com.samuraism.bc4j.Japan.csv;
 import static org.junit.jupiter.api.Assertions.*;
 
-@Execution(ExecutionMode.CONCURRENT)
+@Execution(ExecutionMode.SAME_THREAD)
 @SuppressWarnings({"ConstantConditions"})
 class BusinessCalendarTest {
     @Test
