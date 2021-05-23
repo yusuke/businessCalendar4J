@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.MonthDay;
 import java.time.format.DateTimeFormatter;
@@ -36,16 +37,43 @@ import java.util.function.Function;
 final class CSV {
 
     private BusinessCalendarBuilder builder;
-    @Nullable
-    private Path path;
+    @NotNull
+    private final Path path;
 
-    CSV(@NotNull Path path) {
+    private long lastModified = -1L;
+
+    @Nullable
+    private final Duration duration;
+
+    CSV(@NotNull Path path, @Nullable Duration duration) {
         this.path = path;
+        this.duration = duration;
         reload();
+        scheduleReload();
     }
 
-    private void reload(){
-        if (path != null) {
+    private void scheduleReload() {
+        if (duration != null) {
+            final Thread thread = new Thread(() -> {
+                while (true) {
+                    try {
+                        //noinspection BusyWait
+                        Thread.sleep(duration.toMillis());
+                        reload();
+                    } catch (Exception ignore) {
+                    }
+                }
+
+            });
+            thread.setDaemon(true);
+            thread.start();
+        }
+    }
+
+    private void reload() {
+        final long latestLastModified = path.toFile().lastModified();
+        if (lastModified != latestLastModified) {
+            lastModified = latestLastModified;
             List<String> lines;
             try {
                 lines = Files.readAllLines(path, StandardCharsets.UTF_8);
@@ -57,12 +85,13 @@ final class CSV {
     }
 
     Function<LocalDate, String> holiday() {
-        return builder.holiday();
+        return date -> builder.holiday().apply(date);
     }
 
     Function<LocalDate, List<BusinessHourSlot>> getBusinessHours() {
-        return builder.getBusinessHours();
+        return date -> builder.getBusinessHours().apply(date);
     }
+
     void csv(List<String> lines) {
         final BusinessCalendarBuilder newConf = new BusinessCalendarBuilder();
         DateTimeFormatter ymdFormat = DateTimeFormatter.ofPattern("yyyy/M/d");
@@ -116,7 +145,7 @@ final class CSV {
 
         }
     }
-    
+
     @SuppressWarnings("serial")
     private static final Map<String, String> convert = new HashMap<String, String>() {{
         put("MON", "MONDAY");

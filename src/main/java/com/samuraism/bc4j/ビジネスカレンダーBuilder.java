@@ -16,9 +16,11 @@
 package com.samuraism.bc4j;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.function.Function;
@@ -95,6 +97,20 @@ public final class ビジネスカレンダーBuilder {
     @NotNull
     public ビジネスカレンダーBuilder csv(@NotNull Path path) {
         builder.csv(path);
+        return this;
+    }
+
+    /**
+     * CSV設定ファイルを読み込む
+     *
+     * @param path     csvファイルのパス
+     * @param duration リロード間隔
+     * @return このインスタンス
+     * @since 1.15
+     */
+    @NotNull
+    public ビジネスカレンダーBuilder csv(@NotNull Path path, @Nullable Duration duration) {
+        builder.csv(path, duration);
         return this;
     }
 

@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -134,16 +135,23 @@ public class BusinessCalendarBuilder {
      * @since 1.15
      */
     public BusinessCalendarBuilder csv(Path path) {
-        CSV csv = new CSV(path);
+        csv(path, null);
+        return this;
+    }
+
+    /**
+     * Read CSV configuration file
+     * @param path csv file path
+     * @param duration reload interval
+     * @return this instance
+     * @since 1.15
+     */
+    public BusinessCalendarBuilder csv(Path path, Duration duration) {
+        CSV csv = new CSV(path, duration);
         this.holidayLogics.add(csv.holiday());
         this.businessHours.add(csv.getBusinessHours());
         return this;
-
     }
-
-
-
-
 
     static class BusinessHours implements Function<LocalDate, List<BusinessHourSlot>>{
         private final Predicate<LocalDate> predicate;

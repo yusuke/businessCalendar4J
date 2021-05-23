@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -35,6 +36,22 @@ class CSVBasedConfiguration {
         }
     }
 
+    @Test
+    void reload() throws IOException, InterruptedException {
+        final Path path = write(
+                "holiday,2021/12/24,just holiday\n"
+        );
+        final BusinessCalendar expected1 = BusinessCalendar.newBuilder().on(2021, 12, 24).holiday("just holiday").build();
+
+        final BusinessCalendar calendar1 = BusinessCalendar.newBuilder().csv(path, Duration.of(1,ChronoUnit.SECONDS)).build();
+        assertCal(expected1, calendar1);
+        Thread.sleep(2000);
+
+        write(path,"holiday,2021/11/24,just holiday\n");
+        Thread.sleep(2000);
+        final BusinessCalendar expected2 = BusinessCalendar.newBuilder().on(2021, 11, 24).holiday("just holiday").build();
+        assertCal(expected2, calendar1);
+    }
 
     @Test
     void csv() throws IOException {
@@ -70,8 +87,7 @@ class CSVBasedConfiguration {
                             "holiday,2/1/2021,just holiday\n"
             );
             final BusinessCalendar calendar1 = BusinessCalendar.newBuilder().csv(path).build();
-            assertCal(expectedCalendar, calendar1, LocalDate.of(2021, 1, 1), LocalDate.
-                    of(2021, 12, 31));
+            assertCal(expectedCalendar, calendar1);
         }
         {
             final Path path = write(
@@ -89,8 +105,7 @@ class CSVBasedConfiguration {
                             "holiday,2021/2/1,just holiday\n"
             );
             final BusinessCalendar calendar = BusinessCalendar.newBuilder().csv(path).build();
-            assertCal(expectedCalendar, calendar, LocalDate.of(2021, 1, 1), LocalDate.
-                    of(2021, 12, 31));
+            assertCal(expectedCalendar, calendar);
         }
 
         {
@@ -106,8 +121,7 @@ class CSVBasedConfiguration {
             final BusinessCalendar calendar = BusinessCalendar.newBuilder()
                     .csv(path)
                     .build();
-            assertCal(expected2, calendar, LocalDate.of(2021, 1, 1), LocalDate.
-                    of(2021, 12, 31));
+            assertCal(expected2, calendar);
         }
         {
             final BusinessCalendar expected2 = BusinessCalendar.newBuilder()
@@ -120,13 +134,13 @@ class CSVBasedConfiguration {
             final BusinessCalendar calendar = BusinessCalendar.newBuilder()
                     .csv(path)
                     .build();
-            assertCal(expected2, calendar, LocalDate.of(2021, 1, 1), LocalDate.
-                    of(2021, 12, 31));
+            assertCal(expected2, calendar);
         }
     }
 
-    void assertCal(BusinessCalendar expected, BusinessCalendar testTarget, LocalDate from, LocalDate to) {
-
+    void assertCal(BusinessCalendar expected, BusinessCalendar testTarget) {
+        LocalDate from = LocalDate.of(2021,1,1);
+         LocalDate to = LocalDate.of(2021,12,31);
         final List<Holiday> expectedHolidays = expected.getHolidaysBetween(from, to);
         final List<Holiday> expectedHolidaysBetween = testTarget.getHolidaysBetween(from, to);
         assertEquals(expectedHolidays, expectedHolidaysBetween);
