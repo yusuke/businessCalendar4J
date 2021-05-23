@@ -42,7 +42,7 @@ public class BusinessCalendarBuilder {
     final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
     private final HolidayMap customHolidayMap = new HolidayMap();
     Locale locale = Locale.getDefault();
-    private final List<BusinessHours> businessHours = new ArrayList<>();
+    private final List<Function<LocalDate, List<BusinessHourSlot>>> businessHours = new ArrayList<>();
 
     public final BusinessCalendarBuilder locale(Locale locale) {
         ensureNotBuilt();
@@ -51,7 +51,7 @@ public class BusinessCalendarBuilder {
         return this;
     }
 
-    Function<LocalDate, String> holiday(){
+    Function<LocalDate, String> holiday() {
         return date -> holidayLogics.stream()
                 .map(e -> e.apply(date)).filter(Objects::nonNull).findFirst().orElse(null);
     }
@@ -122,9 +122,10 @@ public class BusinessCalendarBuilder {
     @NotNull
     Function<LocalDate, List<BusinessHourSlot>> getBusinessHours() {
         return (date) -> {
-            for (BusinessHours bh : businessHours) {
-                if (bh.predicate.test(date)) {
-                    return bh.getSlots(date);
+            for (Function<LocalDate, List<BusinessHourSlot>> bh : businessHours) {
+                final List<BusinessHourSlot> apply = bh.apply(date);
+                if (apply != null) {
+                    return apply;
                 }
             }
             return null;
@@ -138,39 +139,47 @@ public class BusinessCalendarBuilder {
     }
 
     public BusinessCalendarBuilder csv(Path path) {
+        List<String> lines;
         try {
-            List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
-            DateTimeFormatter ymdFormat = DateTimeFormatter.ofPattern("yyyy/M/d");
-            DateTimeFormatter mdFormat = DateTimeFormatter.ofPattern("M/d");
-            for (String line : lines) {
-                if (line.startsWith("#")) {
-                    continue;
-                }
-                final String[] split = line.split(",");
-                if (1 <= split.length) {
-                    switch (split[0]) {
-                        case "ymdFormat":
-                            ymdFormat = DateTimeFormatter.ofPattern(split[1]);
-                            break;
-                        case "mdFormat":
-                            mdFormat = DateTimeFormatter.ofPattern(split[1]);
-                            break;
-                        case "hours":
-                            on(ymdFormat, mdFormat, split, BusinessCalendarPredicate::hours);
-                            break;
-                        case "holiday":
-                            on(ymdFormat, mdFormat, split, BusinessCalendarPredicate::holiday);
-                            break;
-                        default:
-                            throw new RuntimeException(new ParseException(line, 0));
-                    }
-                }
-
-            }
+            lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+            final BusinessCalendarBuilder nestedCsvConfiguration = new BusinessCalendarBuilder();
+            nestedCsvConfiguration.csv(lines);
+            this.holidayLogics.add(nestedCsvConfiguration.holiday());
+            this.businessHours.add(nestedCsvConfiguration.getBusinessHours());
         } catch (IOException io) {
             throw new UncheckedIOException(io);
         }
         return this;
+
+    }
+
+    public void csv(List<String> lines) {
+        DateTimeFormatter ymdFormat = DateTimeFormatter.ofPattern("yyyy/M/d");
+        DateTimeFormatter mdFormat = DateTimeFormatter.ofPattern("M/d");
+        for (String line : lines) {
+            if (line.startsWith("#")) {
+                continue;
+            }
+            final String[] split = line.split(",");
+            if (1 <= split.length) {
+                switch (split[0]) {
+                    case "ymdFormat":
+                        ymdFormat = DateTimeFormatter.ofPattern(split[1]);
+                        break;
+                    case "mdFormat":
+                        mdFormat = DateTimeFormatter.ofPattern(split[1]);
+                        break;
+                    case "hours":
+                        on(ymdFormat, mdFormat, split, BusinessCalendarPredicate::hours);
+                        break;
+                    case "holiday":
+                        on(ymdFormat, mdFormat, split, BusinessCalendarPredicate::holiday);
+                        break;
+                    default:
+                        throw new RuntimeException(new ParseException(line, 0));
+                }
+            }
+        }
     }
 
     private void on(@NotNull DateTimeFormatter ymdFormatter, @NotNull DateTimeFormatter mdFormatter,
@@ -180,9 +189,9 @@ public class BusinessCalendarBuilder {
             try {
                 final LocalDate date = LocalDate.parse(lines[1], ymdFormatter);
                 consumer.accept(new BusinessCalendarPredicate(date, this), join(lines, 2));
-            }catch(DateTimeParseException dtpe1){
+            } catch (DateTimeParseException dtpe1) {
                 final MonthDay parsed = MonthDay.parse(lines[1], mdFormatter);
-                consumer.accept(new BusinessCalendarPredicate(date->date.getMonth() == parsed.getMonth()
+                consumer.accept(new BusinessCalendarPredicate(date -> date.getMonth() == parsed.getMonth()
                         && date.getDayOfMonth() == parsed.getDayOfMonth(), this), join(lines, 2));
             }
         } catch (DateTimeParseException dtpe2) {
@@ -299,7 +308,7 @@ public class BusinessCalendarBuilder {
         }
     }
 
-    static class BusinessHours {
+    static class BusinessHours implements Function<LocalDate, List<BusinessHourSlot>>{
         private final Predicate<LocalDate> predicate;
         private final List<BusinessHourFromTo> businessHourFromTos = new ArrayList<>();
 
@@ -317,9 +326,14 @@ public class BusinessCalendarBuilder {
             businessHourFromTos.sort(Comparator.comparing(e -> e.from));
         }
 
-        public List<BusinessHourSlot> getSlots(LocalDate date) {
-            return businessHourFromTos.stream()
-                    .map(e -> new BusinessHourSlot(date, e.from, e.to)).collect(Collectors.toList());
+        @Override
+        public List<BusinessHourSlot> apply(LocalDate localDate) {
+            if (predicate.test(localDate)) {
+                return businessHourFromTos.stream()
+                        .map(e -> new BusinessHourSlot(localDate, e.from, e.to)).collect(Collectors.toList());
+            }else{
+                return null;
+            }
         }
 
         private LocalTime toLocalTime(String timeStr) {

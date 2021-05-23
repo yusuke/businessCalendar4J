@@ -138,7 +138,7 @@ public final class BusinessCalendar {
             return Collections.emptyList();
         } else {
             return businessHours.stream().map(e -> e.apply(date)).filter(Objects::nonNull).findFirst()
-                    .orElseGet(() -> OPEN24HOURS.getSlots(date));
+                    .orElseGet(() -> OPEN24HOURS.apply(date));
         }
     }
 
