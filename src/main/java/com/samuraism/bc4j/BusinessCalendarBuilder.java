@@ -16,23 +16,12 @@
 package com.samuraism.bc4j;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.ParseException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.MonthDay;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.time.temporal.TemporalAdjusters;
 import java.util.*;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -42,7 +31,7 @@ public class BusinessCalendarBuilder {
     final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
     private final HolidayMap customHolidayMap = new HolidayMap();
     Locale locale = Locale.getDefault();
-    private final List<Function<LocalDate, List<BusinessHourSlot>>> businessHours = new ArrayList<>();
+    final List<Function<LocalDate, List<BusinessHourSlot>>> businessHours = new ArrayList<>();
 
     public final BusinessCalendarBuilder locale(Locale locale) {
         ensureNotBuilt();
@@ -138,175 +127,23 @@ public class BusinessCalendarBuilder {
         }
     }
 
+    /**
+     * Read CSV configuration file
+     * @param path csv file path
+     * @return this instance
+     * @since 1.15
+     */
     public BusinessCalendarBuilder csv(Path path) {
-        List<String> lines;
-        try {
-            lines = Files.readAllLines(path, StandardCharsets.UTF_8);
-            final BusinessCalendarBuilder nestedCsvConfiguration = new BusinessCalendarBuilder();
-            nestedCsvConfiguration.csv(lines);
-            this.holidayLogics.add(nestedCsvConfiguration.holiday());
-            this.businessHours.add(nestedCsvConfiguration.getBusinessHours());
-        } catch (IOException io) {
-            throw new UncheckedIOException(io);
-        }
+        CSV csv = new CSV(path);
+        this.holidayLogics.add(csv.holiday());
+        this.businessHours.add(csv.getBusinessHours());
         return this;
 
     }
 
-    public void csv(List<String> lines) {
-        DateTimeFormatter ymdFormat = DateTimeFormatter.ofPattern("yyyy/M/d");
-        DateTimeFormatter mdFormat = DateTimeFormatter.ofPattern("M/d");
-        for (String line : lines) {
-            if (line.startsWith("#")) {
-                continue;
-            }
-            final String[] split = line.split(",");
-            if (1 <= split.length) {
-                switch (split[0]) {
-                    case "ymdFormat":
-                        ymdFormat = DateTimeFormatter.ofPattern(split[1]);
-                        break;
-                    case "mdFormat":
-                        mdFormat = DateTimeFormatter.ofPattern(split[1]);
-                        break;
-                    case "hours":
-                        on(ymdFormat, mdFormat, split, BusinessCalendarPredicate::hours);
-                        break;
-                    case "holiday":
-                        on(ymdFormat, mdFormat, split, BusinessCalendarPredicate::holiday);
-                        break;
-                    default:
-                        throw new RuntimeException(new ParseException(line, 0));
-                }
-            }
-        }
-    }
-
-    private void on(@NotNull DateTimeFormatter ymdFormatter, @NotNull DateTimeFormatter mdFormatter,
-                    @NotNull String[] lines, BiConsumer<BusinessCalendarPredicate, String> consumer) {
-        // date
-        try {
-            try {
-                final LocalDate date = LocalDate.parse(lines[1], ymdFormatter);
-                consumer.accept(new BusinessCalendarPredicate(date, this), join(lines, 2));
-            } catch (DateTimeParseException dtpe1) {
-                final MonthDay parsed = MonthDay.parse(lines[1], mdFormatter);
-                consumer.accept(new BusinessCalendarPredicate(date -> date.getMonth() == parsed.getMonth()
-                        && date.getDayOfMonth() == parsed.getDayOfMonth(), this), join(lines, 2));
-            }
-        } catch (DateTimeParseException dtpe2) {
-            // ordinal
-            try {
-                parseWeekDays(lines, 2, Integer.valueOf(lines[1]), consumer);
-            } catch (NumberFormatException nfe) {
-                parseWeekDays(lines, 1, null, consumer);
-            }
-
-        }
-    }
 
 
-    @SuppressWarnings("serial")
-    static Map<String, String> convert = new HashMap<String, String>() {{
-        put("MON", "MONDAY");
-        put("TUE", "TUESDAY");
-        put("WED", "WEDNESDAY");
-        put("THU", "THURSDAY");
-        put("FRI", "FRIDAY");
-        put("SAT", "SATURDAY");
-        put("SUN", "SUNDAY");
-    }};
 
-    private void parseWeekDays(@NotNull String[] lines, int fromIndex, @Nullable Integer ordinal,
-                               BiConsumer<BusinessCalendarPredicate, String> consumer) {
-        List<DayOfWeek> dayOfWeeks = new ArrayList<>();
-        while ((fromIndex) < lines.length) {
-            final String uppercase = lines[fromIndex].toUpperCase(Locale.ENGLISH);
-            try {
-                dayOfWeeks.add(DayOfWeek.valueOf(convert.getOrDefault(uppercase, uppercase)));
-            } catch (IllegalArgumentException notDayOfWeek) {
-                break;
-            }
-            fromIndex++;
-        }
-        String buf = join(lines, fromIndex);
-        final DayOfWeek[] objects = dayOfWeeks.toArray(new DayOfWeek[0]);
-        if (ordinal == null) {
-            if (dayOfWeeks.size() == 0) {
-                consumer.accept(new BusinessCalendarPredicate(e -> true, this), buf);
-            } else {
-                consumer.accept(new BusinessCalendarPredicate(this, objects), buf);
-            }
-        } else {
-            consumer.accept(new BusinessCalendarPredicate(this, ordinal, objects), buf);
-        }
-    }
-
-    private String join(String[] split, int fromIndex) {
-        StringBuilder buf = new StringBuilder();
-        boolean first = true;
-        for (int i = fromIndex; i < split.length; i++) {
-            if (!first) {
-                buf.append(",");
-            }
-            buf.append(split[i]);
-            first = false;
-        }
-        return buf.toString();
-    }
-
-    public class BusinessCalendarPredicate {
-        private final BusinessCalendarBuilder builder;
-        private final Predicate<LocalDate> predicate;
-
-        BusinessCalendarPredicate(@NotNull BusinessCalendarBuilder builder, int ordinal, @NotNull DayOfWeek... dayOfWeeks) {
-            this.predicate = e -> {
-                for (DayOfWeek dayOfWeek : dayOfWeeks) {
-                    if (dayOfWeek == e.getDayOfWeek()) {
-                        int day = e.with(TemporalAdjusters
-                                .dayOfWeekInMonth(ordinal, dayOfWeek))
-                                .getDayOfMonth();
-                        if (e.getDayOfMonth() == day) {
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            };
-            this.builder = builder;
-        }
-
-        BusinessCalendarPredicate(@NotNull BusinessCalendarBuilder builder, @NotNull DayOfWeek... dayOfWeeks) {
-            this.predicate = e -> {
-                for (DayOfWeek dayOfWeek : dayOfWeeks) {
-                    if (dayOfWeek == e.getDayOfWeek()) {
-                        return true;
-                    }
-                }
-                return false;
-            };
-            this.builder = builder;
-        }
-
-        BusinessCalendarPredicate(@NotNull Predicate<LocalDate> predicate, @NotNull BusinessCalendarBuilder builder) {
-            this.predicate = predicate;
-            this.builder = builder;
-        }
-
-        BusinessCalendarPredicate(@NotNull LocalDate date, @NotNull BusinessCalendarBuilder builder) {
-            this.predicate = e -> e.isEqual(date);
-            this.builder = builder;
-        }
-
-        public BusinessCalendarBuilder hours(String businessHour) {
-            businessHours.add(new BusinessHours(predicate, businessHour));
-            return builder;
-        }
-
-        public BusinessCalendarBuilder holiday(String name) {
-            return builder.holiday(date -> predicate.test(date) ? name : null);
-        }
-    }
 
     static class BusinessHours implements Function<LocalDate, List<BusinessHourSlot>>{
         private final Predicate<LocalDate> predicate;

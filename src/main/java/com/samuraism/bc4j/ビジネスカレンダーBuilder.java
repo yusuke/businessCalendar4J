@@ -17,6 +17,7 @@ package com.samuraism.bc4j;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.nio.file.Path;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Locale;
@@ -56,32 +57,45 @@ public final class ビジネスカレンダーBuilder {
 
     @NotNull
     public ビジネスカレンダーPredicate 曜日(@NotNull DayOfWeek... dayOfWeeks) {
-        final BusinessCalendarBuilder.BusinessCalendarPredicate businessCalendarPredicate = builder.on(dayOfWeeks);
+        final BusinessCalendarPredicate businessCalendarPredicate = builder.on(dayOfWeeks);
         return new ビジネスカレンダーPredicate(this, businessCalendarPredicate);
     }
 
     @NotNull
     public ビジネスカレンダーPredicate 曜日(int n番目, @NotNull DayOfWeek... dayOfWeeks) {
-        final BusinessCalendarBuilder.BusinessCalendarPredicate businessCalendarPredicate = builder.on(n番目, dayOfWeeks);
+        final BusinessCalendarPredicate businessCalendarPredicate = builder.on(n番目, dayOfWeeks);
         return new ビジネスカレンダーPredicate(this, businessCalendarPredicate);
     }
 
     @NotNull
     public ビジネスカレンダーPredicate 年月日(int 年, int 月, int 日) {
-        final BusinessCalendarBuilder.BusinessCalendarPredicate businessCalendarPredicate = builder.on(年,月,日);
+        final BusinessCalendarPredicate businessCalendarPredicate = builder.on(年, 月, 日);
         return new ビジネスカレンダーPredicate(this, businessCalendarPredicate);
     }
 
     @NotNull
     public ビジネスカレンダーPredicate 月日(int 月, int 日) {
-        final BusinessCalendarBuilder.BusinessCalendarPredicate businessCalendarPredicate = builder.on(月,日);
+        final BusinessCalendarPredicate businessCalendarPredicate = builder.on(月, 日);
         return new ビジネスカレンダーPredicate(this, businessCalendarPredicate);
     }
 
     @NotNull
     public ビジネスカレンダーPredicate 条件(@NotNull Predicate<LocalDate> predicate) {
-        final BusinessCalendarBuilder.BusinessCalendarPredicate businessCalendarPredicate = builder.on(predicate);
+        final BusinessCalendarPredicate businessCalendarPredicate = builder.on(predicate);
         return new ビジネスカレンダーPredicate(this, businessCalendarPredicate);
+    }
+
+    /**
+     * CSV設定ファイルを読み込む
+     *
+     * @param path csvファイルのパス
+     * @return このインスタンス
+     * @since 1.15
+     */
+    @NotNull
+    public ビジネスカレンダーBuilder csv(@NotNull Path path) {
+        builder.csv(path);
+        return this;
     }
 
     @NotNull
@@ -91,9 +105,9 @@ public final class ビジネスカレンダーBuilder {
 
     public static class ビジネスカレンダーPredicate {
         ビジネスカレンダーBuilder builder;
-        BusinessCalendarBuilder.BusinessCalendarPredicate businessCalendarPredicate;
+        BusinessCalendarPredicate businessCalendarPredicate;
 
-        public ビジネスカレンダーPredicate(ビジネスカレンダーBuilder builder, BusinessCalendarBuilder.BusinessCalendarPredicate businessCalendarPredicate) {
+        public ビジネスカレンダーPredicate(ビジネスカレンダーBuilder builder, BusinessCalendarPredicate businessCalendarPredicate) {
             this.builder = builder;
             this.businessCalendarPredicate = businessCalendarPredicate;
         }
