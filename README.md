@@ -18,11 +18,11 @@ Add a dependency declaration to pom.xml, or build.gradle as follows:
 ### Maven
 ```xml
 <dependencies>
-    <dependency>
-        <groupId>com.samuraism</groupId>
-        <artifactId>businessCalendar4j</artifactId>
-        <version>1.16</version>
-    </dependency>
+  <dependency>
+    <groupId>com.samuraism</groupId>
+    <artifactId>businessCalendar4j</artifactId>
+    <version>1.16</version>
+  </dependency>
 </dependencies>
 ```
 ### Gradle
@@ -53,22 +53,23 @@ Conditions for holidays and business hours are evaluated in the method chain ord
 
 ```java
 BusinessCalendar calendar = BusinessCalendar.newBuilder()
-        // fixed one-time holiday
-        .on(1995, 5, 23).holiday("Java public debut")
-        // occurs every year
-        .on(5, 19).holiday("James Gosling's birthday")
-        .build();
+  // fixed one-time holiday
+  .on(1995, 5, 23).holiday("Java public debut")
+  // occurs every year
+  .on(5, 19).holiday("James Gosling's birthday")
+  .build();
 ```
 
 - Specify holidays by day of weeks.
 
 ```java
 BusinessCalendar calendar = BusinessCalendar.newBuilder()
-        // fixed holiday by day of weeks.
-        .on(DayOfWeek.SUNDAY, DayOfWeek.Wednesday).holiday("closed on Sunday an Wednesday")
-        // occurs every 2nd Monday
-        .on(2, DayOfWeek.Monday).holiday("closed on every 2nd Monday")
-        .build();
+  // fixed holiday by day of weeks.
+  .on(DayOfWeek.SUNDAY, DayOfWeek.Wednesday)
+    .holiday("closed on Sunday an Wednesday")
+  // occurs every 2nd Monday
+  .on(2, DayOfWeek.Monday).holiday("closed on every 2nd Monday")
+  .build();
 ```
 
 - Specify business hours by day of weeks, and month-day.
@@ -78,7 +79,8 @@ BusinessCalendar calendar = BusinessCalendar.newBuilder()
   // opens 10am to 12pm, 1pm to 3pm on New Year's Eve
   .on(12, 31).hours("10 - 12, 13-15")
   // Saturday and Sunday: 10am to 11:30pm, 1pm to 4:30pm
-  .on(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).hours("10AM-11:30 a.m., 1pm to 4:30pm")
+  .on(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
+    .hours("10AM-11:30 a.m., 1pm to 4:30pm")
   // from Monday to Friday: 9am to 6pm
   .hours("9-18")
   .build();
@@ -143,8 +145,8 @@ Predefined public holidays are available in [UnitedStates](https://github.com/yu
 
 ```java
 BusinessCalendar usCal = BusinessCalendar.newBuilder()
-        .holiday(UnitedStates.MARTIN_LUTHER_KING_JR_DAY)
-        .holiday(UnitedStates.INDEPENDENCE_DAY)
+  .holiday(UnitedStates.MARTIN_LUTHER_KING_JR_DAY)
+  .holiday(UnitedStates.INDEPENDENCE_DAY)
   .build();
 ```
 
@@ -162,15 +164,15 @@ BusinessCalendar usCal = BusinessCalendar.newBuilder()
 - Apply Japanese public holidays
 ```java
 BusinessCalendar japanCal = BusinessCalendar.newBuilder()
-        .holiday(Japan.PUBLIC_HOLIDAYS)
-        .build();
+  .holiday(Japan.PUBLIC_HOLIDAYS)
+  .build();
 ```
 
 - Closed on Saturday and Sunday
 ```java
 BusinessCalendar weekDays = BusinessCalendar.newBuilder()
-        .holiday(BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS)
-        .build();
+  .holiday(BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS)
+  .build();
 ```
 
 ### Test holidays
@@ -196,11 +198,15 @@ System.out.println("Is it business day? " + cal.isBusinessDay(may24));
 
 ```java
 BusinessCalendar cal = ...
-System.out.println("What date is the next holiday? " + cal.firstHoliday(LocalDate.of(2021, 5, 24)));
-System.out.println("What date was the previous holiday? " + cal.lastHoliday(LocalDate.of(2021, 5, 24)));
+System.out.println("What date is the next holiday? "
+  + cal.firstHoliday(LocalDate.of(2021, 5, 24)));
+System.out.println("What date was the previous holiday? "
+  + cal.lastHoliday(LocalDate.of(2021, 5, 24)));
 LocalDate independenceDay = LocalDate.of(2021, 7, 4);
-System.out.println("What date is the next business day? " + cal.firstBusinessDay(independenceDay));
-System.out.println("What date was the previous business day? " + cal.lastBusinessDay(independenceDay));
+System.out.println("What date is the next business day? "
+  + cal.firstBusinessDay(independenceDay));
+System.out.println("What date was the previous business day? "
+  + cal.lastBusinessDay(independenceDay));
 ```
 
 Note that the date is inclusive. In other words, lastHoliday() / firstHoliday() returns the same date if the specified date is a holiday.
@@ -240,6 +246,18 @@ LocalDateTime may24 = LocalDateTime.of(2021, 5, 24);
 List<BusinessHourSlot> slots = cal.getBusinessHourSlots(may24);
 System.out.println("Number of business hour slots on May 24, 2021: " + slots.size());
 System.out.println("On May 24, 2021, the buness starts from: " + slots.get(0).from;
+```
+
+- Get [holidays](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/Holiday.java) and business days in a specified period
+
+```java
+BusinessCalendar cal = ...
+List<Holiday> holidays = cal.getHolidaysBetween(LocalDateTime.of(2021, 1, 1),
+  LocalDateTime.of(2021, 12, 21));
+System.out.println("Holidays in 2021: " + holidays);
+List<LocalDate> businessDays = cal.getBusinessDaysBetween(LocalDateTime.of(2021, 1, 1),
+  LocalDateTime.of(2021, 12, 21));
+System.out.println("Business days in 2021: " + businessDays);
 ```
 
 ## Example codes

@@ -70,7 +70,8 @@ dependencies {
 ```java
 ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder()
   // 曜日固定の休業日
-  .曜日(DayOfWeek.SUNDAY, DayOfWeek.Wednesday).祝休日("毎週日曜、水曜は休業")
+  .曜日(DayOfWeek.SUNDAY, DayOfWeek.Wednesday)
+    .祝休日("毎週日曜、水曜は休業")
   // 第二月曜日は休業
   .曜日(2, DayOfWeek.Monday).祝休日("第二月曜日は休業")
   .build();
@@ -83,7 +84,8 @@ dependencies {
   // 大晦日は10時〜12時、13時〜15時営業
   .月日(12, 31).営業時間("10 - 12, 13-15")
   // 土日は10時から12時、13時〜16時半営業
-  .曜日(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).営業時間("午前10時〜午前11時半, 13時〜午後4時半")
+  .曜日(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
+    .営業時間("午前10時〜午前11時半, 13時〜午後4時半")
   // そのほかの営業日は9時〜18時営業
   .営業時間("9-18")
   .build();
@@ -246,6 +248,18 @@ LocalDateTime may24 = LocalDateTime.of(2021, 5, 24);
 List<BusinessHourSlot> slots = cal.get営業時間枠(may24);
 System.out.println("2021年5月24日の営業時間枠数: " + slots.size());
 System.out.println("2021年5月24日の営業開始時間: " + slots.get(0).from;
+```
+
+- 指定した期間の [祝休日](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/Holiday.java) や営業日を取得
+
+```java
+ビジネスカレンダー cal = ...
+List<Holiday> holidays = cal.get指定期間内の祝休日(LocalDateTime.of(2021, 1, 1),
+  LocalDateTime.of(2021, 12, 21));
+System.out.println("2021年の祝休日: " + holidays);
+List<LocalDate> businessDays = cal.get指定期間内の営業日(LocalDateTime.of(2021, 1, 1),
+  LocalDateTime.of(2021, 12, 21));
+System.out.println("2021年の営業日: " + businessDays);
 ```
 
 ## サンプルコード
