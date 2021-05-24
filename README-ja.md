@@ -221,7 +221,7 @@ System.out.println("営業中? " + cal.is営業時間());
 ```java
 ビジネスカレンダー cal = ...
 LocalDateTime 五月24日10時23分 = LocalDateTime.of(2021, 5, 24, 10, 23);
-System.out.println("営業中? " + cal.isBusinessHour(五月24日10時23分));
+System.out.println("営業中? " + cal.is営業時間(五月24日10時23分));
 ```
 
 - 次の、または前の営業開始/終了時間を取得
@@ -229,11 +229,11 @@ System.out.println("営業中? " + cal.isBusinessHour(五月24日10時23分));
 ```java
 ビジネスカレンダー cal = ...
 LocalDateTime 五月24日10時23分 = LocalDateTime.of(2021, 5, 24, 10, 23);
-System.out.println("現在の営業時間はいつ終了する? " + cal.nextBusinessHourEnd(may241023));
-System.out.println("現在の営業時間はいつ開始した? " + cal.lastBusinessHourStart(may241023));
+System.out.println("現在の営業時間はいつ終了する? " + cal.次の営業終了時間(may241023));
+System.out.println("現在の営業時間はいつ開始した? " + cal.前の営業終了時間(may241023));
 ```
 
-- 指定した日の営業時間枠を全て取得
+- 指定した日の [営業時間枠](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/BusinessHourSlot.java) を全て取得
 
 ```java
 ビジネスカレンダー cal = ...

@@ -230,7 +230,7 @@ System.out.println("When will this business hour slot close? " + cal.nextBusines
 System.out.println("When what the last business hour slot started? " + cal.lastBusinessHourStart(may241023));
 ```
 
-- Get business hour slots for a specified date
+- Get [business hour slots](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/BusinessHourSlot.java)  for a specified date
 
 ```java
 BusinessCalendar cal = ...
