@@ -22,9 +22,9 @@ Maven Central Repositoryにリリースされているため、以下のよう�
 ```xml
 <dependencies>
     <dependency>
-  <groupId>com.samuraism</groupId>
-  <artifactId>businessCalendar4j</artifactId>
-  <version>1.16</version>
+        <groupId>com.samuraism</groupId>
+        <artifactId>businessCalendar4j</artifactId>
+        <version>1.16</version>
     </dependency>
 </dependencies>
 ```
@@ -44,8 +44,8 @@ dependencies {
 - 初期化構文
 ```java
 ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder()
-  // メソッドチェーンで祝休日や営業時間を設定
-  .build();
+    // メソッドチェーンで祝休日や営業時間を設定
+    .build();
 ```
 
 祝休日、営業時間の指定はメソッドチェーンの順番に評価されます。
@@ -58,37 +58,37 @@ dependencies {
 
 ```java
 ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder()
-  // 固定の1回のみの祝日
-  .年月日(1995, 5, 23).祝休日("Java デビュー")
-  // 毎年5月19日は休業
-  .月日(5, 19).祝休日("James Gosling's birthday")
-  .build();
+    // 固定の1回のみの祝日
+    .年月日(1995, 5, 23).祝休日("Java デビュー")
+    // 毎年5月19日は休業
+    .月日(5, 19).祝休日("James Gosling's birthday")
+    .build();
 ```
 
 - 曜日で休業日を指定する
 
 ```java
 ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder()
-  // 曜日固定の休業日
-  .曜日(DayOfWeek.SUNDAY, DayOfWeek.Wednesday)
-    .祝休日("毎週日曜、水曜は休業")
-  // 第二月曜日は休業
-  .曜日(2, DayOfWeek.Monday).祝休日("第二月曜日は休業")
-  .build();
+    // 曜日固定の休業日
+    .曜日(DayOfWeek.SUNDAY, DayOfWeek.Wednesday)
+        .祝休日("毎週日曜、水曜は休業")
+    // 第二月曜日は休業
+    .曜日(2, DayOfWeek.Monday).祝休日("第二月曜日は休業")
+    .build();
 ```
 
 - 営業時間を曜日や月日で指定
 
 ```java
 ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder()
-  // 大晦日は10時〜12時、13時〜15時営業
-  .月日(12, 31).営業時間("10 - 12, 13-15")
-  // 土日は10時から12時、13時〜16時半営業
-  .曜日(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
-    .営業時間("午前10時〜午前11時半, 13時〜午後4時半")
-  // そのほかの営業日は9時〜18時営業
-  .営業時間("9-18")
-  .build();
+    // 大晦日は10時〜12時、13時〜15時営業
+    .月日(12, 31).営業時間("10 - 12, 13-15")
+    // 土日は10時から12時、13時〜16時半営業
+    .曜日(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
+        .営業時間("午前10時〜午前11時半, 13時〜午後4時半")
+    // そのほかの営業日は9時〜18時営業
+    .営業時間("9-18")
+    .build();
 ```
 
 指定のない日はデフォルトで24時間営業となります。
@@ -111,16 +111,16 @@ dependencies {
 
 ```java
 ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder()
-  .csv(Paths.get("holidays-business-hours.csv"))
-  .build();
+    .csv(Paths.get("holidays-business-hours.csv"))
+    .build();
 ```
 
 - 祝休日、営業時間をCSVファイルで設定し、1時間おきにリロードする
 
 ```java
 ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder()
-  .csv(Paths.get("holidays-business-hours.csv"), Duration.of(1, ChronoUnit.HOURS))
-  .build();
+    .csv(Paths.get("holidays-business-hours.csv"), Duration.of(1, ChronoUnit.HOURS))
+    .build();
 ```
 
 以下は設定ファイルの記述例です。
@@ -150,16 +150,16 @@ holiday,2/1/2021,just another holiday
 - 日本の祝休日を適用
 ```java
 ビジネスカレンダー japanCal = ビジネスカレンダー.newBuilder()
-  .祝休日(ビジネスカレンダー.日本の祝休日)
-  .build();
+    .祝休日(ビジネスカレンダー.日本の祝休日)
+    .build();
 ```
 
 - アメリカ合衆国のキング牧師記念日と独立記念日を適用
 ```java
 ビジネスカレンダー usCal = ビジネスカレンダー.newBuilder()
-  .祝休日(UnitedStates.MARTIN_LUTHER_KING_JR_DAY)
-  .祝休日(UnitedStates.INDEPENDENCE_DAY)
-  .build();
+    .祝休日(UnitedStates.MARTIN_LUTHER_KING_JR_DAY)
+    .祝休日(UnitedStates.INDEPENDENCE_DAY)
+    .build();
 ```
 
 アメリカ合衆国の祝日として利用可能な値: NEW_YEARS_DAY, MARTIN_LUTHER_KING_JR_DAY,
@@ -169,16 +169,16 @@ MEMORIAL_DAY, INDEPENDENCE_DAY, LABOR_DAY, VETERANS_DAY, THANKS_GIVING_DAY, CHRI
 
 ```java
 ビジネスカレンダー usCal = ビジネスカレンダー.newBuilder()
-  .祝休日(UnitedStates.PUBLIC_HOLIDAYS)
-  .build();
+    .祝休日(UnitedStates.PUBLIC_HOLIDAYS)
+    .build();
 ```
 
 - 土日休業
 
 ```java
 ビジネスカレンダー weekDays = ビジネスカレンダー.newBuilder()
-  .祝休日(ビジネスカレンダー.土日休業)
-  .build();
+    .祝休日(ビジネスカレンダー.土日休業)
+    .build();
 ```
 
 ### 祝休日、営業日を判定する
@@ -255,10 +255,10 @@ System.out.println("2021年5月24日の営業開始時間: " + slots.get(0).from
 ```java
 ビジネスカレンダー cal = ...
 List<Holiday> holidays = cal.get指定期間内の祝休日(LocalDateTime.of(2021, 1, 1),
-  LocalDateTime.of(2021, 12, 21));
+    LocalDateTime.of(2021, 12, 21));
 System.out.println("2021年の祝休日: " + holidays);
 List<LocalDate> businessDays = cal.get指定期間内の営業日(LocalDateTime.of(2021, 1, 1),
-  LocalDateTime.of(2021, 12, 21));
+    LocalDateTime.of(2021, 12, 21));
 System.out.println("2021年の営業日: " + businessDays);
 ```
 
