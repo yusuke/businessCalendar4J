@@ -35,7 +35,7 @@ dependencies {
 
 ### initialization
 
-Initialization ceremony: 
+- Initialization ceremony: 
 ```java
 BusinessCalendar calendar = BusinessCalendar.newBuilder()
   // where you configure holidays and business hours
@@ -46,7 +46,7 @@ BusinessCalendar calendar = BusinessCalendar.newBuilder()
 
 #### Specify holidays and business hours
 
-Set fixed holidays by year-month-day, or month-day.
+- Set fixed holidays by year-month-day, or month-day.
 
 ```java
 BusinessCalendar calendar = BusinessCalendar.newBuilder()
@@ -57,7 +57,7 @@ BusinessCalendar calendar = BusinessCalendar.newBuilder()
         .build();
 ```
 
-Specify holidays by day of weeks.
+- Specify holidays by day of weeks.
 
 ```java
 BusinessCalendar calendar = BusinessCalendar.newBuilder()
@@ -68,7 +68,7 @@ BusinessCalendar calendar = BusinessCalendar.newBuilder()
         .build();
 ```
 
-Specify business hours by day of weeks, and month-day.
+- Specify business hours by day of weeks, and month-day.
 
 ```java
 BusinessCalendar calendar = BusinessCalendar.newBuilder()
@@ -98,6 +98,42 @@ Below are valid business hour expressions for "Opens from midnight to 8:30am, 9a
 | "午前12時 から 午前8時半, 9-正午,午後1時半~午後5時、午後7:31〜午前0時" |
 
 Note that those conditions for holidays and business hours are evaluated in the method chain order.
+
+- Configure holidays and business hours with a CSV formatted text file.
+
+```java
+BusinessCalendar calendar = BusinessCalendar.newBuilder()
+  .csv(Paths.get("holidays-business-hours.csv"))
+  .build();
+```
+
+- Configure holidays and business hours with a CSV formatted text file, reload every hour
+
+```java
+BusinessCalendar calendar = BusinessCalendar.newBuilder()
+  .csv(Paths.get("holidays-business-hours.csv"), Duration.of(1, ChronoUnit.HOURS))
+  .build();
+```
+
+Below is a valid configuration file format example.
+
+```text
+# comment
+# opens 24 hours on every 2nd Sunday
+hours,2,sun,0-24
+hours,sun,1-17,18-19
+hours,mon,2-17
+hours,tue,3-17
+hours,wed,4-17
+hours,thu,5-17
+hours,fri,6-17
+hours,sat,7-17
+hours,sun,8-17
+holiday,5/1,May 1st
+holiday,2021/12/2,Dec 2, 2021
+ymdFormat,M/d/yyyy
+holiday,2/1/2021,just another holiday
+```
 
 #### Predefined holidays
 Predefined public holidays are available in [UnitedStates](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/UnitedStates.java) and [Japan](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/Japan.java).
@@ -138,7 +174,7 @@ BusinessCalendar weekDays = BusinessCalendar.newBuilder()
 
 ### Test holidays
 
-Test today is a holiday or business day.
+- Test today is a holiday or business day
 
 ```java
 BusinessCalendar cal = ...
@@ -146,7 +182,7 @@ System.out.println("Is it holiday? " + cal.isHoliday());
 System.out.println("Is it business day? " + cal.isBusinessDay());
 ```
 
-Test whether specified date is a holiday or business day.
+- Test whether specified date is a holiday or business day
 
 ```java
 BusinessCalendar cal = ...
@@ -155,7 +191,7 @@ System.out.println("Is it holiday? " + cal.isHoliday(may24));
 System.out.println("Is it business day? " + cal.isBusinessDay(may24));
 ```
 
-Get next, or previous holiday or business day. 
+- Get next, or previous holiday or business day
 
 ```java
 BusinessCalendar cal = ...
@@ -170,14 +206,14 @@ Note that the date is inclusive. In other words, lastHoliday() / firstHoliday() 
 
 ### Test business hours
 
-Test if it's during business hours.
+- Test if it's during business hours
 
 ```java
 BusinessCalendar cal = ...
 System.out.println("Is it open? " + cal.isBusinessHour());
 ```
 
-Test whether specified time is during business hours.
+- Test whether specified time is during business hours
 
 ```java
 BusinessCalendar cal = ...
@@ -185,7 +221,7 @@ LocalDateTime may241023 = LocalDateTime.of(2021, 5, 24, 10, 23);
 System.out.println("Is it open? " + cal.isBusinessHour(may241023));
 ```
 
-Get next, or previous business hour start / end.
+- Get next, or previous business hour start / end
 
 ```java
 BusinessCalendar cal = ...
@@ -194,7 +230,7 @@ System.out.println("When will this business hour slot close? " + cal.nextBusines
 System.out.println("When what the last business hour slot started? " + cal.lastBusinessHourStart(may241023));
 ```
 
-Get business hour slots for a specified date.
+- Get business hour slots for a specified date
 
 ```java
 BusinessCalendar cal = ...
@@ -205,7 +241,7 @@ System.out.println("Number of business hour slots on May 24, 2021: " + slots.siz
 System.out.println("On May 24, 2021, the buness starts from: " + slots.get(0).from;
 ```
 
-## Example code
+## Example codes
 See [JapaneseHolidaysExample](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/JapaneseHolidaysExample.java) for Japanese businessCalendar, [UnitedStatesHolidaysExample](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/UnitedStatesHolidaysExample.java) for the United States businessCalendar.
 
 ## License

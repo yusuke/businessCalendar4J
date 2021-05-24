@@ -37,7 +37,7 @@ dependencies {
 
 ### 初期化
 
-初期化構文:
+- 初期化構文
 ```java
 ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder()
   // ここで祝休日や営業時間を設定
@@ -48,7 +48,7 @@ dependencies {
 
 #### 祝休日と営業時間を設定する
 
-年月日または月日で固定の祝休日を設定する。
+- 年月日または月日で固定の祝休日を設定する
 
 ```java
 ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder()
@@ -59,7 +59,7 @@ dependencies {
         .build();
 ```
 
-曜日で休業日を指定する。
+- 曜日で休業日を指定する
 
 ```java
 ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder()
@@ -70,7 +70,7 @@ dependencies {
         .build();
 ```
 
-営業時間を曜日や月日で指定。
+- 営業時間を曜日や月日で指定
 
 ```java
 ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder()
@@ -100,6 +100,43 @@ dependencies {
 | "午前12時 から 午前8時半, 9-正午,午後1時半~午後5時、午後7:31〜午前0時" |
 
 祝休日、営業時間の指定はメソッドチェーンの順番に評価されます。
+
+- 祝休日、営業時間をCSVファイルで設定する
+
+```java
+ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder()
+        .csv(Paths.get("holidays-business-hours.csv"))
+        .build();
+```
+
+- 祝休日、営業時間をCSVファイルで設定し、1時間おきにリロードする
+
+```java
+ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder()
+  .csv(Paths.get("holidays-business-hours.csv"), Duration.of(1, ChronoUnit.HOURS))
+  .build();
+```
+
+以下は設定ファイルの記述例です。
+
+```text
+# comment
+# opens 24 hours on every 2nd Sunday
+hours,2,sun,0-24
+hours,sun,1-17,18-19
+hours,mon,2-17
+hours,tue,3-17
+hours,wed,4-17
+hours,thu,5-17
+hours,fri,6-17
+hours,sat,7-17
+hours,sun,8-17
+holiday,5/1,May 1st
+holiday,2021/12/2,Dec 2, 2021
+ymdFormat,M/d/yyyy
+holiday,2/1/2021,just another holiday
+```
+
 
 #### 定義済みの祝休日
 [UnitedStates](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/UnitedStates.java) and [Japan](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/Japan.java) でアメリカ合衆国と日本の祝休日が事前定義されています。
@@ -140,7 +177,7 @@ MEMORIAL_DAY, INDEPENDENCE_DAY, LABOR_DAY, VETERANS_DAY, THANKS_GIVING_DAY, CHRI
 
 ### 祝休日、営業日を判定する
 
-今日が祝休日か営業日か判定
+- 今日が祝休日か営業日か判定
 
 ```java
 ビジネスカレンダー cal = ...
@@ -148,7 +185,7 @@ System.out.println("今日は休業日? " + cal.is祝休日());
 System.out.println("今日は営業日? " + cal.is営業日());
 ```
 
-指定日が祝休日か営業日か判定
+- 指定日が祝休日か営業日か判定
 
 ```java
 ビジネスカレンダー cal = ...
@@ -157,7 +194,7 @@ System.out.println("2021年5月24日は祝日? " + cal.is祝休日(令和3年五
 System.out.println("2021年5月24日は営業日? " + cal.is営業日(令和3年五月24日));
 ```
 
-次、または前の祝休日または営業日を取得
+- 次、または前の祝休日または営業日を取得
 
 ```java
 ビジネスカレンダー cal = ...
@@ -172,14 +209,14 @@ System.out.println("次の営業日は? " + cal.以降の営業日(みどりの�
 
 ### 営業時間の判定
 
-現在が営業時間内か判定
+- 現在が営業時間内か判定
 
 ```java
 ビジネスカレンダー cal = ...
 System.out.println("営業中? " + cal.is営業時間());
 ```
 
-指定した時間が営業時間内か判定
+- 指定した時間が営業時間内か判定
 
 ```java
 ビジネスカレンダー cal = ...
@@ -187,7 +224,7 @@ LocalDateTime 五月24日10時23分 = LocalDateTime.of(2021, 5, 24, 10, 23);
 System.out.println("営業中? " + cal.isBusinessHour(五月24日10時23分));
 ```
 
-次の、または前の営業開始/終了時間を取得
+- 次の、または前の営業開始/終了時間を取得
 
 ```java
 ビジネスカレンダー cal = ...
@@ -196,7 +233,7 @@ System.out.println("現在の営業時間はいつ終了する? " + cal.nextBusi
 System.out.println("現在の営業時間はいつ開始した? " + cal.lastBusinessHourStart(may241023));
 ```
 
-指定した日の英病時間枠を全て取得
+- 指定した日の英病時間枠を全て取得
 
 ```java
 ビジネスカレンダー cal = ...
@@ -207,7 +244,7 @@ System.out.println("2021年5月24日の営業時間枠数: " + slots.size());
 System.out.println("2021年5月24日の営業開始時間: " + slots.get(0).from;
 ```
 
-## 利用方法
+## サンプルコード
 日本の祝日については[JapaneseHolidays](https://github.com/yusuke/businessCalendar4j/blob/main/src/main/java/com/samuraism/businessCalendar/JapaneseHolidays.java) の他、日本語のAPIである [日本の祝休日](https://github.com/yusuke/businessCalendar/blob/main/src/main/java/com/samuraism/businessCalendar/日本の祝休日.java) もあります。
 
 サンプルコードは日本の祝日の処理方法については [JapaneseHolidaysExample.java (英語語API)](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/JapaneseHolidaysExample.java),  [ビジネスカレンダーExample.java (日本語API)](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/ビジネスカレンダーExample.java) を、アメリカ合衆国の祝日の処理方法については [UnitedStatesHolidaysExample](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/UnitedStatesHolidaysExample.java) をご覧ください。
