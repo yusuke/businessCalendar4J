@@ -233,7 +233,7 @@ System.out.println("現在の営業時間はいつ終了する? " + cal.nextBusi
 System.out.println("現在の営業時間はいつ開始した? " + cal.lastBusinessHourStart(may241023));
 ```
 
-- 指定した日の英病時間枠を全て取得
+- 指定した日の営業時間枠を全て取得
 
 ```java
 ビジネスカレンダー cal = ...
