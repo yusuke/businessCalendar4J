@@ -84,7 +84,7 @@ BusinessCalendar calendar = BusinessCalendar.newBuilder()
   .build();
 ```
 
-Dates business hours are not specified are treated as 24 hours open.
+Dates that are not specified business hours are treated as 24 hours open business days.
 
 Below are valid business hour expressions for "Opens from midnight to 8:30am, 9am to noon, 1:30pm to 5pm, 7:31pm to midnight".
 
