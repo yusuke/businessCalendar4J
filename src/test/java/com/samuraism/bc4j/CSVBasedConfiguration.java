@@ -48,10 +48,10 @@ class CSVBasedConfiguration {
 
         final BusinessCalendar calendar1 = BusinessCalendar.newBuilder().csv(path, Duration.of(100,ChronoUnit.MILLIS)).build();
         assertCal(expected1, calendar1);
-        Thread.sleep(700);
+        Thread.sleep(1000);
 
         write(path,"holiday,2021/11/24,just holiday\n");
-        Thread.sleep(800);
+        Thread.sleep(3000);
         final BusinessCalendar expected2 = BusinessCalendar.newBuilder().on(2021, 11, 24).holiday("just holiday").build();
         assertCal(expected2, calendar1);
     }
