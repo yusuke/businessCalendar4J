@@ -1,5 +1,5 @@
-# [&#35;businessCalendar4J](https://twitter.com/search?q=%23businessCalendar4J&src=typed_query&f=live)
-BusinessCalendar4J is a 100% pure Java business calendar library. You can configure holidays and business hours flexibly, and use predefined public holidays in United States and Japan. Need support for other countries' public holidays? Please contribute!
+# Business Calendar library for Java
+[&#35;businessCalendar4J](https://twitter.com/search?q=%23businessCalendar4J&src=typed_query&f=live) is a 100% pure Java business calendar library. You can configure holidays and business hours flexibly, and use predefined public holidays in United States and Japan. Need support for other countries' public holidays? Please contribute!
 
 It is also possible to get information like "Name of the holiday on a specified date", "First business day after a specified date", and "List of holidays in a specified period.".
 
