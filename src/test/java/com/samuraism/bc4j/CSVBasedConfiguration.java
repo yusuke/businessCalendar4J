@@ -67,10 +67,27 @@ class CSVBasedConfiguration {
         Thread.sleep(1000);
         //noinspection ResultOfMethodCallIgnored
         path.toFile().delete();
-        System.out.println(path.toFile().lastModified());
-
+       
         Thread.sleep(3000);
         assertCal(expected1, calendar1);
+    }
+
+    @Test
+    void emptyConfigurationFileWillEmptyConfiguration() throws IOException, InterruptedException {
+        final Path path = write(
+                "holiday,2021/12/24,just holiday\n"
+        );
+        final BusinessCalendar expected1 = BusinessCalendar.newBuilder().on(2021, 12, 24).holiday("just holiday").build();
+
+        final BusinessCalendar calendar1 = BusinessCalendar.newBuilder().csv(path, Duration.of(100,ChronoUnit.MILLIS)).build();
+        assertCal(expected1, calendar1);
+        Thread.sleep(1000);
+        write(path,"");
+
+        final BusinessCalendar expected2 = BusinessCalendar.newBuilder().build();
+
+        Thread.sleep(3000);
+        assertCal(expected2, calendar1);
     }
 
 
