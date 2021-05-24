@@ -128,6 +128,18 @@ public class ビジネスカレンダー {
     }
 
     /**
+     * 指定した日の営業時間枠を返す
+     *
+     * @param 日付 日付
+     * @return 指定した日の営業時間枠, または祝休日であれば空のリスト
+     * @since 1.16
+     */
+    @NotNull
+    public List<BusinessHourSlot> get営業時間枠(@NotNull LocalDate 日付) {
+        return businessCalendar.getBusinessHourSlots(日付);
+    }
+
+    /**
      * 指定した時刻以前の営業終了時間を返す
      *
      * @param when 起点

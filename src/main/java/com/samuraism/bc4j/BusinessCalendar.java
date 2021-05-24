@@ -129,7 +129,7 @@ public final class BusinessCalendar {
      * Returns a list of BusinessHourSlot on a specific date
      *
      * @param date date
-     * @return list of business hour slots on a specified date
+     * @return list of business hour slots on a specified date, or an empty list if the specified date is a holiday
      * @since 1.9
      */
     @NotNull
