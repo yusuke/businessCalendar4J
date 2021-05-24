@@ -17,15 +17,14 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Execution(ExecutionMode.CONCURRENT)
 class CSVBasedConfiguration {
     @Test
     void invalidFormat() throws IOException {
         {
-            assertThrows(RuntimeException.class, () -> BusinessCalendar.newBuilder().csv(Paths.get("doesnotexist")).build());
+            assertDoesNotThrow(() -> BusinessCalendar.newBuilder().csv(Paths.get("doesnotexist")).build());
         }
         {
             // hour should be hours
@@ -55,6 +54,25 @@ class CSVBasedConfiguration {
         final BusinessCalendar expected2 = BusinessCalendar.newBuilder().on(2021, 11, 24).holiday("just holiday").build();
         assertCal(expected2, calendar1);
     }
+
+    @Test
+    void fileGotDeleted() throws IOException, InterruptedException {
+        final Path path = write(
+                "holiday,2021/12/24,just holiday\n"
+        );
+        final BusinessCalendar expected1 = BusinessCalendar.newBuilder().on(2021, 12, 24).holiday("just holiday").build();
+
+        final BusinessCalendar calendar1 = BusinessCalendar.newBuilder().csv(path, Duration.of(100,ChronoUnit.MILLIS)).build();
+        assertCal(expected1, calendar1);
+        Thread.sleep(1000);
+        //noinspection ResultOfMethodCallIgnored
+        path.toFile().delete();
+        System.out.println(path.toFile().lastModified());
+
+        Thread.sleep(3000);
+        assertCal(expected1, calendar1);
+    }
+
 
     @Test
     void csv() throws IOException {

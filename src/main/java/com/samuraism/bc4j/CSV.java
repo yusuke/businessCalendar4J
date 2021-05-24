@@ -18,6 +18,7 @@ package com.samuraism.bc4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
@@ -71,16 +72,22 @@ final class CSV {
     }
 
     private void reload() {
-        final long latestLastModified = path.toFile().lastModified();
-        if (lastModified != latestLastModified) {
-            lastModified = latestLastModified;
-            List<String> lines;
-            try {
-                lines = Files.readAllLines(path, StandardCharsets.UTF_8);
-                csv(lines);
-            } catch (IOException io) {
-                throw new UncheckedIOException(io);
-            }
+        final File file = path.toFile();
+        if (!file.exists()) {
+            return;
+        }
+        final long latestLastModified = file.lastModified();
+
+        if (lastModified == latestLastModified) {
+            return;
+        }
+        lastModified = latestLastModified;
+        List<String> lines;
+        try {
+            lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+            csv(lines);
+        } catch (IOException io) {
+            throw new UncheckedIOException(io);
         }
     }
 
