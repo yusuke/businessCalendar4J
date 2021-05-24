@@ -20,45 +20,53 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.function.Function;
+import java.util.function.Predicate;
+
+import static com.samuraism.bc4j.BusinessCalendarPredicate.holiday;
+import static com.samuraism.bc4j.BusinessCalendarPredicate.predicate;
 
 public class UnitedStates {
 
-
-    public static final Function<LocalDate, String> NEW_YEARS_DAY = e -> substitution(e, e2 -> e2.getMonthValue() == 1 && e2.getDayOfMonth() == 1 ? "unitedStates.NewYearsDay" : null);
-    public static final Function<LocalDate, String> MARTIN_LUTHER_KING_JR_DAY = e -> e.getMonthValue() == 1 && e.getDayOfMonth() ==
-            e.with(TemporalAdjusters.dayOfWeekInMonth(3, DayOfWeek.MONDAY)).getDayOfMonth() ? "unitedStates.MartinLutherKingJrDay" : null;
-    public static final Function<LocalDate, String> MEMORIAL_DAY = e -> e.getMonthValue() == 5 && e.getDayOfMonth() ==
-            e.with(TemporalAdjusters.lastInMonth(DayOfWeek.MONDAY)).getDayOfMonth() ? "unitedStates.MemorialDay" : null;
-    public static final Function<LocalDate, String> INDEPENDENCE_DAY = e -> substitution(e, e2 -> e2.getMonthValue() == 7 && e2.getDayOfMonth() == 4 ? "unitedStates.IndependenceDay" : null);
-    public static final Function<LocalDate, String> LABOR_DAY = e -> e.getMonthValue() == 9 && e.getDayOfMonth() ==
-            e.with(TemporalAdjusters.dayOfWeekInMonth(1, DayOfWeek.MONDAY)).getDayOfMonth() ? "unitedStates.LaborDay" : null;
-    public static final Function<LocalDate, String> VETERANS_DAY = e -> substitution(e, e2 -> e2.getMonthValue() == 11 && e2.getDayOfMonth() == 11 ? "unitedStates.VeteransDay" : null);
-    public static final Function<LocalDate, String> THANKS_GIVING_DAY = e -> e.getMonthValue() == 11 && e.getDayOfMonth() ==
-            e.with(TemporalAdjusters.dayOfWeekInMonth(4, DayOfWeek.THURSDAY)).getDayOfMonth() ? "unitedStates.ThanksgivingDay" : null;
-    public static final Function<LocalDate, String> CHRISTMAS_DAY = e -> substitution(e, e2 -> e2.getMonthValue() == 12 && e2.getDayOfMonth() == 24 ? "unitedStates.ChristmasDay" : null);
+    public static final Function<LocalDate, String> NEW_YEARS_DAY =
+            substitution(predicate(1, 1), "unitedStates.NewYearsDay");
+    public static final Function<LocalDate, String> MARTIN_LUTHER_KING_JR_DAY =
+            holiday(predicate(3, DayOfWeek.MONDAY, 1), "unitedStates.MartinLutherKingJrDay");
+    public static final Function<LocalDate, String> MEMORIAL_DAY =
+            holiday(date -> date.getMonthValue() == 5 && date.getDayOfMonth() ==
+                    date.with(TemporalAdjusters.lastInMonth(DayOfWeek.MONDAY)).getDayOfMonth(), "unitedStates.MemorialDay");
+    public static final Function<LocalDate, String> INDEPENDENCE_DAY =
+            substitution(predicate(7, 4), "unitedStates.IndependenceDay");
+    public static final Function<LocalDate, String> LABOR_DAY =
+            holiday(predicate(1, DayOfWeek.MONDAY, 9), "unitedStates.LaborDay");
+    public static final Function<LocalDate, String> VETERANS_DAY =
+            substitution(predicate(11, 11), "unitedStates.VeteransDay");
+    public static final Function<LocalDate, String> THANKS_GIVING_DAY =
+            holiday(predicate(4, DayOfWeek.THURSDAY, 11), "unitedStates.ThanksgivingDay");
+    public static final Function<LocalDate, String> CHRISTMAS_DAY =
+            substitution(predicate(12, 24), "unitedStates.ChristmasDay");
 
     @SuppressWarnings("unchecked")
     public static final Function<LocalDate, String>[] PUBLIC_HOLIDAYS = new Function[]{NEW_YEARS_DAY, MARTIN_LUTHER_KING_JR_DAY,
             MEMORIAL_DAY, INDEPENDENCE_DAY, LABOR_DAY, VETERANS_DAY, THANKS_GIVING_DAY, CHRISTMAS_DAY};
 
-    private static String substitution(LocalDate date, Function<LocalDate, String> logic) {
-        final String apply = logic.apply(date);
-        if (apply != null) {
-            return apply;
-        }
-        LocalDate movedFrom = null;
-        if (date.getDayOfWeek() == DayOfWeek.MONDAY) {
-            movedFrom = date.minus(1, ChronoUnit.DAYS);
-        } else if (date.getDayOfWeek() == DayOfWeek.FRIDAY) {
-            movedFrom = date.plus(1, ChronoUnit.DAYS);
-        }
-        if (movedFrom != null) {
-            final String originalHoliday = logic.apply(movedFrom);
-            if (originalHoliday != null) {
-                return "${" + originalHoliday + "} (${unitedStates.observed})";
+    private static Function<LocalDate, String> substitution(Predicate<LocalDate> predicate, String name) {
+        return date -> {
+            if (predicate.test(date)) {
+                return name;
             }
-        }
-        return null;
+            LocalDate movedFrom = null;
+            if (date.getDayOfWeek() == DayOfWeek.MONDAY) {
+                movedFrom = date.minus(1, ChronoUnit.DAYS);
+            } else if (date.getDayOfWeek() == DayOfWeek.FRIDAY) {
+                movedFrom = date.plus(1, ChronoUnit.DAYS);
+            }
+            if (movedFrom != null) {
+                if (predicate.test(movedFrom)) {
+                    return "${" + name + "} (${unitedStates.observed})";
+                }
+            }
+            return null;
+        };
     }
 }
 

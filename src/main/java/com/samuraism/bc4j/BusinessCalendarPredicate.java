@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class BusinessCalendarPredicate {
@@ -27,19 +28,7 @@ public class BusinessCalendarPredicate {
     private final Predicate<LocalDate> predicate;
 
     BusinessCalendarPredicate(@NotNull BusinessCalendarBuilder builder, int ordinal, @NotNull DayOfWeek... dayOfWeeks) {
-        this.predicate = e -> {
-            for (DayOfWeek dayOfWeek : dayOfWeeks) {
-                if (dayOfWeek == e.getDayOfWeek()) {
-                    int day = e.with(TemporalAdjusters
-                            .dayOfWeekInMonth(ordinal, dayOfWeek))
-                            .getDayOfMonth();
-                    if (e.getDayOfMonth() == day) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        };
+        this.predicate = predicate(ordinal, dayOfWeeks);
         this.builder = builder;
     }
 
@@ -65,12 +54,48 @@ public class BusinessCalendarPredicate {
         this.builder = builder;
     }
 
-    public BusinessCalendarBuilder hours(String businessHour) {
+    @NotNull
+    public BusinessCalendarBuilder hours(@NotNull String businessHour) {
         builder.businessHours.add(new BusinessCalendarBuilder.BusinessHours(predicate, businessHour));
         return builder;
     }
 
-    public BusinessCalendarBuilder holiday(String name) {
-        return builder.holiday(date -> predicate.test(date) ? name : null);
+    @NotNull
+    public BusinessCalendarBuilder holiday(@NotNull String name) {
+        return builder.holiday(holiday(predicate, name));
+    }
+
+    @NotNull
+    static Function<LocalDate, String> holiday(@NotNull Predicate<LocalDate> predicate, @NotNull String name) {
+        return date -> predicate.test(date) ? name : null;
+    }
+
+    @NotNull
+    static Predicate<LocalDate> predicate(int month, int day) {
+        return e -> e.getMonthValue() == month && e.getDayOfMonth() == day;
+    }
+
+    @NotNull
+    static Predicate<LocalDate> predicate(int ordinal, @NotNull DayOfWeek dayOfWeek, int month) {
+        return e -> e.getMonthValue() == month && dayOfWeekOrdinalMatches(e, ordinal, dayOfWeek);
+    }
+
+    @NotNull
+    static Predicate<LocalDate> predicate(int ordinal, @NotNull DayOfWeek[] dayOfWeeks) {
+        return e -> {
+            for (DayOfWeek dayOfWeek : dayOfWeeks) {
+                if (dayOfWeek == e.getDayOfWeek()) {
+                    if (dayOfWeekOrdinalMatches(e, ordinal, dayOfWeek)) return true;
+                }
+            }
+            return false;
+        };
+    }
+
+    static boolean dayOfWeekOrdinalMatches(LocalDate e, int ordinal, DayOfWeek dayOfWeek) {
+        int day = e.with(TemporalAdjusters
+                .dayOfWeekInMonth(ordinal, dayOfWeek))
+                .getDayOfMonth();
+        return e.getDayOfMonth() == day;
     }
 }

@@ -442,6 +442,7 @@ public final class BusinessCalendar {
      * @return dumped information about holidays and business days in the specified period
      * @since 1.15
      */
+    @SuppressWarnings("unused")
     public String dump(@NotNull LocalDate from, @NotNull LocalDate to) {
         return dump(from, to, "yyyy/MM/dd");
     }
@@ -482,6 +483,7 @@ public final class BusinessCalendar {
     }
 
     private static final DateTimeFormatter HHmm = DateTimeFormatter.ofPattern("HH:mm");
+    @SuppressWarnings("SpellCheckingInspection")
     private static final DateTimeFormatter HHmmss = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     private String formatTime(LocalDateTime time) {

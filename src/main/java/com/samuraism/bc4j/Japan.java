@@ -23,6 +23,8 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.Random;
 import java.util.function.Function;
 
+import static com.samuraism.bc4j.BusinessCalendarPredicate.dayOfWeekOrdinalMatches;
+
 public final class Japan implements Function<LocalDate, String> {
     public static final Function<LocalDate, String> PUBLIC_HOLIDAYS = new Japan();
 
@@ -42,7 +44,7 @@ public final class Japan implements Function<LocalDate, String> {
 
     private static final long aboutOneMonth = 1000L * 60 * 60 * 24 * 31 + new Random(System.currentTimeMillis()).nextLong() % (1000L * 60 * 60 * 10);
     static final CSVHolidays csv = new CSVHolidays(aboutOneMonth, System.getProperty("SYUKUJITSU_URL",
-            "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"), "/syukujitsu.csv", 
+            "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"), "/syukujitsu.csv",
             "japanese.", Charset.forName("Shift_JIS"));
 
     private Japan() {
@@ -73,7 +75,7 @@ public final class Japan implements Function<LocalDate, String> {
             case 12:
                 break;
             case 1:
-                if (day == e.with(TemporalAdjusters.dayOfWeekInMonth(2, DayOfWeek.MONDAY)).getDayOfMonth()) {
+                if (dayOfWeekOrdinalMatches(e, 2, DayOfWeek.MONDAY)) {
                     return "japanese.成人の日";
                 }
                 break;
@@ -121,7 +123,7 @@ public final class Japan implements Function<LocalDate, String> {
                 }
                 break;
             case 7:
-                if (day == e.with(TemporalAdjusters.dayOfWeekInMonth(3, DayOfWeek.MONDAY)).getDayOfMonth()) {
+                if (dayOfWeekOrdinalMatches(e, 3, DayOfWeek.MONDAY)) {
                     return "japanese.海の日";
                 }
                 break;
@@ -157,7 +159,7 @@ public final class Japan implements Function<LocalDate, String> {
                 }
                 break;
             case 10:
-                if (day == e.with(TemporalAdjusters.dayOfWeekInMonth(2, DayOfWeek.MONDAY)).getDayOfMonth()) {
+                if (dayOfWeekOrdinalMatches(e, 2, DayOfWeek.MONDAY)) {
                     return "japanese.スポーツの日";
                 }
                 break;
