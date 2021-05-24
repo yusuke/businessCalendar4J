@@ -35,6 +35,8 @@ dependencies {
 
 ## 利用方法
 
+以下は日本語APIの説明になります。英語版APIについては [こちら](https://github.com/yusuke/businessCalendar4J/blob/main/README.md) をご覧ください。
+
 ### 初期化
 
 - 初期化構文
