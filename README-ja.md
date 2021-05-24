@@ -1,10 +1,12 @@
 # [&#35;businessCalendar4J](https://twitter.com/search?q=%23businessCalendar4J&src=typed_query&f=live)
-日本やアメリカ合衆国の祝日、休日の判定や名称取得を行えるライブラリです。依存がないので気軽に利用できます。
-「指定したの日の祝日の名称を取得する」「指定した日以降の最初の営業日を取得する」「指定した期間の祝日のリストを取得する」といったことが簡単に行えます。
+
+BusinessCalendar4J は100% pure Javaのビジネスカレンダーライブラリです。柔軟に祝休日や営業時間を定義出来ます。またアメリカ合衆国と日本の祝休日も定義されています。他の国の祝休日サポートが必要ですか？コントリビュートをお願いします！
+
+「指定した日の祝日名称を取得する」「指定した日以降の最初の営業日」「指定した期間内の祝休日のリスト」なども取得できます。
+
+また [ビジネスカレンダーBuilder](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/ビジネスカレンダーBuilder.java) より固定の日、またはlambda式で柔軟に「土日を祝日扱いにする」、「特定の日を祝休日扱いにする」、などの定義が行えるので事業等の実態に合わせた営業日の導出が行えます。
 
 日本の祝日については内閣府の公開している情報を直接取得して、かつ定期的に更新してるため正確です。内閣府で公開している確定情報の範囲よりも後の日付については現行の法律をベースにしたアルゴリズムと国立天文台の情報を元に休祝日を推定します。
-
-また [BusinessCalenderBuilder](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/BusinessCalendarBuilder.java) より固定の日、またはlambda式で柔軟に「土日を祝日扱いにする」、「特定の日を祝休日扱いにする」、などの定義が行えるので事業等の実態に合わせた営業日の導出が行えます。
 
 [![@businessCal4J](https://img.shields.io/twitter/url/https/twitter.com/BusinessCal4J.svg?style=social&label=Follow%20%40BusinessCal4J)](https://twitter.com/businessCal4J)
 
