@@ -17,25 +17,29 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Execution(ExecutionMode.CONCURRENT)
 class CSVBasedConfiguration {
     @Test
     void invalidFormat() throws IOException {
-        {
-            assertDoesNotThrow(() -> BusinessCalendar.newBuilder().csv(Paths.get("doesnotexist")).build());
-        }
+        final Path doesnotexist = Paths.get("doesnotexist");
+        BusinessCalendar.newBuilder().csv(doesnotexist).build();
+        assertTrue(Logger.warnMessages.contains(doesnotexist.toAbsolutePath() + " does not exist"));
         {
             // hour should be hours
             final Path path = write("hour,sat,13-17");
-            assertThrows(RuntimeException.class, () -> BusinessCalendar.newBuilder().csv(path).build());
+            BusinessCalendar.newBuilder().csv(path).build();
         }
+        assertTrue(Logger.warnMessages.contains("Skipping line[1] (unable to parse): \"hour,sat,13-17\""));
+
         {
             // saturday should be saturday
-            final Path path = write("hours,sataday,13-17");
-            assertThrows(RuntimeException.class, () -> BusinessCalendar.newBuilder().csv(path).build());
+            final Path path = write("\nhours,sataday,13-17");
+            BusinessCalendar.newBuilder().csv(path).build();
         }
+        assertTrue(Logger.warnMessages.contains("Skipping line[2] (unable to parse): \"hours,sataday,13-17\""));
     }
 
     @Test
@@ -45,11 +49,11 @@ class CSVBasedConfiguration {
         );
         final BusinessCalendar expected1 = BusinessCalendar.newBuilder().on(2021, 12, 24).holiday("just holiday").build();
 
-        final BusinessCalendar calendar1 = BusinessCalendar.newBuilder().csv(path, Duration.of(100,ChronoUnit.MILLIS)).build();
+        final BusinessCalendar calendar1 = BusinessCalendar.newBuilder().csv(path, Duration.of(100, ChronoUnit.MILLIS)).build();
         assertCal(expected1, calendar1);
         Thread.sleep(1000);
 
-        write(path,"holiday,2021/11/24,just holiday\n");
+        write(path, "holiday,2021/11/24,just holiday\n");
         Thread.sleep(3000);
         final BusinessCalendar expected2 = BusinessCalendar.newBuilder().on(2021, 11, 24).holiday("just holiday").build();
         assertCal(expected2, calendar1);
@@ -62,12 +66,12 @@ class CSVBasedConfiguration {
         );
         final BusinessCalendar expected1 = BusinessCalendar.newBuilder().on(2021, 12, 24).holiday("just holiday").build();
 
-        final BusinessCalendar calendar1 = BusinessCalendar.newBuilder().csv(path, Duration.of(100,ChronoUnit.MILLIS)).build();
+        final BusinessCalendar calendar1 = BusinessCalendar.newBuilder().csv(path, Duration.of(100, ChronoUnit.MILLIS)).build();
         assertCal(expected1, calendar1);
         Thread.sleep(1000);
         //noinspection ResultOfMethodCallIgnored
         path.toFile().delete();
-       
+
         Thread.sleep(3000);
         assertCal(expected1, calendar1);
     }
@@ -79,10 +83,10 @@ class CSVBasedConfiguration {
         );
         final BusinessCalendar expected1 = BusinessCalendar.newBuilder().on(2021, 12, 24).holiday("just holiday").build();
 
-        final BusinessCalendar calendar1 = BusinessCalendar.newBuilder().csv(path, Duration.of(100,ChronoUnit.MILLIS)).build();
+        final BusinessCalendar calendar1 = BusinessCalendar.newBuilder().csv(path, Duration.of(100, ChronoUnit.MILLIS)).build();
         assertCal(expected1, calendar1);
         Thread.sleep(1000);
-        write(path,"");
+        write(path, "");
 
         final BusinessCalendar expected2 = BusinessCalendar.newBuilder().build();
 
@@ -177,8 +181,8 @@ class CSVBasedConfiguration {
     }
 
     void assertCal(BusinessCalendar expected, BusinessCalendar testTarget) {
-        LocalDate from = LocalDate.of(2021,1,1);
-         LocalDate to = LocalDate.of(2021,12,31);
+        LocalDate from = LocalDate.of(2021, 1, 1);
+        LocalDate to = LocalDate.of(2021, 12, 31);
         final List<Holiday> expectedHolidays = expected.getHolidaysBetween(from, to);
         final List<Holiday> expectedHolidaysBetween = testTarget.getHolidaysBetween(from, to);
         assertEquals(expectedHolidays, expectedHolidaysBetween);

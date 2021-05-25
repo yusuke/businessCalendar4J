@@ -20,11 +20,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.ParseException;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -36,6 +34,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 final class CSV {
+
+    private final Logger logger = Logger.getLogger(CSV.class);
 
     private BusinessCalendarBuilder builder;
     @NotNull
@@ -74,20 +74,23 @@ final class CSV {
     private void reload() {
         final File file = path.toFile();
         if (!file.exists()) {
+            logger.warn(() -> path.toAbsolutePath() + " does not exist");
             return;
         }
         final long latestLastModified = file.lastModified();
 
         if (lastModified == latestLastModified) {
+            logger.debug(() -> path.toAbsolutePath() + " is not modified");
             return;
         }
         lastModified = latestLastModified;
         List<String> lines;
         try {
+            logger.info(() -> "loading" + path.toAbsolutePath());
             lines = Files.readAllLines(path, StandardCharsets.UTF_8);
             csv(lines);
         } catch (IOException io) {
-            throw new UncheckedIOException(io);
+            logger.warn(() -> "failed to load" + path.toAbsolutePath(), io);
         }
     }
 
@@ -103,28 +106,33 @@ final class CSV {
         final BusinessCalendarBuilder newConf = new BusinessCalendarBuilder();
         DateTimeFormatter ymdFormat = DateTimeFormatter.ofPattern("yyyy/M/d");
         DateTimeFormatter mdFormat = DateTimeFormatter.ofPattern("M/d");
-        for (String line : lines) {
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
             if (line.startsWith("#")) {
                 continue;
             }
             final String[] split = line.split(",");
-            if (1 <= split.length) {
-                switch (split[0]) {
-                    case "ymdFormat":
-                        ymdFormat = DateTimeFormatter.ofPattern(split[1]);
-                        break;
-                    case "mdFormat":
-                        mdFormat = DateTimeFormatter.ofPattern(split[1]);
-                        break;
-                    case "hours":
-                        on(newConf, ymdFormat, mdFormat, split, BusinessCalendarPredicate::hours);
-                        break;
-                    case "holiday":
-                        on(newConf, ymdFormat, mdFormat, split, BusinessCalendarPredicate::holiday);
-                        break;
-                    default:
-                        throw new RuntimeException(new ParseException(line, 0));
+            try {
+                if (1 <= split.length) {
+                    switch (split[0]) {
+                        case "ymdFormat":
+                            ymdFormat = DateTimeFormatter.ofPattern(split[1]);
+                            break;
+                        case "mdFormat":
+                            mdFormat = DateTimeFormatter.ofPattern(split[1]);
+                            break;
+                        case "hours":
+                            on(newConf, ymdFormat, mdFormat, split, BusinessCalendarPredicate::hours);
+                            break;
+                        case "holiday":
+                            on(newConf, ymdFormat, mdFormat, split, BusinessCalendarPredicate::holiday);
+                            break;
+                        default:
+                            logger.warn("Skipping line[" + (i + 1) + "] (unable to parse): \"" + line + "\"");
+                    }
                 }
+            } catch (Exception e) {
+                logger.warn("Skipping line[" + (i + 1) + "] (unable to parse): \"" + line + "\"");
             }
         }
         this.builder = newConf;

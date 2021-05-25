@@ -17,6 +17,9 @@ package com.samuraism.bc4j;
  */
 
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 
 /**
@@ -25,6 +28,22 @@ import java.util.logging.Level;
 final class Logger {
     private final java.util.logging.Logger jul;
     private final org.slf4j.Logger slf4j;
+    final static boolean testEnvironment;
+
+    static {
+        boolean junitFound = false;
+        try {
+            Class.forName("org.junit.jupiter.api.Test");
+            junitFound = true;
+        } catch (ClassNotFoundException ignore) {
+        }
+        testEnvironment = junitFound;
+    }
+
+    static List<String> debugMessages = new ArrayList<>();
+    static List<String> infoMessages = new ArrayList<>();
+    static List<String> warnMessages = new ArrayList<>();
+    static List<String> errorMessages = new ArrayList<>();
 
     Logger(java.util.logging.Logger julLogger, org.slf4j.Logger slf4jLogger) {
         this.jul = julLogger;
@@ -32,10 +51,10 @@ final class Logger {
     }
 
     public static void main(String[] args) {
-        Logger.getLogger(Logger.class).debug("debug");
-        Logger.getLogger(Logger.class).info("info");
-        Logger.getLogger(Logger.class).warn("warn");
-        Logger.getLogger(Logger.class).error("error");
+        Logger.getLogger(Logger.class).debug(() -> "debug");
+        Logger.getLogger(Logger.class).info(() -> "info");
+        Logger.getLogger(Logger.class).warn(() -> "warn");
+        Logger.getLogger(Logger.class).error(() -> "error");
     }
 
     static final boolean SLF4J_EXISTS_IN_CLASSPATH;
@@ -46,11 +65,11 @@ final class Logger {
             // use SLF4J if it's found in the classpath
             Class.forName("org.slf4j.Logger");
             useSLF4J = true;
-            getLogger(Logger.class).info("SLF4J Logger selected");
+            getLogger(Logger.class).info(() -> "SLF4J Logger selected");
         } catch (ClassNotFoundException ignore) {
         }
         SLF4J_EXISTS_IN_CLASSPATH = useSLF4J;
-        getLogger(Logger.class).info(SLF4J_EXISTS_IN_CLASSPATH ? "SLF4J Logger selected" : "jul Logger selected");
+        getLogger(Logger.class).info(() -> SLF4J_EXISTS_IN_CLASSPATH ? "SLF4J Logger selected" : "jul Logger selected");
     }
 
     /**
@@ -60,85 +79,96 @@ final class Logger {
      * @return logger instance
      */
     static Logger getLogger(Class<?> clazz) {
-        return SLF4J_EXISTS_IN_CLASSPATH ? 
+        return SLF4J_EXISTS_IN_CLASSPATH ?
                 new Logger(null, org.slf4j.LoggerFactory.getLogger(clazz)) :
                 new Logger(java.util.logging.Logger.getLogger(clazz.getName()), null);
     }
 
-    boolean isDebugEnabled() {
-        if (SLF4J_EXISTS_IN_CLASSPATH) {
-            return slf4j.isDebugEnabled();
-
+    void debug(Supplier<String> supplier) {
+        if (testEnvironment) {
+            debugMessages.add(supplier.get());
         }
-        return jul.isLoggable(Level.FINEST);
-    }
-
-    boolean isInfoEnabled() {
         if (SLF4J_EXISTS_IN_CLASSPATH) {
-            return slf4j.isInfoEnabled();
+            if (slf4j.isDebugEnabled()) {
+                slf4j.debug(supplier.get());
+            }
         }
-        return jul.isLoggable(Level.INFO);
-    }
-
-    boolean isWarnEnabled() {
-        if (SLF4J_EXISTS_IN_CLASSPATH) {
-            return slf4j.isWarnEnabled();
-        }
-        return jul.isLoggable(Level.WARNING);
-    }
-
-    boolean isErrorEnabled() {
-        if (SLF4J_EXISTS_IN_CLASSPATH) {
-            return slf4j.isErrorEnabled();
-        }
-        return jul.isLoggable(Level.SEVERE);
-    }
-
-    void debug(String message) {
-        if (SLF4J_EXISTS_IN_CLASSPATH) {
-            slf4j.debug(message);
-        } else {
-            jul.finest(message);
+        if (jul.isLoggable(Level.FINEST)) {
+            jul.finest(supplier.get());
         }
     }
 
-    void info(String message) {
+    void info(Supplier<String> supplier) {
+        if (testEnvironment) {
+            infoMessages.add(supplier.get());
+        }
         if (SLF4J_EXISTS_IN_CLASSPATH) {
-            slf4j.info(message);
-        } else {
-            jul.info(message);
+            if (slf4j.isInfoEnabled()) {
+                slf4j.info(supplier.get());
+            }
+        }
+        if (jul.isLoggable(Level.INFO)) {
+            jul.info(supplier.get());
         }
     }
 
     void warn(String message) {
+        warn(() -> message);
+    }
+
+    void warn(Supplier<String> supplier) {
+        if (testEnvironment) {
+            warnMessages.add(supplier.get());
+        }
         if (SLF4J_EXISTS_IN_CLASSPATH) {
-            slf4j.warn(message);
-        } else {
-            jul.warning(message);
+            if (slf4j.isWarnEnabled()) {
+                slf4j.warn(supplier.get());
+            }
+        }
+        if (jul.isLoggable(Level.WARNING)) {
+            jul.warning(supplier.get());
         }
     }
 
-    void warn(String message, Throwable th) {
+    void warn(Supplier<String> supplier, Throwable th) {
+        if (testEnvironment) {
+            warnMessages.add(supplier.get());
+        }
         if (SLF4J_EXISTS_IN_CLASSPATH) {
-            slf4j.warn(message, th);
-        } else {
-            jul.log(Level.WARNING, message, th);
+            if (slf4j.isWarnEnabled()) {
+                slf4j.warn(supplier.get(), th);
+            }
+        }
+        if (jul.isLoggable(Level.WARNING)) {
+            jul.log(Level.WARNING, supplier.get(), th);
         }
     }
 
-    void error(String message) {
+    void error(Supplier<String> supplier) {
+        if (testEnvironment) {
+            errorMessages.add(supplier.get());
+        }
         if (SLF4J_EXISTS_IN_CLASSPATH) {
-            slf4j.error(message);
-        } else {
-            jul.severe(message);
+            if (slf4j.isErrorEnabled()) {
+                slf4j.error(supplier.get());
+            }
+        }
+        if (jul.isLoggable(Level.SEVERE)) {
+            jul.severe(supplier.get());
         }
     }
 
-    void error(String message, Throwable th) {
+    void error(Supplier<String> supplier, Throwable th) {
+        if (testEnvironment) {
+            errorMessages.add(supplier.get());
+        }
         if (SLF4J_EXISTS_IN_CLASSPATH) {
-            slf4j.error(message, th);
-        } else {
-            jul.log(Level.SEVERE, message, th);
+            if (slf4j.isErrorEnabled()) {
+                slf4j.error(supplier.get(), th);
+            }
+        }
+        if (jul.isLoggable(Level.SEVERE)) {
+            jul.log(Level.SEVERE, supplier.get(), th);
         }
     }
 }
