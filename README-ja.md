@@ -134,6 +134,20 @@ URLから:
     .build();
 ```
 
+- CSVファイルで祝休日、営業時間を設定し、任意のタイミングでリロードする
+
+```java
+CsvConfiguration conf = CsvConfiguration.getInstance(Paths.get("holidayconf.csv"));
+ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder()
+    .csv(conf);
+    .build();
+.
+.
+.
+// 必要なタイミングでリロードできます
+conf.reload();
+```
+
 以下は設定ファイルの記述例です。
 
 ```text

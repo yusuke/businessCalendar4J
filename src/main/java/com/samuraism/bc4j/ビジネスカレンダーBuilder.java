@@ -141,6 +141,33 @@ public final class ビジネスカレンダーBuilder {
         return this;
     }
 
+    /**
+     * CSVで設定する
+     *
+     * @param csv CSV設定
+     * @return このインスタンス
+     * @since 1.18
+     */
+    @NotNull
+    public ビジネスカレンダーBuilder csv(@NotNull CsvConfiguration csv) {
+        builder.csv(csv);
+        return this;
+    }
+
+    /**
+     * CSVで設定する
+     *
+     * @param csv CSV設定
+     * @param duration リロード間隔
+     * @return このインスタンス
+     * @since 1.18
+     */
+    @NotNull
+    public ビジネスカレンダーBuilder csv(@NotNull CsvConfiguration csv, @NotNull Duration duration) {
+        builder.csv(csv, duration);
+        return this;
+    }
+
     @NotNull
     public ビジネスカレンダー build() {
         return new ビジネスカレンダー(builder.build());

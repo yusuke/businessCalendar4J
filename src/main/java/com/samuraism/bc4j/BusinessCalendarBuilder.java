@@ -138,20 +138,23 @@ public class BusinessCalendarBuilder {
      * @since 1.15
      */
     public BusinessCalendarBuilder csv(Path path) {
-        csv(path, null, null);
+        csv(path, null);
         return this;
     }
 
     /**
      * Read CSV configuration file
      *
-     * @param path     csv file path
-     * @param duration reload interval
+     * @param path           csv file path
+     * @param reloadInterval reload interval
      * @return this instance
      * @since 1.15
      */
-    public BusinessCalendarBuilder csv(@NotNull Path path, @NotNull Duration duration) {
-        csv(path, null, duration);
+    public BusinessCalendarBuilder csv(@NotNull Path path, @Nullable Duration reloadInterval) {
+        CsvConfiguration csv = CsvConfiguration.getInstance(path);
+        csv.scheduleReload(reloadInterval);
+        this.holidayLogics.add(csv.holiday());
+        this.businessHours.add(csv.getBusinessHours());
         return this;
     }
 
@@ -163,27 +166,51 @@ public class BusinessCalendarBuilder {
      * @since 1.17
      */
     public BusinessCalendarBuilder csv(URL url) {
-        csv(null, url, null);
+        csv(url, null);
         return this;
     }
 
     /**
      * Read CSV configuration from URL
      *
-     * @param url      csv url
-     * @param duration reload interval
+     * @param url            csv url
+     * @param reloadInterval reload interval
      * @return this instance
      * @since 1.17
      */
-    public BusinessCalendarBuilder csv(URL url, @NotNull Duration duration) {
-        csv(null, url, duration);
+    public BusinessCalendarBuilder csv(URL url, @Nullable Duration reloadInterval) {
+        CsvConfiguration csv = CsvConfiguration.getInstance(url);
+        this.holidayLogics.add(csv.holiday());
+        this.businessHours.add(csv.getBusinessHours());
+        csv.scheduleReload(reloadInterval);
         return this;
     }
 
-    private void csv(@Nullable Path path, @Nullable URL url, @Nullable Duration duration) {
-        CSV csv = new CSV(path, url, duration);
+    /**
+     * Configure with csv configuration
+     *
+     * @param csv configuration
+     * @return this instance
+     * @since 1.18
+     */
+    public BusinessCalendarBuilder csv(CsvConfiguration csv) {
+        csv(csv, null);
+        return this;
+    }
+
+    /**
+     * Configure with csv configuration
+     *
+     * @param csv            configuration
+     * @param reloadInterval reload interval
+     * @return this instance
+     * @since 1.18
+     */
+    public BusinessCalendarBuilder csv(CsvConfiguration csv, @Nullable Duration reloadInterval) {
         this.holidayLogics.add(csv.holiday());
         this.businessHours.add(csv.getBusinessHours());
+        csv.scheduleReload(reloadInterval);
+        return this;
     }
 
     static class BusinessHours implements Function<LocalDate, List<BusinessHourSlot>> {

@@ -38,9 +38,9 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-final class CSV {
+public final class CsvConfiguration {
 
-    private final Logger logger = Logger.getLogger(CSV.class);
+    private final Logger logger = Logger.getLogger(CsvConfiguration.class);
 
     private BusinessCalendarBuilder builder;
     @Nullable
@@ -51,24 +51,53 @@ final class CSV {
 
     private long lastModified = -1L;
 
-    @Nullable
-    private final Duration duration;
-
-    CSV(@Nullable Path path, @Nullable URL url, @Nullable Duration duration) {
-        this.path = path;
-        this.url = url;
-        this.duration = duration;
-        reload();
-        scheduleReload();
+    /**
+     * Creates a CSV configuration from file path
+     *
+     * @param path configuration location
+     * @return configuration instance
+     * @since 1.18
+     */
+    public static CsvConfiguration getInstance(@NotNull Path path) {
+        return new CsvConfiguration(path);
     }
 
-    private void scheduleReload() {
-        if (duration != null) {
+    /**
+     * Creates a CSV configuration from URL
+     *
+     * @param url configuration location
+     * @return configuration instance
+     * @since 1.18
+     */
+    public static CsvConfiguration getInstance(@NotNull URL url) {
+        return new CsvConfiguration(url);
+    }
+
+    private CsvConfiguration(@NotNull Path path) {
+        this.path = path;
+        this.url = null;
+        reload();
+    }
+
+    private CsvConfiguration(@NotNull URL url) {
+        this.path = null;
+        this.url = url;
+        reload();
+    }
+
+    private boolean reloadScheduled = false;
+
+    void scheduleReload(@Nullable Duration interval) {
+        if (reloadScheduled) {
+            throw new IllegalStateException("reload already scheduled");
+        }
+        if (interval != null) {
+            reloadScheduled = true;
             final Thread thread = new Thread(() -> {
                 while (true) {
                     try {
                         //noinspection BusyWait
-                        Thread.sleep(duration.toMillis());
+                        Thread.sleep(interval.toMillis());
                         reload();
                     } catch (Exception ignore) {
                     }
@@ -80,28 +109,38 @@ final class CSV {
         }
     }
 
-    private void reload() {
+    /**
+     * reload configuration file
+     *
+     * @return warning messages
+     * @since 1.18
+     */
+    public List<String> reload() {
+        List<String> messages = new ArrayList<>();
+
         if (path != null) {
 
             final File file = path.toFile();
             if (!file.exists()) {
-                logger.warn(() -> path.toAbsolutePath() + " does not exist");
-                return;
+                final String message = path.toAbsolutePath() + " does not exist";
+                messages.add(message);
+                logger.warn(() -> message);
             }
             final long latestLastModified = file.lastModified();
 
             if (lastModified == latestLastModified) {
                 logger.debug(() -> path.toAbsolutePath() + " is not modified");
-                return;
             }
             lastModified = latestLastModified;
             List<String> lines;
             try {
                 logger.info(() -> "loading: " + path.toAbsolutePath());
                 lines = Files.readAllLines(path, StandardCharsets.UTF_8);
-                csv(lines);
+                messages.addAll(csv(lines));
             } catch (IOException io) {
-                logger.warn(() -> "failed to load: " + path.toAbsolutePath(), io);
+                final String message = "failed to load: " + path.toAbsolutePath();
+                messages.add(message);
+                logger.warn(() -> message, io);
             }
         }
         if (url != null) {
@@ -122,12 +161,14 @@ final class CSV {
                 String content = out.toString("UTF8");
 
                 final List<String> lines = Arrays.asList(content.split("\n"));
-                csv(lines);
+                messages.addAll(csv(lines));
             } catch (IOException e) {
-                logger.warn(() -> "failed to connect: " + url, e);
+                final String message = "failed to connect: " + url;
+                messages.add(message);
+                logger.warn(() -> message, e);
             }
         }
-
+        return messages;
     }
 
     Function<LocalDate, String> holiday() {
@@ -138,7 +179,8 @@ final class CSV {
         return date -> builder.getBusinessHours().apply(date);
     }
 
-    void csv(List<String> lines) {
+    List<String> csv(List<String> lines) {
+        List<String> warnings = new ArrayList<>();
         final BusinessCalendarBuilder newConf = new BusinessCalendarBuilder();
         DateTimeFormatter ymdFormat = DateTimeFormatter.ofPattern("yyyy/M/d");
         DateTimeFormatter mdFormat = DateTimeFormatter.ofPattern("M/d");
@@ -164,14 +206,19 @@ final class CSV {
                             on(newConf, ymdFormat, mdFormat, split, BusinessCalendarPredicate::holiday);
                             break;
                         default:
-                            logger.warn("Skipping line[" + (i + 1) + "] (unable to parse): \"" + line + "\"");
+                            final String message = "Skipping line[" + (i + 1) + "] (unable to parse): \"" + line + "\"";
+                            warnings.add(message);
+                            logger.warn(() -> message);
                     }
                 }
             } catch (Exception e) {
-                logger.warn("Skipping line[" + (i + 1) + "] (unable to parse): \"" + line + "\"");
+                final String message = "Skipping line[" + (i + 1) + "] (unable to parse): \"" + line + "\"";
+                warnings.add(message);
+                logger.warn(() -> message);
             }
         }
         this.builder = newConf;
+        return warnings;
     }
 
     private void on(@NotNull BusinessCalendarBuilder newConf, @NotNull DateTimeFormatter ymdFormatter, @NotNull DateTimeFormatter mdFormatter,

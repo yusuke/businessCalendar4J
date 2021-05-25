@@ -128,6 +128,20 @@ BusinessCalendar calendar = BusinessCalendar.newBuilder()
     .build();
 ```
 
+- Configure holidays and business hours with a CSV formatted text file, reload on demand.
+
+```java
+CsvConfiguration conf = CsvConfiguration.getInstance(Paths.get("holidayconf.csv"));
+BusinessCalendar calendar = BusinessCalendar.newBuilder()
+    .csv(conf);
+    .build();
+.
+.
+.
+// reload at anytime you need.
+conf.reload();
+```
+
 Below is a valid configuration file format example.
 
 ```text

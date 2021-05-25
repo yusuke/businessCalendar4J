@@ -112,10 +112,6 @@ final class Logger {
         }
     }
 
-    void warn(String message) {
-        warn(() -> message);
-    }
-
     void warn(Supplier<String> supplier) {
         if (testEnvironment) {
             warnMessages.add(supplier.get());
