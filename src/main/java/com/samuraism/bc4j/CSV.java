@@ -18,8 +18,12 @@ package com.samuraism.bc4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,6 +33,7 @@ import java.time.LocalDate;
 import java.time.MonthDay;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -38,16 +43,20 @@ final class CSV {
     private final Logger logger = Logger.getLogger(CSV.class);
 
     private BusinessCalendarBuilder builder;
-    @NotNull
+    @Nullable
     private final Path path;
+
+    @Nullable
+    private final URL url;
 
     private long lastModified = -1L;
 
     @Nullable
     private final Duration duration;
 
-    CSV(@NotNull Path path, @Nullable Duration duration) {
+    CSV(@Nullable Path path, @Nullable URL url, @Nullable Duration duration) {
         this.path = path;
+        this.url = url;
         this.duration = duration;
         reload();
         scheduleReload();
@@ -72,26 +81,53 @@ final class CSV {
     }
 
     private void reload() {
-        final File file = path.toFile();
-        if (!file.exists()) {
-            logger.warn(() -> path.toAbsolutePath() + " does not exist");
-            return;
-        }
-        final long latestLastModified = file.lastModified();
+        if (path != null) {
 
-        if (lastModified == latestLastModified) {
-            logger.debug(() -> path.toAbsolutePath() + " is not modified");
-            return;
+            final File file = path.toFile();
+            if (!file.exists()) {
+                logger.warn(() -> path.toAbsolutePath() + " does not exist");
+                return;
+            }
+            final long latestLastModified = file.lastModified();
+
+            if (lastModified == latestLastModified) {
+                logger.debug(() -> path.toAbsolutePath() + " is not modified");
+                return;
+            }
+            lastModified = latestLastModified;
+            List<String> lines;
+            try {
+                logger.info(() -> "loading: " + path.toAbsolutePath());
+                lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+                csv(lines);
+            } catch (IOException io) {
+                logger.warn(() -> "failed to load: " + path.toAbsolutePath(), io);
+            }
         }
-        lastModified = latestLastModified;
-        List<String> lines;
-        try {
-            logger.info(() -> "loading" + path.toAbsolutePath());
-            lines = Files.readAllLines(path, StandardCharsets.UTF_8);
-            csv(lines);
-        } catch (IOException io) {
-            logger.warn(() -> "failed to load" + path.toAbsolutePath(), io);
+        if (url != null) {
+            final URLConnection con;
+            try {
+                logger.info(() -> "loading: " + url);
+                con = url.openConnection();
+                con.setReadTimeout((int) Duration.of(1, ChronoUnit.MINUTES).toMillis());
+                con.setConnectTimeout((int) Duration.of(30, ChronoUnit.SECONDS).toMillis());
+                con.connect();
+                ByteArrayOutputStream out = new ByteArrayOutputStream(2048);
+                try (InputStream is = con.getInputStream()) {
+                    int read;
+                    while (-1 != (read = is.read())) {
+                        out.write(read);
+                    }
+                }
+                String content = out.toString("UTF8");
+
+                final List<String> lines = Arrays.asList(content.split("\n"));
+                csv(lines);
+            } catch (IOException e) {
+                logger.warn(() -> "failed to connect: " + url, e);
+            }
         }
+
     }
 
     Function<LocalDate, String> holiday() {
@@ -145,12 +181,12 @@ final class CSV {
             try {
                 final LocalDate date = LocalDate.parse(lines[1], ymdFormatter);
                 consumer.accept(new BusinessCalendarPredicate(date, newConf), join(lines, 2));
-            } catch (DateTimeParseException dtpe1) {
+            } catch (DateTimeParseException e1) {
                 final MonthDay parsed = MonthDay.parse(lines[1], mdFormatter);
                 consumer.accept(new BusinessCalendarPredicate(date -> date.getMonth() == parsed.getMonth()
                         && date.getDayOfMonth() == parsed.getDayOfMonth(), newConf), join(lines, 2));
             }
-        } catch (DateTimeParseException dtpe2) {
+        } catch (DateTimeParseException e2) {
             // ordinal
             try {
                 parseWeekDays(newConf, lines, 2, Integer.valueOf(lines[1]), consumer);

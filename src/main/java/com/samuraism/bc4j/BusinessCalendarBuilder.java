@@ -16,7 +16,9 @@
 package com.samuraism.bc4j;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.net.URL;
 import java.nio.file.Path;
 import java.time.DayOfWeek;
 import java.time.Duration;
@@ -130,30 +132,61 @@ public class BusinessCalendarBuilder {
 
     /**
      * Read CSV configuration file
+     *
      * @param path csv file path
      * @return this instance
      * @since 1.15
      */
     public BusinessCalendarBuilder csv(Path path) {
-        csv(path, null);
+        csv(path, null, null);
         return this;
     }
 
     /**
      * Read CSV configuration file
-     * @param path csv file path
+     *
+     * @param path     csv file path
      * @param duration reload interval
      * @return this instance
      * @since 1.15
      */
-    public BusinessCalendarBuilder csv(Path path, Duration duration) {
-        CSV csv = new CSV(path, duration);
-        this.holidayLogics.add(csv.holiday());
-        this.businessHours.add(csv.getBusinessHours());
+    public BusinessCalendarBuilder csv(@NotNull Path path, @NotNull Duration duration) {
+        csv(path, null, duration);
         return this;
     }
 
-    static class BusinessHours implements Function<LocalDate, List<BusinessHourSlot>>{
+    /**
+     * Read CSV configuration from URL
+     *
+     * @param url csv url
+     * @return this instance
+     * @since 1.17
+     */
+    public BusinessCalendarBuilder csv(URL url) {
+        csv(null, url, null);
+        return this;
+    }
+
+    /**
+     * Read CSV configuration from URL
+     *
+     * @param url      csv url
+     * @param duration reload interval
+     * @return this instance
+     * @since 1.17
+     */
+    public BusinessCalendarBuilder csv(URL url, @NotNull Duration duration) {
+        csv(null, url, duration);
+        return this;
+    }
+
+    private void csv(@Nullable Path path, @Nullable URL url, @Nullable Duration duration) {
+        CSV csv = new CSV(path, url, duration);
+        this.holidayLogics.add(csv.holiday());
+        this.businessHours.add(csv.getBusinessHours());
+    }
+
+    static class BusinessHours implements Function<LocalDate, List<BusinessHourSlot>> {
         private final Predicate<LocalDate> predicate;
         private final List<BusinessHourFromTo> businessHourFromTos = new ArrayList<>();
 
@@ -176,7 +209,7 @@ public class BusinessCalendarBuilder {
             if (predicate.test(localDate)) {
                 return businessHourFromTos.stream()
                         .map(e -> new BusinessHourSlot(localDate, e.from, e.to)).collect(Collectors.toList());
-            }else{
+            } else {
                 return null;
             }
         }

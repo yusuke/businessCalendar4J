@@ -7,6 +7,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -178,6 +179,49 @@ class CSVBasedConfiguration {
                     .build();
             assertCal(expected2, calendar);
         }
+    }
+
+    @Test
+    void url() throws IOException {
+        final BusinessCalendar expectedCalendar = BusinessCalendar.newBuilder()
+                .on(2, DayOfWeek.SUNDAY).hours("0-24")
+                .on(DayOfWeek.SUNDAY).hours("1-17,18-19")
+                .on(DayOfWeek.MONDAY).hours("2-17")
+                .on(DayOfWeek.TUESDAY).hours("3-17")
+                .on(DayOfWeek.WEDNESDAY).hours("4-17")
+                .on(DayOfWeek.THURSDAY).hours("5-17")
+                .on(DayOfWeek.FRIDAY).hours("6-17")
+                .on(DayOfWeek.SATURDAY).hours("7-17")
+                .hours("9-18")
+                .on(2021, 2, 1).holiday("just holiday")
+                .on(2021, 12, 24).holiday("yet another holiday")
+                .build();
+
+        {
+            final Path path = write(
+                    "# abbreviation\n" +
+                            "hours,2,sun,0-24\n" +
+                            "hours,sun,1-17,18-19\n" +
+                            "hours,mon,2-17\n" +
+                            "hours,tue,3-17\n" +
+                            "hours,wed,4-17\n" +
+                            "hours,thu,5-17\n" +
+                            "hours,fri,6-17\n" +
+                            "hours,sat,7-17\n" +
+                            "hours,sun,8-17\n" +
+                            "ymdFormat,yyyy/M/d\n" +
+                            "holiday,2021/12/24,yet another holiday\n" +
+                            "ymdFormat,M/d/yyyy\n" +
+                            "holiday,2/1/2021,just holiday\n"
+            );
+            final URI uri = path.toUri();
+            System.out.println(uri.toURL());
+            final BusinessCalendar calendar1 = BusinessCalendar.newBuilder().csv(uri.toURL()).build();
+            assertCal(expectedCalendar, calendar1);
+        }
+        
+
+        
     }
 
     void assertCal(BusinessCalendar expected, BusinessCalendar testTarget) {
