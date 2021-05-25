@@ -24,14 +24,14 @@ Maven Central Repositoryにリリースされているため、以下のよう�
     <dependency>
         <groupId>com.samuraism</groupId>
         <artifactId>businessCalendar4j</artifactId>
-        <version>1.17</version>
+        <version>1.18</version>
     </dependency>
 </dependencies>
 ```
 ### Gradleの場合
 ```text
 dependencies {
-    compile 'com.samuraism:businessCalendar4j:1.17'
+    compile 'com.samuraism:businessCalendar4j:1.18'
 }
 ```
 
