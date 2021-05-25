@@ -107,13 +107,24 @@ dependencies {
 | "12 a.m. to 8:30 & 9-12,1:30pm to 5pm&7:31pm-12am" |
 | "午前12時 から 午前8時半, 9-正午,午後1時半~午後5時、午後7:31〜午前0時" |
 
-- 祝休日、営業時間をCSVファイルで設定する
+- 祝休日、営業時間をCSVで設定する
+
+ファイルシステムから:
 
 ```java
 ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder()
     .csv(Paths.get("holidays-business-hours.csv"))
     .build();
 ```
+
+URLから:
+
+```java
+ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder()
+    .csv(new URL("https://somewhere.example.com/holidays-business-hours.csv"))
+    .build();
+```
+
 
 - 祝休日、営業時間をCSVファイルで設定し、1時間おきにリロードする
 
