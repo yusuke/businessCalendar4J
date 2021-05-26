@@ -51,10 +51,10 @@ final class Logger {
     }
 
     public static void main(String[] args) {
-        Logger.getLogger(Logger.class).debug(() -> "debug");
-        Logger.getLogger(Logger.class).info(() -> "info");
-        Logger.getLogger(Logger.class).warn(() -> "warn");
-        Logger.getLogger(Logger.class).error(() -> "error");
+        Logger.getLogger().debug(() -> "debug");
+        Logger.getLogger().info(() -> "info");
+        Logger.getLogger().warn(() -> "warn");
+        Logger.getLogger().error(() -> "error");
     }
 
     static final boolean SLF4J_EXISTS_IN_CLASSPATH;
@@ -65,23 +65,22 @@ final class Logger {
             // use SLF4J if it's found in the classpath
             Class.forName("org.slf4j.Logger");
             useSLF4J = true;
-            getLogger(Logger.class).info(() -> "SLF4J Logger selected");
         } catch (ClassNotFoundException ignore) {
         }
         SLF4J_EXISTS_IN_CLASSPATH = useSLF4J;
-        getLogger(Logger.class).info(() -> SLF4J_EXISTS_IN_CLASSPATH ? "SLF4J Logger selected" : "jul Logger selected");
+        getLogger().info(() -> SLF4J_EXISTS_IN_CLASSPATH ? "SLF4J Logger selected" : "jul Logger selected");
     }
 
     /**
      * Returns a Logger instance associated with the specified class.
      *
-     * @param clazz class
      * @return logger instance
      */
-    static Logger getLogger(Class<?> clazz) {
+    static Logger getLogger() {
+        final String className = new Throwable().getStackTrace()[1].getClassName();
         return SLF4J_EXISTS_IN_CLASSPATH ?
-                new Logger(null, org.slf4j.LoggerFactory.getLogger(clazz)) :
-                new Logger(java.util.logging.Logger.getLogger(clazz.getName()), null);
+                new Logger(null, org.slf4j.LoggerFactory.getLogger(className)) :
+                new Logger(java.util.logging.Logger.getLogger(className), null);
     }
 
     void debug(Supplier<String> supplier) {

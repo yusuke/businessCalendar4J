@@ -40,7 +40,7 @@ import java.util.function.Function;
 
 public final class CsvConfiguration {
 
-    private final Logger logger = Logger.getLogger(CsvConfiguration.class);
+    private final Logger logger = Logger.getLogger();
 
     private BusinessCalendarBuilder builder;
     @Nullable
