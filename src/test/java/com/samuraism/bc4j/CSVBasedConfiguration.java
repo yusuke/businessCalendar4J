@@ -77,6 +77,16 @@ class CSVBasedConfiguration {
     }
 
     @Test
+    void classPath() {
+        final BusinessCalendar cal = BusinessCalendar.newBuilder()
+                .csv(CSVBasedConfiguration.class.getResource("/csvconf.csv")).build();
+        assertTrue(cal.isHoliday(LocalDate.of(2021, 12, 20)));
+        assertTrue(cal.isHoliday(LocalDate.of(2022, 11, 24)));
+        assertEquals(2, (long) cal.getHolidaysBetween(LocalDate.of(2021, 1, 1), 
+                LocalDate.of(2022, 12, 31)).size());
+    }
+
+    @Test
     void fileGotDeleted() throws IOException, InterruptedException {
         final Path path = write(
                 "holiday,2021/12/24,just holiday\n"
