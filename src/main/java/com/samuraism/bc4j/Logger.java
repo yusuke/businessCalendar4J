@@ -54,7 +54,7 @@ final class Logger {
             try {
                 // store all log messages to logMessages during test invocation
                 Class.forName("org.junit.jupiter.api.Test");
-                java.util.logging.Logger.getLogger("").addHandler(new java.util.logging.Handler (){
+                java.util.logging.Logger.getLogger("").addHandler(new java.util.logging.Handler() {
                     @Override
                     public void publish(LogRecord record) {
                         logMessages.add(record.getMessage());
@@ -94,8 +94,7 @@ final class Logger {
             if (slf4j.isDebugEnabled()) {
                 slf4j.debug(supplier.get());
             }
-        }
-        if (jul.isLoggable(Level.FINEST)) {
+        } else if (jul.isLoggable(Level.FINEST)) {
             jul.finest(supplier.get());
         }
     }
