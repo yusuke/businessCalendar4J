@@ -1,3 +1,18 @@
+/*
+   Copyright 2021 the original author or authors.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
 package com.samuraism.bc4j;
 
 import org.junit.jupiter.api.Test;
@@ -25,22 +40,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CSVBasedConfiguration {
     @Test
     void invalidFormat() throws IOException {
+        TestHandler.init();
         final Path doesnotexist = Paths.get("doesnotexist");
         BusinessCalendar.newBuilder().csv(doesnotexist).build();
-        assertTrue(Logger.warnMessages.contains(doesnotexist.toAbsolutePath() + " does not exist"));
+        assertTrue(TestHandler.logMessages.contains(doesnotexist.toAbsolutePath() + " does not exist"));
         {
             // hour should be hours
             final Path path = write("hour,sat,13-17");
             BusinessCalendar.newBuilder().csv(path).build();
         }
-        assertTrue(Logger.warnMessages.contains("Skipping line[1] (unable to parse): \"hour,sat,13-17\""));
+        assertTrue(TestHandler.logMessages.contains("Skipping line[1] (unable to parse): \"hour,sat,13-17\""));
 
         {
             // saturday should be saturday
             final Path path = write("\nhours,sataday,13-17");
             BusinessCalendar.newBuilder().csv(path).build();
         }
-        assertTrue(Logger.warnMessages.contains("Skipping line[2] (unable to parse): \"hours,sataday,13-17\""));
+        assertTrue(TestHandler.logMessages.contains("Skipping line[2] (unable to parse): \"hours,sataday,13-17\""));
     }
 
     @Test
@@ -219,9 +235,8 @@ class CSVBasedConfiguration {
             final BusinessCalendar calendar1 = BusinessCalendar.newBuilder().csv(uri.toURL()).build();
             assertCal(expectedCalendar, calendar1);
         }
-        
 
-        
+
     }
 
     void assertCal(BusinessCalendar expected, BusinessCalendar testTarget) {
