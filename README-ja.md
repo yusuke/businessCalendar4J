@@ -175,15 +175,15 @@ holiday,2/1/2021,just another holiday
 - 日本の祝休日を適用
 ```java
 ビジネスカレンダー japanCal = ビジネスカレンダー.newBuilder()
-    .祝休日(ビジネスカレンダー.日本の祝休日)
+    .祝休日(ビジネスカレンダー.日本.PUBLIC_HOLIDAYS)
     .build();
 ```
 
 - アメリカ合衆国のキング牧師記念日と独立記念日を適用
 ```java
 ビジネスカレンダー usCal = ビジネスカレンダー.newBuilder()
-    .祝休日(UnitedStates.MARTIN_LUTHER_KING_JR_DAY)
-    .祝休日(UnitedStates.INDEPENDENCE_DAY)
+    .祝休日(ビジネスカレンダー.アメリカ合衆国.MARTIN_LUTHER_KING_JR_DAY)
+    .祝休日(ビジネスカレンダー.アメリカ合衆国.INDEPENDENCE_DAY)
     .build();
 ```
 
@@ -194,7 +194,7 @@ MEMORIAL_DAY, INDEPENDENCE_DAY, LABOR_DAY, VETERANS_DAY, THANKS_GIVING_DAY, CHRI
 
 ```java
 ビジネスカレンダー usCal = ビジネスカレンダー.newBuilder()
-    .祝休日(UnitedStates.PUBLIC_HOLIDAYS)
+    .祝休日(ビジネスカレンダー.アメリカ合衆国.PUBLIC_HOLIDAYS)
     .build();
 ```
 

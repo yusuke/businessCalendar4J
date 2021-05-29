@@ -169,8 +169,8 @@ Predefined public holidays are available in [UnitedStates](https://github.com/yu
 
 ```java
 BusinessCalendar usCal = BusinessCalendar.newBuilder()
-    .holiday(UnitedStates.MARTIN_LUTHER_KING_JR_DAY)
-    .holiday(UnitedStates.INDEPENDENCE_DAY)
+    .holiday(BusinessCalendar.UNITED_STATES.MARTIN_LUTHER_KING_JR_DAY)
+    .holiday(BusinessCalendar.UNITED_STATES.INDEPENDENCE_DAY)
     .build();
 ```
 
@@ -181,14 +181,14 @@ MEMORIAL_DAY, INDEPENDENCE_DAY, LABOR_DAY, VETERANS_DAY, THANKS_GIVING_DAY, CHRI
 
 ```java
 BusinessCalendar usCal = BusinessCalendar.newBuilder()
-    .holiday(UnitedStates.PUBLIC_HOLIDAYS)
+    .holiday(BusinessCalendar.UNITED_STATES.PUBLIC_HOLIDAYS)
     .build();
 ```
 
 - Apply Japanese public holidays
 ```java
 BusinessCalendar japanCal = BusinessCalendar.newBuilder()
-    .holiday(Japan.PUBLIC_HOLIDAYS)
+    .holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS)
     .build();
 ```
 
