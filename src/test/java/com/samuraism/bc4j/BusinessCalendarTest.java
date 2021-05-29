@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BusinessCalendarTest {
     @Test
     void isHoliday() {
-        BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).build();
+        BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).build();
         assertAll(
                 // New Year's Day
                 () -> assertTrue(calendar.isHoliday(LocalDate.of(2021, 1, 1))),
@@ -49,7 +49,7 @@ class BusinessCalendarTest {
 
     @Test
     void isBusinessDay() {
-        BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).build();
+        BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).build();
         assertAll(
                 // New Year's Day
                 () -> assertFalse(calendar.isBusinessDay(LocalDate.of(2021, 1, 1))),
@@ -67,7 +67,7 @@ class BusinessCalendarTest {
 
     @Test
     void holidayName() {
-        BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
+        BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
         assertNull(calendar.getHoliday(LocalDate.of(1954, 1, 15)));
         assertEquals("New Year's Day", calendar.getHoliday(LocalDate.of(1955, 1, 1)).name);
         assertEquals("Coming of age day", calendar.getHoliday(LocalDate.of(2021, 1, 11)).name);
@@ -77,7 +77,7 @@ class BusinessCalendarTest {
 
     @Test
     void customHoliday() {
-        BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH)
+        BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH)
                 .on(1977, 6, 17).holiday("just holiday").build();
         assertTrue(calendar.isHoliday(LocalDate.of(1977, 6, 17)));
         assertEquals("just holiday", calendar.getHoliday(LocalDate.of(1977, 6, 17)).name);
@@ -85,7 +85,7 @@ class BusinessCalendarTest {
 
     @Test
     void logicBasedHoliday() {
-        BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH)
+        BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH)
                 .holiday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "Saturday" : null)
                 .holiday(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "Sunday" : null).build();
         assertTrue(calendar.isHoliday(LocalDate.of(2021, 1, 23)));
@@ -95,7 +95,7 @@ class BusinessCalendarTest {
         assertEquals("Saturday", calendar.getHoliday(LocalDate.of(2022, 8, 27)).name);
         assertEquals("Sunday", calendar.getHoliday(LocalDate.of(2022, 8, 28)).name);
 
-        calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH)
+        calendar = BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH)
                 .holiday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "Saturday" : null)
                 .holiday(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "Sunday" : null)
                 .holiday(e -> e.getMonthValue() == 6 && e.getDayOfMonth() == 17 ? "Somebody's birthday" : null)
@@ -108,7 +108,7 @@ class BusinessCalendarTest {
     void getHolidaysBetween() {
         assertAll(
                 () -> {
-                    BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
+                    BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
                     final List<Holiday> HolidayList = calendar.getHolidaysBetween(LocalDate.of(1955, 1, 1),
                             LocalDate.of(1955, 1, 16));
                     assertEquals(2, HolidayList.size());
@@ -116,7 +116,7 @@ class BusinessCalendarTest {
                     assertEquals("Coming of age day", HolidayList.get(1).name);
                 },
                 () -> {
-                    BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
+                    BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
                     // from / to will be flipped if necessary
                     final List<Holiday> HolidayList = calendar.getHolidaysBetween(LocalDate.of(1955, 1, 16),
                             LocalDate.of(1954, 12, 31));
@@ -125,7 +125,7 @@ class BusinessCalendarTest {
                     assertEquals("Coming of age day", HolidayList.get(1).name);
                 },
                 () -> {
-                    BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
+                    BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
                     final List<Holiday> HolidayList = calendar.getHolidaysBetween(LocalDate.of(1955, 1, 1),
                             LocalDate.of(2021, 12, 31));
                     assertEquals(959, HolidayList.size());
@@ -134,7 +134,7 @@ class BusinessCalendarTest {
                 },
                 () -> {
                     // custom holidays
-                    BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH)
+                    BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH)
                             .holiday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "Saturday" : null)
                             .holiday(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "Sunday" : null)
                             .build();
@@ -151,7 +151,7 @@ class BusinessCalendarTest {
                 },
                 () -> {
                     // no holidays during the specified period
-                    BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
+                    BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
                     final List<Holiday> HolidayList = calendar.getHolidaysBetween(LocalDate.of(2021, 1, 2),
                             LocalDate.of(2021, 1, 2));
                     assertEquals(0, HolidayList.size());
@@ -160,7 +160,7 @@ class BusinessCalendarTest {
 
     @Test
     void lastFirstBusinessDay() {
-        BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH)
+        BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH)
                 .holiday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "Saturday" : null)
                 .holiday(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "Sunday" : null)
                 .build();
@@ -179,7 +179,7 @@ class BusinessCalendarTest {
 
     @Test
     void lastFirstHoliday() {
-        BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH)
+        BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH)
                 .holiday(e -> e.getDayOfWeek() == DayOfWeek.SATURDAY ? "Saturday" : null)
                 .holiday(e -> e.getDayOfWeek() == DayOfWeek.SUNDAY ? "Sunday" : null)
                 .build();
@@ -199,7 +199,7 @@ class BusinessCalendarTest {
 
     @Test
     void outOfScope() {
-        BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
+        BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
         assertAll(
                 // 内閣府でとれるデータの範囲より前
                 () -> assertEquals(LocalDate.of(1954, 1, 1),
@@ -221,18 +221,18 @@ class BusinessCalendarTest {
 
     @Test
     void newYearHolidays() {
-        assertNull(Japan.CLOSED_ON_NEW_YEARS_HOLIDAYS.apply(LocalDate.of(2020, 12, 31)));
-        assertNotNull(Japan.CLOSED_ON_NEW_YEARS_HOLIDAYS.apply(LocalDate.of(2021, 1, 1)));
-        assertNotNull(Japan.CLOSED_ON_NEW_YEARS_HOLIDAYS.apply(LocalDate.of(2021, 1, 2)));
-        assertNotNull(Japan.CLOSED_ON_NEW_YEARS_HOLIDAYS.apply(LocalDate.of(2022, 1, 3)));
-        assertNull(Japan.CLOSED_ON_NEW_YEARS_HOLIDAYS.apply(LocalDate.of(2022, 1, 4)));
+        assertNull(BusinessCalendar.JAPAN.CLOSED_ON_NEW_YEARS_HOLIDAYS.apply(LocalDate.of(2020, 12, 31)));
+        assertNotNull(BusinessCalendar.JAPAN.CLOSED_ON_NEW_YEARS_HOLIDAYS.apply(LocalDate.of(2021, 1, 1)));
+        assertNotNull(BusinessCalendar.JAPAN.CLOSED_ON_NEW_YEARS_HOLIDAYS.apply(LocalDate.of(2021, 1, 2)));
+        assertNotNull(BusinessCalendar.JAPAN.CLOSED_ON_NEW_YEARS_HOLIDAYS.apply(LocalDate.of(2022, 1, 3)));
+        assertNull(BusinessCalendar.JAPAN.CLOSED_ON_NEW_YEARS_HOLIDAYS.apply(LocalDate.of(2022, 1, 4)));
     }
 
     @Test
     void newYearsEve() {
-        assertNull(Japan.CLOSED_ON_NEW_YEARS_EVE.apply(LocalDate.of(2021, 12, 30)));
-        assertNotNull(Japan.CLOSED_ON_NEW_YEARS_EVE.apply(LocalDate.of(2021, 12, 31)));
-        assertNull(Japan.CLOSED_ON_NEW_YEARS_EVE.apply(LocalDate.of(2022, 1, 1)));
+        assertNull(BusinessCalendar.JAPAN.CLOSED_ON_NEW_YEARS_EVE.apply(LocalDate.of(2021, 12, 30)));
+        assertNotNull(BusinessCalendar.JAPAN.CLOSED_ON_NEW_YEARS_EVE.apply(LocalDate.of(2021, 12, 31)));
+        assertNull(BusinessCalendar.JAPAN.CLOSED_ON_NEW_YEARS_EVE.apply(LocalDate.of(2022, 1, 1)));
     }
 
     @Test

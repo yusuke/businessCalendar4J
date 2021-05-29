@@ -17,14 +17,16 @@ package com.samuraism.bc4j.exmaple;
 
 import com.samuraism.bc4j.BusinessCalendar;
 import com.samuraism.bc4j.Holiday;
-import com.samuraism.bc4j.Japan;
 
 import java.time.LocalDate;
 import java.util.Locale;
 
+import static com.samuraism.bc4j.BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS;
+import static com.samuraism.bc4j.BusinessCalendar.JAPAN;
+
 public class JapaneseHolidaysExample {
     public static void main(String[] args) {
-        BusinessCalendar businessCalendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
+        BusinessCalendar businessCalendar = BusinessCalendar.newBuilder().holiday(JAPAN.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build();
 
         // prints true, because it's New Year's Day
         System.out.println("Is Jan 1, 2021 a holiday? "
@@ -46,8 +48,8 @@ public class JapaneseHolidaysExample {
         // Sets custom holidays
         businessCalendar = BusinessCalendar.newBuilder()
                 .locale(Locale.ENGLISH)
-                .holiday(Japan.PUBLIC_HOLIDAYS)
-                .holiday(BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS)
+                .holiday(JAPAN.PUBLIC_HOLIDAYS)
+                .holiday(CLOSED_ON_SATURDAYS_AND_SUNDAYS)
                 .on(1995, 5, 23).holiday("Java public debut")
                 .on(5, 19).holiday("James Gosling's birthday")
                 .build();

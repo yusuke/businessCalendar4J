@@ -319,13 +319,13 @@ class BusinessHoursTest {
         }
         {
             // 2021/7/4 and 2021/7/5 are holiday
-            final BusinessCalendar build = BusinessCalendar.newBuilder().holiday(UnitedStates.INDEPENDENCE_DAY).build();
+            final BusinessCalendar build = BusinessCalendar.newBuilder().holiday(BusinessCalendar.UNITED_STATES.INDEPENDENCE_DAY).build();
             final LocalDateTime atIndependenceDay = LocalDateTime.of(2021, 7, 5, 12, 0);
             assertEquals(LocalDateTime.of(2021, 7, 7, 0, 0), build.nextBusinessHourEnd(atIndependenceDay));
         }
         {
             // 2021/7/4 and 2021/7/5 are holiday
-            final BusinessCalendar build = BusinessCalendar.newBuilder().holiday(UnitedStates.INDEPENDENCE_DAY)
+            final BusinessCalendar build = BusinessCalendar.newBuilder().holiday(BusinessCalendar.UNITED_STATES.INDEPENDENCE_DAY)
                     .hours("9-12,13-18").build();
 
             assertEquals(LocalDateTime.of(2021, 7, 6, 12, 0),
@@ -353,13 +353,13 @@ class BusinessHoursTest {
         }
         {
             // 2021/7/4 and 2021/7/5 are holiday
-            final BusinessCalendar build = BusinessCalendar.newBuilder().holiday(UnitedStates.INDEPENDENCE_DAY).build();
+            final BusinessCalendar build = BusinessCalendar.newBuilder().holiday(BusinessCalendar.UNITED_STATES.INDEPENDENCE_DAY).build();
             final LocalDateTime atIndependenceDay = LocalDateTime.of(2021, 7, 5, 12, 0);
             assertEquals(LocalDateTime.of(2021, 7, 4, 0, 0), build.lastBusinessHourEnd(atIndependenceDay));
         }
         {
             // 2021/7/4 and 2021/7/5 are holiday
-            final BusinessCalendar build = BusinessCalendar.newBuilder().holiday(UnitedStates.INDEPENDENCE_DAY)
+            final BusinessCalendar build = BusinessCalendar.newBuilder().holiday(BusinessCalendar.UNITED_STATES.INDEPENDENCE_DAY)
                     .hours("9-12:5,13-18:45").build();
 
             assertEquals(LocalDateTime.of(2021, 7, 3, 18, 45),
@@ -387,13 +387,13 @@ class BusinessHoursTest {
         }
         {
             // 2021/7/4 and 2021/7/5 are holiday
-            final BusinessCalendar build = BusinessCalendar.newBuilder().holiday(UnitedStates.INDEPENDENCE_DAY).build();
+            final BusinessCalendar build = BusinessCalendar.newBuilder().holiday(BusinessCalendar.UNITED_STATES.INDEPENDENCE_DAY).build();
             final LocalDateTime atIndependenceDay = LocalDateTime.of(2021, 7, 4, 12, 0);
             assertEquals(LocalDateTime.of(2021, 7, 3, 0, 0), build.lastBusinessHourStart(atIndependenceDay));
         }
         {
             // 2021/7/4 and 2021/7/5 are holiday
-            final BusinessCalendar build = BusinessCalendar.newBuilder().holiday(UnitedStates.INDEPENDENCE_DAY)
+            final BusinessCalendar build = BusinessCalendar.newBuilder().holiday(BusinessCalendar.UNITED_STATES.INDEPENDENCE_DAY)
                     .hours("9-12,13-18").build();
 
             assertEquals(LocalDateTime.of(2021, 7, 6, 9, 0),
@@ -424,13 +424,13 @@ class BusinessHoursTest {
 
         {
             // 2021/7/4 and 2021/7/5 are holiday
-            final BusinessCalendar build = BusinessCalendar.newBuilder().holiday(UnitedStates.INDEPENDENCE_DAY).build();
+            final BusinessCalendar build = BusinessCalendar.newBuilder().holiday(BusinessCalendar.UNITED_STATES.INDEPENDENCE_DAY).build();
             final LocalDateTime atIndependenceDay = LocalDateTime.of(2021, 7, 5, 12, 0);
             assertEquals(LocalDateTime.of(2021, 7, 6, 0, 0), build.nextBusinessHourStart(atIndependenceDay));
         }
         {
             // 2021/7/4 and 2021/7/5 are holiday
-            final BusinessCalendar build = BusinessCalendar.newBuilder().holiday(UnitedStates.INDEPENDENCE_DAY)
+            final BusinessCalendar build = BusinessCalendar.newBuilder().holiday(BusinessCalendar.UNITED_STATES.INDEPENDENCE_DAY)
                     .hours("9:5-12,13:30-18").build();
 
             assertEquals(LocalDateTime.of(2021, 7, 6, 13, 30),

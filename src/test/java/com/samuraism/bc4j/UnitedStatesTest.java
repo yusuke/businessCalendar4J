@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.samuraism.bc4j.UnitedStates.*;
+import static com.samuraism.bc4j.BusinessCalendar.UNITED_STATES;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Execution(ExecutionMode.CONCURRENT)
@@ -19,14 +19,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class UnitedStatesTest {
     final BusinessCalendar calendar = BusinessCalendar.newBuilder().locale(Locale.ENGLISH)
             .holiday(
-                    NEW_YEARS_DAY,
-                    MARTIN_LUTHER_KING_JR_DAY,
-                    MEMORIAL_DAY,
-                    INDEPENDENCE_DAY,
-                    LABOR_DAY,
-                    VETERANS_DAY,
-                    THANKS_GIVING_DAY,
-                    CHRISTMAS_DAY
+                    UNITED_STATES.NEW_YEARS_DAY,
+                    UNITED_STATES.MARTIN_LUTHER_KING_JR_DAY,
+                    UNITED_STATES.MEMORIAL_DAY,
+                    UNITED_STATES.INDEPENDENCE_DAY,
+                    UNITED_STATES.LABOR_DAY,
+                    UNITED_STATES.VETERANS_DAY,
+                    UNITED_STATES.THANKS_GIVING_DAY,
+                    UNITED_STATES.CHRISTMAS_DAY
             )
             .build();
 

@@ -19,6 +19,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -27,27 +29,25 @@ import static com.samuraism.bc4j.BusinessCalendarPredicate.predicate;
 
 public class UnitedStates {
 
-    public static final Function<LocalDate, String> NEW_YEARS_DAY =
+
+    public final Function<LocalDate, String> NEW_YEARS_DAY =
             substitution(predicate(1, 1), "unitedStates.NewYearsDay");
-    public static final Function<LocalDate, String> MARTIN_LUTHER_KING_JR_DAY =
+    public final Function<LocalDate, String> MARTIN_LUTHER_KING_JR_DAY =
             holiday(predicate(3, DayOfWeek.MONDAY, 1), "unitedStates.MartinLutherKingJrDay");
-    public static final Function<LocalDate, String> MEMORIAL_DAY =
+    public final Function<LocalDate, String> MEMORIAL_DAY =
             holiday(date -> date.getMonthValue() == 5 && date.getDayOfMonth() ==
                     date.with(TemporalAdjusters.lastInMonth(DayOfWeek.MONDAY)).getDayOfMonth(), "unitedStates.MemorialDay");
-    public static final Function<LocalDate, String> INDEPENDENCE_DAY =
+    public final Function<LocalDate, String> INDEPENDENCE_DAY =
             substitution(predicate(7, 4), "unitedStates.IndependenceDay");
-    public static final Function<LocalDate, String> LABOR_DAY =
+    public final Function<LocalDate, String> LABOR_DAY =
             holiday(predicate(1, DayOfWeek.MONDAY, 9), "unitedStates.LaborDay");
-    public static final Function<LocalDate, String> VETERANS_DAY =
+    public final Function<LocalDate, String> VETERANS_DAY =
             substitution(predicate(11, 11), "unitedStates.VeteransDay");
-    public static final Function<LocalDate, String> THANKS_GIVING_DAY =
+    public final Function<LocalDate, String> THANKS_GIVING_DAY =
             holiday(predicate(4, DayOfWeek.THURSDAY, 11), "unitedStates.ThanksgivingDay");
-    public static final Function<LocalDate, String> CHRISTMAS_DAY =
+    public final Function<LocalDate, String> CHRISTMAS_DAY =
             substitution(predicate(12, 24), "unitedStates.ChristmasDay");
 
-    @SuppressWarnings("unchecked")
-    public static final Function<LocalDate, String>[] PUBLIC_HOLIDAYS = new Function[]{NEW_YEARS_DAY, MARTIN_LUTHER_KING_JR_DAY,
-            MEMORIAL_DAY, INDEPENDENCE_DAY, LABOR_DAY, VETERANS_DAY, THANKS_GIVING_DAY, CHRISTMAS_DAY};
 
     private static Function<LocalDate, String> substitution(Predicate<LocalDate> predicate, String name) {
         return date -> {
@@ -68,5 +68,27 @@ public class UnitedStates {
             return null;
         };
     }
+
+    private UnitedStates() {
+    }
+
+    private static final UnitedStates singleton = new UnitedStates();
+
+    static UnitedStates getInstance() {
+        return singleton;
+    }
+
+    private final List<Function<LocalDate, String>> all = Arrays.asList(NEW_YEARS_DAY, MARTIN_LUTHER_KING_JR_DAY,
+            MEMORIAL_DAY, INDEPENDENCE_DAY, LABOR_DAY, VETERANS_DAY, THANKS_GIVING_DAY, CHRISTMAS_DAY);
+
+    public Function<LocalDate, String> PUBLIC_HOLIDAYS = localDate -> {
+        for (Function<LocalDate, String> localDateStringFunction : all) {
+            final String apply = localDateStringFunction.apply(localDate);
+            if (apply != null) {
+                return apply;
+            }
+        }
+        return null;
+    };
 }
 

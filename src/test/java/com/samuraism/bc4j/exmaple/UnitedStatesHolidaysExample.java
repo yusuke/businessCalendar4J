@@ -16,14 +16,16 @@
 package com.samuraism.bc4j.exmaple;
 
 import com.samuraism.bc4j.BusinessCalendar;
-import com.samuraism.bc4j.UnitedStates;
 
 import java.time.LocalDate;
+
+import static com.samuraism.bc4j.BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS;
+import static com.samuraism.bc4j.BusinessCalendar.UNITED_STATES;
 
 public class UnitedStatesHolidaysExample {
     public static void main(String[] args) {
         BusinessCalendar calendar = BusinessCalendar.newBuilder()
-                .holiday(UnitedStates.PUBLIC_HOLIDAYS)
+                .holiday(UNITED_STATES.PUBLIC_HOLIDAYS)
                 .build();
 
         // prints true, because it's New Year's Day
@@ -44,15 +46,15 @@ public class UnitedStatesHolidaysExample {
 
         // sets a fixed custom Holiday
         BusinessCalendar customCalendar = BusinessCalendar.newBuilder()
-                .holiday(UnitedStates.NEW_YEARS_DAY,
-                        UnitedStates.MARTIN_LUTHER_KING_JR_DAY,
-                        UnitedStates.MEMORIAL_DAY,
-                        UnitedStates.INDEPENDENCE_DAY,
-                        UnitedStates.LABOR_DAY,
-                        UnitedStates.VETERANS_DAY,
-                        UnitedStates.THANKS_GIVING_DAY,
-                        UnitedStates.CHRISTMAS_DAY,
-                        BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS)
+                .holiday(UNITED_STATES.NEW_YEARS_DAY,
+                        UNITED_STATES.MARTIN_LUTHER_KING_JR_DAY,
+                        UNITED_STATES.MEMORIAL_DAY,
+                        UNITED_STATES.INDEPENDENCE_DAY,
+                        UNITED_STATES.LABOR_DAY,
+                        UNITED_STATES.VETERANS_DAY,
+                        UNITED_STATES.THANKS_GIVING_DAY,
+                        UNITED_STATES.CHRISTMAS_DAY,
+                        CLOSED_ON_SATURDAYS_AND_SUNDAYS)
                 .on(5, 19).holiday("James Gosling's birthday")
                 .on(1995, 5, 23).holiday("Java public debut")
                 .build();

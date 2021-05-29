@@ -19,9 +19,12 @@ import com.samuraism.bc4j.ビジネスカレンダー;
 
 import java.time.LocalDate;
 
+import static com.samuraism.bc4j.ビジネスカレンダー.土日休業;
+import static com.samuraism.bc4j.ビジネスカレンダー.日本;
+
 public class ビジネスカレンダーExample {
     public static void main(String[] args) {
-        ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder().祝休日(ビジネスカレンダー.日本の祝休日).build();
+        ビジネスカレンダー calendar = ビジネスカレンダー.newBuilder().祝休日(日本.PUBLIC_HOLIDAYS).build();
 
         // 元日なのでtrueが表示される
         System.out.println("2021年1月1日は祝日？: "
@@ -42,9 +45,9 @@ public class ビジネスカレンダーExample {
 
         // 固定のカスタム祝休日を設定
         calendar = ビジネスカレンダー.newBuilder()
-                .祝休日(ビジネスカレンダー.日本の祝休日)
+                .祝休日(日本.PUBLIC_HOLIDAYS)
                 .年月日(1995, 5, 23).祝休日("Java誕生")
-                .祝休日(ビジネスカレンダー.土日休業)
+                .祝休日(土日休業)
                 // ロジックベーのカスタム祝休日を設定。当該日が祝日ならば名称を、そうでなければnullを返す関数を指定する
                 .月日(5, 19).祝休日("ジェームズ・ゴスリン誕生日")
                 .build();

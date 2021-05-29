@@ -33,8 +33,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SuppressWarnings({"AccessStaticViaInstance", "ConstantConditions"})
 public class 日本の祝休日アルゴリズムTest {
     static TreeMap<LocalDate, String> testCases;
-    final static BusinessCalendar CALENDAR = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE).build();
-    static Japan j = (Japan) Japan.PUBLIC_HOLIDAYS;
+    final static BusinessCalendar CALENDAR = BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE).build();
+    static Japan j = BusinessCalendar.JAPAN;
 
     static TreeMap<LocalDate, String> 祝休日Map待避;
 
@@ -205,7 +205,7 @@ public class 日本の祝休日アルゴリズムTest {
 
     @Test
     void カスタム休日を指定しても休日算出が正しい() {
-        BusinessCalendar businessCalendar = BusinessCalendar.newBuilder().holiday(Japan.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE)
+        BusinessCalendar businessCalendar = BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE)
                 .on(2022, 1, 2).holiday("休みたいから休む")
                 .on(2007, 2, 12).holiday("休みたいから休む")
                 .build();

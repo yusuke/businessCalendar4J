@@ -31,24 +31,24 @@ public class ビジネスカレンダー {
      *
      * @since 1.5
      */
-    public static final Function<LocalDate, String> 正月三が日休業 = Japan.CLOSED_ON_NEW_YEARS_HOLIDAYS;
+    public static final Function<LocalDate, String> 正月三が日休業 = BusinessCalendar.JAPAN.CLOSED_ON_NEW_YEARS_HOLIDAYS;
 
     /**
      * 日本の祝休日を算出するアルゴリズム
      */
-    public static final Function<LocalDate, String> 日本の祝休日 = Japan.PUBLIC_HOLIDAYS;
+    public static final Japan 日本 = Japan.getInstance();
 
     /**
      * アメリカ合衆国の祝休日を算出するアルゴリズム
      */
-    public static final Function<LocalDate, String>[] アメリカ合衆国の祝休日 = UnitedStates.PUBLIC_HOLIDAYS;
+    public static final UnitedStates アメリカ合衆国 = UnitedStates.getInstance();
 
     /**
      * 大晦日を休業とするアルゴリズム
      *
      * @since 1.5
      */
-    public static final Function<LocalDate, String> 大晦日休業 = Japan.CLOSED_ON_NEW_YEARS_EVE;
+    public static final Function<LocalDate, String> 大晦日休業 = BusinessCalendar.JAPAN.CLOSED_ON_NEW_YEARS_EVE;
 
     /**
      * 大晦日を休業とするアルゴリズム

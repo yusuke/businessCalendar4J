@@ -25,7 +25,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import static com.samuraism.bc4j.BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS;
-import static com.samuraism.bc4j.Japan.PUBLIC_HOLIDAYS;
+import static com.samuraism.bc4j.BusinessCalendar.JAPAN;
 
 /**
  * 第一営業日/最終営業日を向こう9年間計算してファイルにダンプ
@@ -45,7 +45,7 @@ public class 第一最終営業日ダンプ {
             shiftJIS.write(header);
             utf8.write(header);
             LocalDate cursor = start;
-            BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(PUBLIC_HOLIDAYS).holiday(CLOSED_ON_SATURDAYS_AND_SUNDAYS).build();
+            BusinessCalendar calendar = BusinessCalendar.newBuilder().holiday(JAPAN.PUBLIC_HOLIDAYS).holiday(CLOSED_ON_SATURDAYS_AND_SUNDAYS).build();
             while (cursor.isBefore(end)) {
                 LocalDate 月末 = cursor.withDayOfMonth(cursor.lengthOfMonth());
                 LocalDate 最初営業日 = calendar.firstBusinessDay(cursor);

@@ -29,6 +29,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public final class BusinessCalendar {
+    public static final UnitedStates UNITED_STATES = UnitedStates.getInstance();
+    public static final Japan JAPAN = Japan.getInstance();
     private final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
     private final List<Function<LocalDate, List<BusinessHourSlot>>> businessHours = new ArrayList<>();
 

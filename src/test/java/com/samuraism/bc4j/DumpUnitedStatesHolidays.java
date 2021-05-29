@@ -24,7 +24,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-import static com.samuraism.bc4j.UnitedStates.*;
+import static com.samuraism.bc4j.BusinessCalendar.UNITED_STATES;
 
 /**
  * Dump United States holidays
@@ -42,14 +42,14 @@ public class DumpUnitedStatesHolidays {
             utf8.write(header);
             for (Holiday holiday : BusinessCalendar.newBuilder()
                     .locale(Locale.ENGLISH)
-                    .holiday(NEW_YEARS_DAY,
-                            MARTIN_LUTHER_KING_JR_DAY,
-                            MEMORIAL_DAY,
-                            INDEPENDENCE_DAY,
-                            LABOR_DAY,
-                            VETERANS_DAY,
-                            THANKS_GIVING_DAY,
-                            CHRISTMAS_DAY)
+                    .holiday(UNITED_STATES.NEW_YEARS_DAY,
+                            UNITED_STATES.MARTIN_LUTHER_KING_JR_DAY,
+                            UNITED_STATES.MEMORIAL_DAY,
+                            UNITED_STATES.INDEPENDENCE_DAY,
+                            UNITED_STATES.LABOR_DAY,
+                            UNITED_STATES.VETERANS_DAY,
+                            UNITED_STATES.THANKS_GIVING_DAY,
+                            UNITED_STATES.CHRISTMAS_DAY)
                     .build()
                     .getHolidaysBetween(start, end)) {
                 final String line = String.format("%s,%s\n", holiday.date.format(dateTimeFormatter), holiday.name);
