@@ -40,23 +40,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CSVBasedConfiguration {
     @Test
     void invalidFormat() throws IOException {
-        TestHandler.init();
         final Path doesnotexist = Paths.get("doesnotexist");
         BusinessCalendar.newBuilder().csv(doesnotexist).build();
-        assertTrue(TestHandler.logMessages.contains(doesnotexist.toAbsolutePath() + " does not exist"));
+        assertTrue(Logger.logMessages.size() > 0);
+        assertTrue(Logger.logMessages.contains(doesnotexist.toAbsolutePath() + " does not exist"));
         {
             // hour should be hours
             final Path path = write("hour,sat,13-17");
             BusinessCalendar.newBuilder().csv(path).build();
         }
-        assertTrue(TestHandler.logMessages.contains("Skipping line[1] (unable to parse): \"hour,sat,13-17\""));
+        assertTrue(Logger.logMessages.contains("Skipping line[1] (unable to parse): \"hour,sat,13-17\""));
 
         {
             // saturday should be saturday
             final Path path = write("\nhours,sataday,13-17");
             BusinessCalendar.newBuilder().csv(path).build();
         }
-        assertTrue(TestHandler.logMessages.contains("Skipping line[2] (unable to parse): \"hours,sataday,13-17\""));
+        assertTrue(Logger.logMessages.contains("Skipping line[2] (unable to parse): \"hours,sataday,13-17\""));
     }
 
     @Test

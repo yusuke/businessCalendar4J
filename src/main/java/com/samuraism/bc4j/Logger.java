@@ -15,13 +15,18 @@
  */
 package com.samuraism.bc4j;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 /**
  * @since 1.17
  */
 final class Logger {
+    static final List<String> logMessages = new ArrayList<>();
+
     private final java.util.logging.Logger jul;
     private final org.slf4j.Logger slf4j;
 
@@ -43,12 +48,33 @@ final class Logger {
         boolean useSLF4J = false;
         try {
             // use SLF4J if it's found in the classpath
-            Class.forName("org.slf4j.Logger");
+            Class.forName("org.slf4j.impl.StaticLoggerBinder");
             useSLF4J = true;
         } catch (ClassNotFoundException ignore) {
+            try {
+                // store all log messages to logMessages during test invocation
+                Class.forName("org.junit.jupiter.api.Test");
+                java.util.logging.Logger.getLogger("").addHandler(new java.util.logging.Handler (){
+                    @Override
+                    public void publish(LogRecord record) {
+                        logMessages.add(record.getMessage());
+                    }
+
+                    @Override
+                    public void flush() {
+
+                    }
+
+                    @Override
+                    public void close() throws SecurityException {
+
+                    }
+                });
+            } catch (ClassNotFoundException ignore2) {
+            }
         }
         SLF4J_EXISTS_IN_CLASSPATH = useSLF4J;
-        getLogger().info(() -> SLF4J_EXISTS_IN_CLASSPATH ? "SLF4J Logger selected" : "jul Logger selected");
+        getLogger().info(() -> SLF4J_EXISTS_IN_CLASSPATH ? "SLF4J Logger selected" : "j.u.l Logger selected");
     }
 
     /**
@@ -79,8 +105,7 @@ final class Logger {
             if (slf4j.isInfoEnabled()) {
                 slf4j.info(supplier.get());
             }
-        }
-        if (jul.isLoggable(Level.INFO)) {
+        } else if (jul.isLoggable(Level.INFO)) {
             jul.info(supplier.get());
         }
     }
@@ -90,8 +115,7 @@ final class Logger {
             if (slf4j.isWarnEnabled()) {
                 slf4j.warn(supplier.get());
             }
-        }
-        if (jul.isLoggable(Level.WARNING)) {
+        } else if (jul.isLoggable(Level.WARNING)) {
             jul.warning(supplier.get());
         }
     }
@@ -101,8 +125,7 @@ final class Logger {
             if (slf4j.isWarnEnabled()) {
                 slf4j.warn(supplier.get(), th);
             }
-        }
-        if (jul.isLoggable(Level.WARNING)) {
+        } else if (jul.isLoggable(Level.WARNING)) {
             jul.log(Level.WARNING, supplier.get(), th);
         }
     }
@@ -112,8 +135,7 @@ final class Logger {
             if (slf4j.isErrorEnabled()) {
                 slf4j.error(supplier.get());
             }
-        }
-        if (jul.isLoggable(Level.SEVERE)) {
+        } else if (jul.isLoggable(Level.SEVERE)) {
             jul.severe(supplier.get());
         }
     }
@@ -123,8 +145,7 @@ final class Logger {
             if (slf4j.isErrorEnabled()) {
                 slf4j.error(supplier.get(), th);
             }
-        }
-        if (jul.isLoggable(Level.SEVERE)) {
+        } else if (jul.isLoggable(Level.SEVERE)) {
             jul.log(Level.SEVERE, supplier.get(), th);
         }
     }
