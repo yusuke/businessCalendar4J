@@ -16,22 +16,22 @@ Java 8以降
 ## 依存の宣言
 Maven Central Repositoryにリリースされているため、以下のように依存を指定するだけで利用出来るようになります。
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.samuraism/businessCalendar/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.samuraism/businessCalendar)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/one.cafebabe/businessCalendar/badge.svg)](https://maven-badges.herokuapp.com/maven-central/one.cafebabe/businessCalendar)
 
 ### Mavenの場合
 ```xml
 <dependencies>
     <dependency>
-        <groupId>com.samuraism</groupId>
+        <groupId>one.cafebabe</groupId>
         <artifactId>businessCalendar4j</artifactId>
-        <version>1.20</version>
+        <version>1.21</version>
     </dependency>
 </dependencies>
 ```
 ### Gradleの場合
 ```text
 dependencies {
-    compile 'com.samuraism:businessCalendar4j:1.20'
+    compile 'one.cafebabe:businessCalendar4j:1.21'
 }
 ```
 

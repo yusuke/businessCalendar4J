@@ -13,22 +13,22 @@ Java 8 or later
 ## Dependency declaration
 Add a dependency declaration to pom.xml, or build.gradle as follows:
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.samuraism/businessCalendar4j/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.samuraism/businessCalendar4j)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/one.cafebabe/businessCalendar4j/badge.svg)](https://maven-badges.herokuapp.com/maven-central/one.cafebabe/businessCalendar4j)
 
 ### Maven
 ```xml
 <dependencies>
     <dependency>
-        <groupId>com.samuraism</groupId>
+        <groupId>one.cafebabe</groupId>
         <artifactId>businessCalendar4j</artifactId>
-        <version>1.20</version>
+        <version>1.21</version>
     </dependency>
 </dependencies>
 ```
 ### Gradle
 ```text
 dependencies {
-    compile 'com.samuraism:businessCalendar4j:1.20'
+    compile 'one.cafebabe:businessCalendar4j:1.21'
 }
 ```
 

@@ -4,8 +4,8 @@ plugins {
     id 'maven-publish'
 }
 
-group 'com.samuraism'
-version '1.20'
+group 'one.cafebabe'
+version '1.21'
 
 repositories {
     mavenCentral()
