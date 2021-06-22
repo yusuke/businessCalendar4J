@@ -4,7 +4,7 @@ BusinessCalendar4J は100% pure Java、追加依存なしのビジネスカレ�
 
 「指定した日の祝日名称を取得する」「指定した日以降の最初の営業日」「指定した期間内の祝休日のリスト」なども取得できます。
 
-また [ビジネスカレンダーBuilder](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/ビジネスカレンダーBuilder.java) より固定の日、またはlambda式で柔軟に「土日を祝日扱いにする」、「特定の日を祝休日扱いにする」、などの定義が行えるので事業等の実態に合わせた営業日の導出が行えます。
+また [ビジネスカレンダーBuilder](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/one/cafebabe/bc4j/ビジネスカレンダーBuilder.java) より固定の日、またはlambda式で柔軟に「土日を祝日扱いにする」、「特定の日を祝休日扱いにする」、などの定義が行えるので事業等の実態に合わせた営業日の導出が行えます。
 
 日本の祝日については内閣府の公開している情報を直接取得して、かつ定期的に更新してるため正確です。内閣府で公開している確定情報の範囲よりも後の日付については現行の法律をベースにしたアルゴリズムと国立天文台の情報を元に休祝日を推定します。
 
@@ -170,7 +170,7 @@ holiday,2/1/2021,just another holiday
 
 
 #### 定義済みの祝休日
-[UnitedStates](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/UnitedStates.java) and [Japan](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/Japan.java) でアメリカ合衆国と日本の祝休日が事前定義されています。
+[UnitedStates](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/one/cafebabe/bc4j/UnitedStates.java) and [Japan](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/one/cafebabe/bc4j/Japan.java) でアメリカ合衆国と日本の祝休日が事前定義されています。
 
 - 日本の祝休日を適用
 ```java
@@ -264,7 +264,7 @@ System.out.println("現在の営業時間はいつ終了する? " + cal.次の�
 System.out.println("現在の営業時間はいつ開始した? " + cal.前の営業終了時間(may241023));
 ```
 
-- 指定した日の [営業時間枠](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/BusinessHourSlot.java) を全て取得
+- 指定した日の [営業時間枠](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/one/cafebabe/bc4j/BusinessHourSlot.java) を全て取得
 
 ```java
 ビジネスカレンダー cal = ...
@@ -275,7 +275,7 @@ System.out.println("2021年5月24日の営業時間枠数: " + slots.size());
 System.out.println("2021年5月24日の営業開始時間: " + slots.get(0).from;
 ```
 
-- 指定した期間の [祝休日](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/Holiday.java) や営業日を取得
+- 指定した期間の [祝休日](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/one/cafebabe/bc4j/Holiday.java) や営業日を取得
 
 ```java
 ビジネスカレンダー cal = ...
@@ -289,9 +289,9 @@ System.out.println("2021年の営業日: " + businessDays);
 
 ## サンプルコード
 
-日本の祝日の処理方法については [JapaneseHolidaysExample.java (英語語API)](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/JapaneseHolidaysExample.java),  [ビジネスカレンダーExample.java (日本語API)](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/ビジネスカレンダーExample.java) を、アメリカ合衆国の祝日の処理方法については [UnitedStatesHolidaysExample](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/UnitedStatesHolidaysExample.java) をご覧ください。
+日本の祝日の処理方法については [JapaneseHolidaysExample.java (英語語API)](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/one/cafebabe/bc4j/exmaple/JapaneseHolidaysExample.java),  [ビジネスカレンダーExample.java (日本語API)](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/one/cafebabe/bc4j/exmaple/ビジネスカレンダーExample.java) を、アメリカ合衆国の祝日の処理方法については [UnitedStatesHolidaysExample](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/one/cafebabe/bc4j/exmaple/UnitedStatesHolidaysExample.java) をご覧ください。
 
-営業時間については[営業時間Example(日本語API)](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/営業時間Example.java) 、[BusinessHoursExample](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/BusinessHoursExample.java) をご覧ください。
+営業時間については[営業時間Example(日本語API)](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/one/cafebabe/bc4j/exmaple/営業時間Example.java) 、[BusinessHoursExample](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/one/cafebabe/bc4j/exmaple/BusinessHoursExample.java) をご覧ください。
 
 ## 祝日情報取得の仕組み
 祝日の情報は[内閣府の祝日情報](https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html) に掲載されている [syukujitsu.csv](https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv) を利用しています。

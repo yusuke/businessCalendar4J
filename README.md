@@ -3,7 +3,7 @@
 
 It is also possible to get information like "Name of the holiday on a specified date", "First business day after a specified date", and "List of holidays in a specified period.".
 
-With [BusinessCalenderBuilder](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/BusinessCalendarBuilder.java), you can specify non-business dates flexibly with lambda expressions, or specify fixed non-business dates at configuration time.
+With [BusinessCalenderBuilder](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/one/cafebabe/bc4j/BusinessCalendarBuilder.java), you can specify non-business dates flexibly with lambda expressions, or specify fixed non-business dates at configuration time.
 
 [![@businessCal4J](https://img.shields.io/twitter/url/https/twitter.com/BusinessCal4J.svg?style=social&label=Follow%20%40BusinessCal4J)](https://twitter.com/businessCal4J)
 
@@ -163,7 +163,7 @@ holiday,2/1/2021,just another holiday
 ```
 
 #### Predefined holidays
-Predefined public holidays are available in [UnitedStates](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/UnitedStates.java) and [Japan](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/Japan.java).
+Predefined public holidays are available in [UnitedStates](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/one/cafebabe/bc4j/UnitedStates.java) and [Japan](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/one/cafebabe/bc4j/Japan.java).
 
 - Apply Martin Luther King Jr. Day and Independence Day 
 
@@ -261,7 +261,7 @@ System.out.println("When will this business hour slot close? " + cal.nextBusines
 System.out.println("When what the last business hour slot started? " + cal.lastBusinessHourStart(may241023));
 ```
 
-- Get [business hour slots](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/BusinessHourSlot.java)  for a specified date
+- Get [business hour slots](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/one/cafebabe/bc4j/BusinessHourSlot.java)  for a specified date
 
 ```java
 BusinessCalendar cal = ...
@@ -272,7 +272,7 @@ System.out.println("Number of business hour slots on May 24, 2021: " + slots.siz
 System.out.println("On May 24, 2021, the buness starts from: " + slots.get(0).from;
 ```
 
-- Get [holidays](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/com/samuraism/bc4j/Holiday.java) and business days in a specified period
+- Get [holidays](https://github.com/yusuke/businessCalendar4J/blob/main/src/main/java/one/cafebabe/bc4j/Holiday.java) and business days in a specified period
 
 ```java
 BusinessCalendar cal = ...
@@ -285,9 +285,9 @@ System.out.println("Business days in 2021: " + businessDays);
 ```
 
 ## Example codes
-For holidays, see [JapaneseHolidaysExample](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/JapaneseHolidaysExample.java) for Japanese businessCalendar, [UnitedStatesHolidaysExample](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/UnitedStatesHolidaysExample.java) for the United States businessCalendar.
+For holidays, see [JapaneseHolidaysExample](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/one/cafebabe/bc4j/exmaple/JapaneseHolidaysExample.java) for Japanese businessCalendar, [UnitedStatesHolidaysExample](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/one/cafebabe/bc4j/exmaple/UnitedStatesHolidaysExample.java) for the United States businessCalendar.
 
-For business hours, see [BusinessHoursExample](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/com/samuraism/bc4j/exmaple/BusinessHoursExample.java).
+For business hours, see [BusinessHoursExample](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/one/cafebabe/bc4j/exmaple/BusinessHoursExample.java).
 
 ## License
 Apache License Version 2.0
