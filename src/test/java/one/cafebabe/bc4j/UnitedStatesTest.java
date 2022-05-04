@@ -173,7 +173,7 @@ class UnitedStatesTest {
     @Test
     void christmasDay() {
         for (int year = 1; year < 2100; year++) {
-            assertEquals("Christmas Day", calendar.getHoliday(LocalDate.of(year, 12, 24)).name);
+            assertEquals("Christmas Day", calendar.getHoliday(LocalDate.of(year, 12, 25)).name);
         }
     }
 }
