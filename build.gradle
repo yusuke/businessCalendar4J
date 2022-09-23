@@ -21,16 +21,33 @@ compileJava   {
     targetCompatibility = '1.8'
 }
 
+compileTestJava {
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
+}
+
 dependencies {
-    compileOnly 'org.slf4j:slf4j-api:1.7.30'
-    implementation 'com.intellij:annotations:12.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+    compileOnly 'org.slf4j:slf4j-api:2.0.2'
+    compileOnly 'org.jetbrains:annotations:23.0.0'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
 }
 
 test {
     useJUnitPlatform()
 }
+
+jar {
+    from('module-info/build/classes/java/main') {
+        include "module-info.class"
+        into "META-INF/versions/9"
+    }
+    manifest {
+        attributes 'Multi-Release': 'true'
+    }
+}
+tasks.jar.dependsOn([':module-info:compileJava'])
 
 publishing {
     publications {

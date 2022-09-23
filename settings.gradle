@@ -1,1 +1,3 @@
 rootProject.name = 'businessCalendar4j'
+
+include 'module-info'
