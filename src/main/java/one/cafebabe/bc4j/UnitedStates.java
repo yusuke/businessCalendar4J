@@ -46,7 +46,7 @@ public class UnitedStates {
     public final Function<LocalDate, String> THANKS_GIVING_DAY =
             holiday(predicate(4, DayOfWeek.THURSDAY, 11), "unitedStates.ThanksgivingDay");
     public final Function<LocalDate, String> CHRISTMAS_DAY =
-            substitution(predicate(12, 24), "unitedStates.ChristmasDay");
+            substitution(predicate(12, 25), "unitedStates.ChristmasDay");
 
 
     private static Function<LocalDate, String> substitution(Predicate<LocalDate> predicate, String name) {
