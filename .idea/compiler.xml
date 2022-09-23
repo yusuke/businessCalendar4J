@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="1.8" />
+    <bytecodeTargetLevel target="18">
+      <module name="businessCalendar4j.main" target="1.8" />
+      <module name="businessCalendar4j.module-info.main" target="9" />
+      <module name="businessCalendar4j.test" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>
