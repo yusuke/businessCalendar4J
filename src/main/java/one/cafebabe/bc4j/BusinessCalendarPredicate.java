@@ -23,6 +23,9 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * BusinessCalendarPredicate
+ */
 public class BusinessCalendarPredicate {
     private final BusinessCalendarBuilder builder;
     private final Predicate<LocalDate> predicate;
@@ -54,12 +57,22 @@ public class BusinessCalendarPredicate {
         this.builder = builder;
     }
 
+    /**
+     * Mark the predicate as a business hour
+     * @param businessHour business hour as string
+     * @return BusinessCalendarBuilder
+     */
     @NotNull
     public BusinessCalendarBuilder hours(@NotNull String businessHour) {
         builder.businessHours.add(new BusinessCalendarBuilder.BusinessHours(predicate, businessHour));
         return builder;
     }
 
+    /**
+     * Mark the predicate as a holiday
+     * @param name holiday name
+     * @return BusinessCalendarBuilder
+     */
     @NotNull
     public BusinessCalendarBuilder holiday(@NotNull String name) {
         return builder.holiday(holiday(predicate, name));

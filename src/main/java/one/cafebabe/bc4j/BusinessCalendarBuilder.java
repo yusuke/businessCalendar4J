@@ -29,14 +29,23 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class BusinessCalendarBuilder {
+/**
+ * business calendar builder
+ */
+public final class BusinessCalendarBuilder {
     private boolean built = false;
     final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
     private final HolidayMap customHolidayMap = new HolidayMap();
     Locale locale = Locale.getDefault();
     final List<Function<LocalDate, List<BusinessHourSlot>>> businessHours = new ArrayList<>();
 
-    public final BusinessCalendarBuilder locale(Locale locale) {
+
+    /**
+     * Specify locale
+     * @param locale locale
+     * @return builder
+     */
+    public BusinessCalendarBuilder locale(Locale locale) {
         ensureNotBuilt();
         holidayLogics.add(customHolidayMap);
         this.locale = locale;
@@ -61,6 +70,10 @@ public class BusinessCalendarBuilder {
         return this;
     }
 
+    /**
+     * Build BusinessCalendar instance
+     * @return BusinessCalendar instance
+     */
     @NotNull
     public BusinessCalendar build() {
         ensureNotBuilt();
@@ -68,42 +81,81 @@ public class BusinessCalendarBuilder {
         return new BusinessCalendar(this);
     }
 
+    /**
+     * Specify business hours
+     * @param businessHour business hours in string format
+     * @return builder
+     */
     @NotNull
     public BusinessCalendarBuilder hours(String businessHour) {
         businessHours.add(new BusinessHours(e -> true, businessHour));
         return this;
     }
 
+    /**
+     * Specify predicates with day of weeks
+     * @param dayOfWeek day of weeks
+     * @return BusinessCalendarPredicate
+     */
     @NotNull
     public BusinessCalendarPredicate on(@NotNull DayOfWeek... dayOfWeek) {
         ensureNotBuilt();
         return new BusinessCalendarPredicate(this, dayOfWeek);
     }
 
+    /**
+     * Specify predicates with ordinal and day of weeks
+     * @param ordinal ordinal
+     * @param dayOfWeek day of week
+     * @return BusinessCalendarPredicate
+     */
     @NotNull
     public BusinessCalendarPredicate on(int ordinal, @NotNull DayOfWeek... dayOfWeek) {
         ensureNotBuilt();
         return new BusinessCalendarPredicate(this, ordinal, dayOfWeek);
     }
 
+    /**
+     * Specify BusinessCalendarPredicate with year, month, and day
+     * @param year year
+     * @param month month
+     * @param day day
+     * @return BusinessCalendarPredicate
+     */
     @NotNull
     public BusinessCalendarPredicate on(int year, int month, int day) {
         ensureNotBuilt();
         return new BusinessCalendarPredicate(e -> e.getYear() == year && e.getMonthValue() == month && e.getDayOfMonth() == day, this);
     }
 
+    /**
+     * Specify predicate with a day
+     * @param date date
+     * @return BusinessCalendarPredicate
+     */
     @NotNull
     public BusinessCalendarPredicate on(LocalDate date) {
         ensureNotBuilt();
         return new BusinessCalendarPredicate(date, this);
     }
 
+    /**
+     * Creates a BusinessCalendarPredicate with month and day
+     * @param month month
+     * @param day day
+     * @return BusinessCalendarPredicate
+     */
     @NotNull
     public BusinessCalendarPredicate on(int month, int day) {
         ensureNotBuilt();
         return new BusinessCalendarPredicate(e -> e.getMonthValue() == month && e.getDayOfMonth() == day, this);
     }
 
+    /**
+     * Creates a BusinessCalendarPredicate with function
+     * @param predicate predicate
+     * @return BusinessCalendarPredicate
+     */
     @NotNull
     public BusinessCalendarPredicate on(@NotNull Predicate<LocalDate> predicate) {
         ensureNotBuilt();

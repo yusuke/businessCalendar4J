@@ -28,6 +28,9 @@ import java.util.Locale;
  * Dump United States holidays
  */
 public class DumpUnitedStatesHolidays {
+    /**
+     * @param args args
+     */
     public static void main(String[] args) {
         final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/M/d");
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d");
@@ -46,7 +49,7 @@ public class DumpUnitedStatesHolidays {
                             BusinessCalendar.UNITED_STATES.INDEPENDENCE_DAY,
                             BusinessCalendar.UNITED_STATES.LABOR_DAY,
                             BusinessCalendar.UNITED_STATES.VETERANS_DAY,
-                            BusinessCalendar.UNITED_STATES.THANKS_GIVING_DAY,
+                            BusinessCalendar.UNITED_STATES.THANKSGIVING_DAY,
                             BusinessCalendar.UNITED_STATES.CHRISTMAS_DAY)
                     .build()
                     .getHolidaysBetween(start, end)) {

@@ -23,10 +23,22 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
+/**
+ * a model representing a business hour slot
+ */
 public final class BusinessHourSlot implements java.io.Serializable {
     private static final long serialVersionUID = -102401732734407839L;
+
+    /**
+     * Start time of this slot
+     */
     @NotNull
-    public final LocalDateTime from, to;
+    public final LocalDateTime from;
+    /**
+     * End time of this slot
+     */
+    @NotNull
+    public final LocalDateTime to;
 
     BusinessHourSlot(@NotNull LocalDate baseDate, @NotNull LocalTime from, @NotNull LocalTime to) {
         this.from = LocalDateTime.of(baseDate, from);

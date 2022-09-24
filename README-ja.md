@@ -24,15 +24,22 @@ Maven Central Repositoryにリリースされているため、以下のよう�
     <dependency>
         <groupId>one.cafebabe</groupId>
         <artifactId>businessCalendar4j</artifactId>
-        <version>1.21</version>
+        <version>1.22</version>
     </dependency>
 </dependencies>
 ```
+
 ### Gradleの場合
 ```text
 dependencies {
-    compile 'one.cafebabe:businessCalendar4j:1.21'
+    compile 'one.cafebabe:businessCalendar4j:1.22'
 }
+```
+
+### Java modularity
+
+```text
+require one.cafebabe.businessCalendar4j
 ```
 
 ## 利用方法

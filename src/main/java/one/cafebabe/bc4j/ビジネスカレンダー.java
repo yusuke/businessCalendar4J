@@ -23,6 +23,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Function;
 
+/**
+ * ビジネスカレンダー
+ */
+@SuppressWarnings("unused")
 public class ビジネスカレンダー {
     private final BusinessCalendar businessCalendar;
 
@@ -61,6 +65,9 @@ public class ビジネスカレンダー {
         this.businessCalendar = businessCalendar;
     }
 
+    /**
+     * @return 新しいBuilder
+     */
     public static @NotNull
     ビジネスカレンダーBuilder newBuilder() {
         return new ビジネスカレンダーBuilder();

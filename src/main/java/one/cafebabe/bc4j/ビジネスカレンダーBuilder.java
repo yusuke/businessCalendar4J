@@ -26,14 +26,22 @@ import java.util.Locale;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * ビジネスカレンダーBuilder
+ */
+@SuppressWarnings("unused")
 public final class ビジネスカレンダーBuilder {
     final BusinessCalendarBuilder builder = BusinessCalendar.newBuilder();
 
     ビジネスカレンダーBuilder() {
     }
 
+    /**
+     * @param locale ロケール
+     * @return ビジネスカレンダーBuilder
+     */
     @NotNull
-    public final ビジネスカレンダーBuilder locale(@NotNull Locale locale) {
+    public ビジネスカレンダーBuilder locale(@NotNull Locale locale) {
         builder.locale(locale);
         return this;
     }
@@ -51,36 +59,64 @@ public final class ビジネスカレンダーBuilder {
         return this;
     }
 
+    /**
+     * @param 営業時間 営業時間
+     * @return ビジネスカレンダーBuilder
+     */
     @NotNull
     public ビジネスカレンダーBuilder 営業時間(String 営業時間) {
         builder.hours(営業時間);
         return this;
     }
 
+    /**
+     * @param dayOfWeeks 曜日
+     * @return ビジネスカレンダーBuilder
+     */
     @NotNull
     public ビジネスカレンダーPredicate 曜日(@NotNull DayOfWeek... dayOfWeeks) {
         final BusinessCalendarPredicate businessCalendarPredicate = builder.on(dayOfWeeks);
         return new ビジネスカレンダーPredicate(this, businessCalendarPredicate);
     }
 
+    /**
+     * @param n番目 何番目の集荷
+     * @param dayOfWeeks 週
+     * @return ビジネスカレンダーBuilder
+     */
     @NotNull
     public ビジネスカレンダーPredicate 曜日(int n番目, @NotNull DayOfWeek... dayOfWeeks) {
         final BusinessCalendarPredicate businessCalendarPredicate = builder.on(n番目, dayOfWeeks);
         return new ビジネスカレンダーPredicate(this, businessCalendarPredicate);
     }
 
+    /**
+     * @param 年 年
+     * @param 月 月
+     * @param 日 日
+     * @return ビジネスカレンダーPredicate
+     */
     @NotNull
     public ビジネスカレンダーPredicate 年月日(int 年, int 月, int 日) {
         final BusinessCalendarPredicate businessCalendarPredicate = builder.on(年, 月, 日);
         return new ビジネスカレンダーPredicate(this, businessCalendarPredicate);
     }
 
+    /**
+     * @param 月 月
+     * @param 日 日
+     * @return ビジネスカレンダーPredicate
+     */
     @NotNull
     public ビジネスカレンダーPredicate 月日(int 月, int 日) {
         final BusinessCalendarPredicate businessCalendarPredicate = builder.on(月, 日);
         return new ビジネスカレンダーPredicate(this, businessCalendarPredicate);
     }
 
+    /**
+     * @param predicate 条件
+     * @return ビジネスカレンダーPredicate
+     */
     @NotNull
     public ビジネスカレンダーPredicate 条件(@NotNull Predicate<LocalDate> predicate) {
         final BusinessCalendarPredicate businessCalendarPredicate = builder.on(predicate);
@@ -168,26 +204,44 @@ public final class ビジネスカレンダーBuilder {
         return this;
     }
 
+    /**
+     * @return ビジネスカレンダー
+     */
     @NotNull
     public ビジネスカレンダー build() {
         return new ビジネスカレンダー(builder.build());
     }
 
+    /**
+     * ビジネスカレンダーPredicate
+     */
     public static class ビジネスカレンダーPredicate {
         ビジネスカレンダーBuilder builder;
         BusinessCalendarPredicate businessCalendarPredicate;
 
+        /**
+         * @param builder ビジネスカレンダーBuilder
+         * @param businessCalendarPredicate ビジネスカレンダーPredicate
+         */
         public ビジネスカレンダーPredicate(ビジネスカレンダーBuilder builder, BusinessCalendarPredicate businessCalendarPredicate) {
             this.builder = builder;
             this.businessCalendarPredicate = businessCalendarPredicate;
         }
 
+        /**
+         * @param 営業時間 営業時間
+         * @return ビジネスカレンダーBuilder
+         */
         @NotNull
         public ビジネスカレンダーBuilder 営業時間(String 営業時間) {
             businessCalendarPredicate.hours(営業時間);
             return builder;
         }
 
+        /**
+         * @param 名称 名称
+         * @return ビジネスカレンダーPredicate
+         */
         @NotNull
         public ビジネスカレンダーBuilder 祝休日(String 名称) {
             businessCalendarPredicate.holiday(名称);

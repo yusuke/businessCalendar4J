@@ -38,6 +38,9 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+/**
+ * CSV based configuration
+ */
 public final class CsvConfiguration {
 
     private final Logger logger = Logger.getLogger();

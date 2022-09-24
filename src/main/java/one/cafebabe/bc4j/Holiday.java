@@ -18,9 +18,18 @@ package one.cafebabe.bc4j;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * holiday
+ */
 public final class Holiday implements Comparable<Holiday>, java.io.Serializable {
     private static final long serialVersionUID = 3372083406725976821L;
+    /**
+     * The date of this holiday
+     */
     public final LocalDate date;
+    /**
+     * The name of this holiday
+     */
     public final String name;
 
     Holiday(LocalDate date, String name) {

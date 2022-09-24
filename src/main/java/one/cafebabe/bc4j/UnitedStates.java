@@ -27,24 +27,52 @@ import java.util.function.Predicate;
 import static one.cafebabe.bc4j.BusinessCalendarPredicate.holiday;
 import static one.cafebabe.bc4j.BusinessCalendarPredicate.predicate;
 
+/**
+ * Holidays in the United States
+ */
 public class UnitedStates {
 
 
+    /**
+     * New Year's Day
+     */
     public final Function<LocalDate, String> NEW_YEARS_DAY =
             substitution(predicate(1, 1), "unitedStates.NewYearsDay");
+    /**
+     * Martin Luther King Jr. Day
+     */
     public final Function<LocalDate, String> MARTIN_LUTHER_KING_JR_DAY =
             holiday(predicate(3, DayOfWeek.MONDAY, 1), "unitedStates.MartinLutherKingJrDay");
+    /**
+     * <a href="https://en.wikipedia.org/wiki/Memorial_Day">Memorial Day</a>
+     */
     public final Function<LocalDate, String> MEMORIAL_DAY =
             holiday(date -> date.getMonthValue() == 5 && date.getDayOfMonth() ==
                     date.with(TemporalAdjusters.lastInMonth(DayOfWeek.MONDAY)).getDayOfMonth(), "unitedStates.MemorialDay");
+    /**
+     * <a href="https://www.imdb.com/title/tt0116629/">Independence Day/</a>
+     */
     public final Function<LocalDate, String> INDEPENDENCE_DAY =
             substitution(predicate(7, 4), "unitedStates.IndependenceDay");
+    /**
+     * Labor Day
+     * <a href="https://en.wikipedia.org/wiki/Labor_Day">https://en.wikipedia.org/wiki/Labor_Day</a>
+     */
     public final Function<LocalDate, String> LABOR_DAY =
             holiday(predicate(1, DayOfWeek.MONDAY, 9), "unitedStates.LaborDay");
+    /**
+     * <a href="https://en.wikipedia.org/wiki/Veterans_Day">Veterans' Day</a>
+     */
     public final Function<LocalDate, String> VETERANS_DAY =
             substitution(predicate(11, 11), "unitedStates.VeteransDay");
-    public final Function<LocalDate, String> THANKS_GIVING_DAY =
+    /**
+     * <a href="https://en.wikipedia.org/wiki/Thanksgiving">Thanksgiving</a>
+     */
+    public final Function<LocalDate, String> THANKSGIVING_DAY =
             holiday(predicate(4, DayOfWeek.THURSDAY, 11), "unitedStates.ThanksgivingDay");
+    /**
+     * <a href="https://en.wikipedia.org/wiki/Christmas">Christmas Day</a>
+     */
     public final Function<LocalDate, String> CHRISTMAS_DAY =
             substitution(predicate(12, 25), "unitedStates.ChristmasDay");
 
@@ -79,8 +107,11 @@ public class UnitedStates {
     }
 
     private final List<Function<LocalDate, String>> all = Arrays.asList(NEW_YEARS_DAY, MARTIN_LUTHER_KING_JR_DAY,
-            MEMORIAL_DAY, INDEPENDENCE_DAY, LABOR_DAY, VETERANS_DAY, THANKS_GIVING_DAY, CHRISTMAS_DAY);
+            MEMORIAL_DAY, INDEPENDENCE_DAY, LABOR_DAY, VETERANS_DAY, THANKSGIVING_DAY, CHRISTMAS_DAY);
 
+    /**
+     * Public holidays in the United States
+     */
     public Function<LocalDate, String> PUBLIC_HOLIDAYS = localDate -> {
         for (Function<LocalDate, String> localDateStringFunction : all) {
             final String apply = localDateStringFunction.apply(localDate);

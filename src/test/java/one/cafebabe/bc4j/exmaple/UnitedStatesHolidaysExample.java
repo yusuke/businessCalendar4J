@@ -22,7 +22,13 @@ import java.time.LocalDate;
 import static one.cafebabe.bc4j.BusinessCalendar.CLOSED_ON_SATURDAYS_AND_SUNDAYS;
 import static one.cafebabe.bc4j.BusinessCalendar.UNITED_STATES;
 
+/**
+ * Example
+ */
 public class UnitedStatesHolidaysExample {
+    /**
+     * @param args args
+     */
     public static void main(String[] args) {
         BusinessCalendar calendar = BusinessCalendar.newBuilder()
                 .holiday(UNITED_STATES.PUBLIC_HOLIDAYS)
@@ -52,7 +58,7 @@ public class UnitedStatesHolidaysExample {
                         UNITED_STATES.INDEPENDENCE_DAY,
                         UNITED_STATES.LABOR_DAY,
                         UNITED_STATES.VETERANS_DAY,
-                        UNITED_STATES.THANKS_GIVING_DAY,
+                        UNITED_STATES.THANKSGIVING_DAY,
                         UNITED_STATES.CHRISTMAS_DAY,
                         CLOSED_ON_SATURDAYS_AND_SUNDAYS)
                 .on(5, 19).holiday("James Gosling's birthday")

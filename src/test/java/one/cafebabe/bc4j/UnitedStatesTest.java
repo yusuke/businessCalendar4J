@@ -24,7 +24,7 @@ class UnitedStatesTest {
                     BusinessCalendar.UNITED_STATES.INDEPENDENCE_DAY,
                     BusinessCalendar.UNITED_STATES.LABOR_DAY,
                     BusinessCalendar.UNITED_STATES.VETERANS_DAY,
-                    BusinessCalendar.UNITED_STATES.THANKS_GIVING_DAY,
+                    BusinessCalendar.UNITED_STATES.THANKSGIVING_DAY,
                     BusinessCalendar.UNITED_STATES.CHRISTMAS_DAY
             )
             .build();
@@ -37,7 +37,7 @@ class UnitedStatesTest {
     @Test
     void martinLutherKingJrDay() {
         //noinspection serial
-        Map<Integer, Integer[]> myMap = new HashMap<Integer, Integer[]>() {
+        Map<Integer, Integer[]> myMap = new HashMap<>() {
             {
                 put(21, new Integer[]{1991, 2002, 2008, 2013, 2019, 2030, 2036, 2041, 2047, 2058, 2064, 2069, 2075, 2086, 2092, 2097});
                 put(20, new Integer[]{1986, 1992, 1997, 2003, 2014, 2020, 2025, 2031, 2042, 2048, 2053, 2059, 2070, 2076, 2081, 2087, 2098});
@@ -58,7 +58,7 @@ class UnitedStatesTest {
 
     @Test
     void memorialDay() {
-        Map<Integer, Integer[]> myMap = new HashMap<Integer, Integer[]>() {
+        Map<Integer, Integer[]> myMap = new HashMap<>() {
             {
                 put(31, new Integer[]{1971, 1976, 1982, 1993, 1999, 2004, 2010, 2021, 2027});
                 put(30, new Integer[]{1977, 1983, 1988, 1994, 2005, 2011, 2016, 2022});
@@ -113,7 +113,7 @@ class UnitedStatesTest {
     @Test
     void veteransDay() {
         // https://www.timeanddate.com/holidays/us/veterans-day
-        Map<Integer, Integer[]> myMap = new HashMap<Integer, Integer[]>() {
+        Map<Integer, Integer[]> myMap = new HashMap<>() {
             {
                 put(10, new Integer[]{2017, 2023});
                 put(11, new Integer[]{2016, 2019, 2020, 2021, 2022, 2024, 2025, 2026});
@@ -151,7 +151,7 @@ class UnitedStatesTest {
 
     @Test
     void thanksGivingDay() {
-        Map<Integer, Integer[]> myMap = new HashMap<Integer, Integer[]>() {
+        Map<Integer, Integer[]> myMap = new HashMap<>() {
             {
                 put(22, new Integer[]{1990, 2001, 2007, 2012, 2018, 2029});
                 put(23, new Integer[]{1989, 1995, 2000, 2006, 2017, 2023, 2028});

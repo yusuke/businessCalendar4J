@@ -25,6 +25,9 @@ import java.util.function.Function;
 
 import static one.cafebabe.bc4j.BusinessCalendarPredicate.dayOfWeekOrdinalMatches;
 
+/**
+ * Japanese holidays
+ */
 public final class Japan {
 
     /**
@@ -52,6 +55,9 @@ public final class Japan {
         return singleton;
     }
 
+    /**
+     * Public holidays in Japan
+     */
     public Function<LocalDate, String> PUBLIC_HOLIDAYS = new Function<LocalDate, String>() {
         @Override
         public String apply(LocalDate e) {

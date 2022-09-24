@@ -28,8 +28,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * Java class representing business calendar
+ */
 public final class BusinessCalendar {
+    /**
+     * Predefined holidays in the United States
+     */
     public static final UnitedStates UNITED_STATES = UnitedStates.getInstance();
+    /**
+     * Predefined holidays in Japan
+     */
     public static final Japan JAPAN = Japan.getInstance();
     private final List<Function<LocalDate, String>> holidayLogics = new ArrayList<>();
     private final List<Function<LocalDate, List<BusinessHourSlot>>> businessHours = new ArrayList<>();
@@ -42,6 +51,10 @@ public final class BusinessCalendar {
         this.businessHours.add(conf.getBusinessHours());
     }
 
+    /**
+     * creates a new builder instance
+     * @return builder
+     */
     @NotNull
     public static BusinessCalendarBuilder newBuilder() {
         return new BusinessCalendarBuilder();
