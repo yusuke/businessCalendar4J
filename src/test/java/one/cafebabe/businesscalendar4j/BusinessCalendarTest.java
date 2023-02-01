@@ -214,9 +214,6 @@ class BusinessCalendarTest {
     void getCabinetOfficialHolidayDataFirstLastDay() {
         assertEquals(LocalDate.of(1955, 1, 1), Japan.getCabinetOfficialHolidayDataFirstDay());
         assertEquals(LocalDate.of(LocalDate.now().getYear() + 1, 11, 23), Japan.getCabinetOfficialHolidayDataLastDay());
-        if (LocalDate.now().isAfter(LocalDate.of(2022, 12, 10))) {
-            fail("2022年12月には公式の祝休日情報は更新されており2022年11月23日以降の祝休日情報がとれるはず");
-        }
     }
 
     @Test
