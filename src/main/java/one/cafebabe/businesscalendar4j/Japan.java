@@ -46,7 +46,7 @@ public final class Japan {
 
     private static final long aboutOneMonth = 1000L * 60 * 60 * 24 * 31 + new Random(System.currentTimeMillis()).nextLong() % (1000L * 60 * 60 * 10);
     static final CSVHolidays csv = new CSVHolidays(aboutOneMonth, System.getProperty("SYUKUJITSU_URL",
-            "https://www8.cao.go.jp/chosei/shukujitsu/shukujitsu.csv"), "/syukujitsu.csv",
+            "https://www8.cao.go.jp/chosei/shukujitsu/shukujitsu.csv"), "/shukujitsu.csv",
             "japanese.", Charset.forName("Shift_JIS"));
 
     private static final Japan singleton = new Japan();
