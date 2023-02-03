@@ -24,7 +24,7 @@ Maven Central Repositoryにリリースされているため、以下のよう�
     <dependency>
         <groupId>one.cafebabe</groupId>
         <artifactId>businessCalendar4j</artifactId>
-        <version>1.3.1</version>
+        <version>1.3.2</version>
     </dependency>
 </dependencies>
 ```
@@ -32,7 +32,7 @@ Maven Central Repositoryにリリースされているため、以下のよう�
 ### Gradleの場合
 ```text
 dependencies {
-    compile 'one.cafebabe:businessCalendar4j:1.3.1'
+    compile 'one.cafebabe:businessCalendar4j:1.3.2'
 }
 ```
 
@@ -301,7 +301,7 @@ System.out.println("2021年の営業日: " + businessDays);
 営業時間については[営業時間Example(日本語API)](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/one/cafebabe/businesscalendar4j/exmaple/営業時間Example.java) 、[BusinessHoursExample](https://github.com/yusuke/businessCalendar4J/blob/main/src/test/java/one/cafebabe/businesscalendar4j/exmaple/BusinessHoursExample.java) をご覧ください。
 
 ## 祝日情報取得の仕組み
-祝日の情報は[内閣府の祝日情報](https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html) に掲載されている [syukujitsu.csv](https://www8.cao.go.jp/chosei/shukujitsu/shukujitsu.csv) を利用しています。
+祝日の情報は[内閣府の祝日情報](https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html) に掲載されている [syukujitsu.csv](https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv) を利用しています。
 起動時に読み込んだあと、負荷をかけないよう毎31日±5分毎(±5分の部分はランダム)に再読み込みを行います。
 
 当該URLからCSVの読み込みを失敗した場合はリソースファイルに配置されている /syukujitsu.csv にフォールバックします。
