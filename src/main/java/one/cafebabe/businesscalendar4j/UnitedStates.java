@@ -52,6 +52,8 @@ public class UnitedStates {
     /**
      * <a href="https://www.imdb.com/title/tt0116629/">Independence Day/</a>
      */
+    public final Function<LocalDate, String> JUNETEENTH_DAY =
+            substitution(2023, predicate(6, 19), "unitedStates.JuneteenthDay");
     public final Function<LocalDate, String> INDEPENDENCE_DAY =
             substitution(predicate(7, 4), "unitedStates.IndependenceDay");
     /**
@@ -96,6 +98,15 @@ public class UnitedStates {
             return null;
         };
     }
+    private static Function<LocalDate, String> substitution(int startFromYear, Predicate<LocalDate> predicate, String name) {
+        Function<LocalDate, String> substitution = substitution(predicate, name);
+        return date -> {
+            if (date.getYear() < startFromYear) {
+                return null;
+            }
+            return substitution.apply(date);
+        };
+    }
 
     private UnitedStates() {
     }
@@ -107,7 +118,7 @@ public class UnitedStates {
     }
 
     private final List<Function<LocalDate, String>> all = Arrays.asList(NEW_YEARS_DAY, MARTIN_LUTHER_KING_JR_DAY,
-            MEMORIAL_DAY, INDEPENDENCE_DAY, LABOR_DAY, VETERANS_DAY, THANKSGIVING_DAY, CHRISTMAS_DAY);
+            MEMORIAL_DAY, JUNETEENTH_DAY, INDEPENDENCE_DAY, LABOR_DAY, VETERANS_DAY, THANKSGIVING_DAY, CHRISTMAS_DAY);
 
     /**
      * Public holidays in the United States

@@ -21,6 +21,7 @@ class UnitedStatesTest {
                     BusinessCalendar.UNITED_STATES.NEW_YEARS_DAY,
                     BusinessCalendar.UNITED_STATES.MARTIN_LUTHER_KING_JR_DAY,
                     BusinessCalendar.UNITED_STATES.MEMORIAL_DAY,
+                    BusinessCalendar.UNITED_STATES.JUNETEENTH_DAY,
                     BusinessCalendar.UNITED_STATES.INDEPENDENCE_DAY,
                     BusinessCalendar.UNITED_STATES.LABOR_DAY,
                     BusinessCalendar.UNITED_STATES.VETERANS_DAY,
@@ -145,6 +146,25 @@ class UnitedStatesTest {
                     assertTrue(calendar.isHoliday(next), next.toString());
                     assertEquals("Veterans Day (observed)", calendar.getHoliday(next).name);
                 }
+            }
+        }
+    }
+
+    @Test
+    void juneteenth() {
+        for (int year = 2000; year < 2023; year++) {
+            assertNull(calendar.getHoliday(LocalDate.of(year, 6, 19)));
+        }
+
+        Map<Integer, Integer[]> myMap = new HashMap<>() {
+            {
+                put(19, new Integer[]{2023, 2024, 2025});
+            }
+        };
+        for (Integer day : myMap.keySet()) {
+            final Integer[] years = myMap.get(day);
+            for (Integer year : years) {
+                assertEquals("Juneteenth National Independence Day", calendar.getHoliday(LocalDate.of(year, 6, day)).name);
             }
         }
     }
