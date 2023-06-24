@@ -6,7 +6,6 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -83,8 +82,8 @@ class UnitedStatesTest {
         // https://www.timeanddate.com/holidays/us/independence-day
         for (int year = 1776; year < 2100; year++) {
             final LocalDate date = LocalDate.of(year, 7, 4);
-            final LocalDate previous = date.minus(1, ChronoUnit.DAYS);
-            final LocalDate next = date.plus(1, ChronoUnit.DAYS);
+            final LocalDate previous = date.minusDays(1);
+            final LocalDate next = date.plusDays(1);
             if (date.getDayOfWeek() == DayOfWeek.SATURDAY) {
                 assertTrue(calendar.isHoliday(previous));
                 assertEquals("Independence Day (observed)", calendar.getHoliday(previous).name);

@@ -17,7 +17,6 @@ package one.cafebabe.businesscalendar4j;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
 import java.util.List;
@@ -86,9 +85,9 @@ public class UnitedStates {
             }
             LocalDate movedFrom = null;
             if (date.getDayOfWeek() == DayOfWeek.MONDAY) {
-                movedFrom = date.minus(1, ChronoUnit.DAYS);
+                movedFrom = date.minusDays(1);
             } else if (date.getDayOfWeek() == DayOfWeek.FRIDAY) {
-                movedFrom = date.plus(1, ChronoUnit.DAYS);
+                movedFrom = date.plusDays(1);
             }
             if (movedFrom != null) {
                 if (predicate.test(movedFrom)) {
