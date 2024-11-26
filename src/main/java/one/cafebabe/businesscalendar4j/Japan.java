@@ -191,6 +191,9 @@ public final class Japan {
                 if (!csv.holidayMap.containsKey(test) && (導出祝休日 == null || "japanese.休日".equals(導出祝休日))) {
                     break;
                 }
+                if ("japanese.休日".equals(導出祝休日) && csv.holidayMap.containsKey(test)) {
+                    break;
+                }
                 if (test.getDayOfWeek() == DayOfWeek.SUNDAY) {
                     return "japanese.休日";
                 }

@@ -60,7 +60,9 @@ class BusinessCalendarTest {
                 // Labor Thanksgiving Day
                 () -> assertFalse(calendar.isBusinessDay(LocalDate.of(2021, 11, 23))),
                 // normal business day
-                () -> assertTrue(calendar.isBusinessDay(LocalDate.of(2021, 12, 31)))
+                () -> assertTrue(calendar.isBusinessDay(LocalDate.of(2021, 12, 31))),
+                () -> assertTrue(calendar.isBusinessDay(LocalDate.of(2025, 5, 7))),
+                () -> assertTrue(calendar.isBusinessDay(LocalDate.of(2025, 11, 25)))
 
         );
     }
@@ -213,7 +215,11 @@ class BusinessCalendarTest {
     @Test
     void getCabinetOfficialHolidayDataFirstLastDay() {
         assertEquals(LocalDate.of(1955, 1, 1), Japan.getCabinetOfficialHolidayDataFirstDay());
-        assertEquals(LocalDate.of(LocalDate.now().getYear() + 1, 11, 23), Japan.getCabinetOfficialHolidayDataLastDay());
+//        assertEquals(LocalDate.of(LocalDate.now().getYear() + 1, 11, 23), Japan.getCabinetOfficialHolidayDataLastDay());
+        assertEquals(
+                LocalDate.of(LocalDate.now().getYear() + 1, 11, LocalDate.of(LocalDate.now().getYear() + 1, 11, 23).getDayOfWeek() == DayOfWeek.SUNDAY ? 24 : 23),
+                Japan.getCabinetOfficialHolidayDataLastDay()
+        );
     }
 
     @Test
