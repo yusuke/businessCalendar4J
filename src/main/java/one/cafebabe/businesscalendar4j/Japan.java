@@ -188,9 +188,10 @@ public final class Japan {
             while (test.getDayOfWeek() != DayOfWeek.SATURDAY) {
                 // is祝休日で調べるとカスタム祝休日も含めて振替休日を算出してしまうので注意
                 final String 導出祝休日 = this.apply(test);
-                if (!csv.holidayMap.containsKey(test) && (導出祝休日 == null || "japanese.休日".equals(導出祝休日))) {
+                if ((!csv.holidayMap.containsKey(test) && 導出祝休日 == null) || "japanese.休日".equals(導出祝休日)) {
                     break;
                 }
+
                 if (test.getDayOfWeek() == DayOfWeek.SUNDAY) {
                     return "japanese.休日";
                 }

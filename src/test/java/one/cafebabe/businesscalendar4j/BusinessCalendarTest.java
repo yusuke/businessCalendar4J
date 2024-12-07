@@ -42,7 +42,11 @@ class BusinessCalendarTest {
                 // Labor Thanksgiving Day
                 () -> assertTrue(calendar.isHoliday(LocalDate.of(2021, 11, 23))),
                 // normal business day
-                () -> assertFalse(calendar.isHoliday(LocalDate.of(2021, 12, 31)))
+                () -> assertFalse(calendar.isHoliday(LocalDate.of(2021, 12, 31))),
+                () -> assertTrue(calendar.isHoliday(LocalDate.of(2025, 5, 3))),
+                () -> assertTrue(calendar.isHoliday(LocalDate.of(2025, 5, 6))),
+                () -> assertTrue(calendar.isHoliday(LocalDate.of(2025, 11, 3))),
+                () -> assertTrue(calendar.isHoliday(LocalDate.of(2026, 11, 23)))
 
         );
     }
@@ -60,8 +64,12 @@ class BusinessCalendarTest {
                 // Labor Thanksgiving Day
                 () -> assertFalse(calendar.isBusinessDay(LocalDate.of(2021, 11, 23))),
                 // normal business day
-                () -> assertTrue(calendar.isBusinessDay(LocalDate.of(2021, 12, 31)))
-
+                () -> assertTrue(calendar.isBusinessDay(LocalDate.of(2021, 12, 31))),
+                () -> assertTrue(calendar.isBusinessDay(LocalDate.of(2025, 5, 2))),
+                () -> assertTrue(calendar.isBusinessDay(LocalDate.of(2025, 5, 7))),
+                () -> assertTrue(calendar.isBusinessDay(LocalDate.of(2025, 11, 4))),
+                () -> assertTrue(calendar.isBusinessDay(LocalDate.of(2025, 11, 25))),
+                () -> assertTrue(calendar.isBusinessDay(LocalDate.of(2026, 11, 24)))
         );
     }
 
@@ -213,7 +221,10 @@ class BusinessCalendarTest {
     @Test
     void getCabinetOfficialHolidayDataFirstLastDay() {
         assertEquals(LocalDate.of(1955, 1, 1), Japan.getCabinetOfficialHolidayDataFirstDay());
-        assertEquals(LocalDate.of(LocalDate.now().getYear() + 1, 11, 23), Japan.getCabinetOfficialHolidayDataLastDay());
+
+        LocalDate laborThanksgivingDay = LocalDate.of(LocalDate.now().getYear() + 1, 11, 23);
+        LocalDate lastDay = laborThanksgivingDay.getDayOfWeek() == DayOfWeek.SUNDAY ? laborThanksgivingDay.plusDays(1) : laborThanksgivingDay;
+        assertEquals(lastDay, Japan.getCabinetOfficialHolidayDataLastDay());
     }
 
     @Test
