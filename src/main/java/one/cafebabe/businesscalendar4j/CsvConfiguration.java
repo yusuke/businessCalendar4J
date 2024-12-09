@@ -273,7 +273,7 @@ public final class CsvConfiguration {
         String buf = join(lines, fromIndex);
         final DayOfWeek[] objects = dayOfWeeks.toArray(new DayOfWeek[0]);
         if (ordinal == null) {
-            if (dayOfWeeks.size() == 0) {
+            if (dayOfWeeks.isEmpty()) {
                 consumer.accept(new BusinessCalendarPredicate(e -> true, newConf), buf);
             } else {
                 consumer.accept(new BusinessCalendarPredicate(newConf, objects), buf);

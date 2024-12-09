@@ -33,8 +33,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Execution(ExecutionMode.CONCURRENT)
 class CSVBasedConfiguration {
@@ -42,7 +41,7 @@ class CSVBasedConfiguration {
     void invalidFormat() throws IOException {
         final Path doesnotexist = Paths.get("doesnotexist");
         BusinessCalendar.newBuilder().csv(doesnotexist).build();
-        assertTrue(Logger.logMessages.size() > 0);
+        assertFalse(Logger.logMessages.isEmpty());
         assertTrue(Logger.logMessages.contains(doesnotexist.toAbsolutePath() + " does not exist"));
         {
             // hour should be hours
@@ -140,38 +139,42 @@ class CSVBasedConfiguration {
 
         {
             final Path path = write(
-                    "# abbreviation\n" +
-                            "hours,2,sun,0-24\n" +
-                            "hours,sun,1-17,18-19\n" +
-                            "hours,mon,2-17\n" +
-                            "hours,tue,3-17\n" +
-                            "hours,wed,4-17\n" +
-                            "hours,thu,5-17\n" +
-                            "hours,fri,6-17\n" +
-                            "hours,sat,7-17\n" +
-                            "hours,sun,8-17\n" +
-                            "ymdFormat,yyyy/M/d\n" +
-                            "holiday,2021/12/24,yet another holiday\n" +
-                            "ymdFormat,M/d/yyyy\n" +
-                            "holiday,2/1/2021,just holiday\n"
+                    """
+                            # abbreviation
+                            hours,2,sun,0-24
+                            hours,sun,1-17,18-19
+                            hours,mon,2-17
+                            hours,tue,3-17
+                            hours,wed,4-17
+                            hours,thu,5-17
+                            hours,fri,6-17
+                            hours,sat,7-17
+                            hours,sun,8-17
+                            ymdFormat,yyyy/M/d
+                            holiday,2021/12/24,yet another holiday
+                            ymdFormat,M/d/yyyy
+                            holiday,2/1/2021,just holiday
+                            """
             );
             final BusinessCalendar calendar1 = BusinessCalendar.newBuilder().csv(path).build();
             assertCal(expectedCalendar, calendar1);
         }
         {
             final Path path = write(
-                    "hours,2,sunday,0-24\n" +
-                            "hours,sunday,1-17,18-19\n" +
-                            "hours,monday,2-17\n" +
-                            "hours,tuesday,3-17\n" +
-                            "hours,wednesday,4-17\n" +
-                            "hours,thursday,5-17\n" +
-                            "hours,friday,6-17\n" +
-                            "hours,saturday,7-17\n" +
-                            "hours,sunday,8-17\n" +
-                            "ymdFormat,yyyy/M/d\n" +
-                            "holiday,2021/12/24,yet another holiday\n" +
-                            "holiday,2021/2/1,just holiday\n"
+                    """
+                            hours,2,sunday,0-24
+                            hours,sunday,1-17,18-19
+                            hours,monday,2-17
+                            hours,tuesday,3-17
+                            hours,wednesday,4-17
+                            hours,thursday,5-17
+                            hours,friday,6-17
+                            hours,saturday,7-17
+                            hours,sunday,8-17
+                            ymdFormat,yyyy/M/d
+                            holiday,2021/12/24,yet another holiday
+                            holiday,2021/2/1,just holiday
+                            """
             );
             final BusinessCalendar calendar = BusinessCalendar.newBuilder().csv(path).build();
             assertCal(expectedCalendar, calendar);
@@ -184,8 +187,10 @@ class CSVBasedConfiguration {
                     .build();
 
             final Path path = write(
-                    "hours,1-3\n" +
-                            "holiday,2,mon,every 2nd monday is a holiday\n"
+                    """
+                            hours,1-3
+                            holiday,2,mon,every 2nd monday is a holiday
+                            """
             );
             final BusinessCalendar calendar = BusinessCalendar.newBuilder()
                     .csv(path)
@@ -225,20 +230,22 @@ class CSVBasedConfiguration {
 
         {
             final Path path = write(
-                    "# abbreviation\n" +
-                            "hours,2,sun,0-24\n" +
-                            "hours,sun,1-17,18-19\n" +
-                            "hours,mon,2-17\n" +
-                            "hours,tue,3-17\n" +
-                            "hours,wed,4-17\n" +
-                            "hours,thu,5-17\n" +
-                            "hours,fri,6-17\n" +
-                            "hours,sat,7-17\n" +
-                            "hours,sun,8-17\n" +
-                            "ymdFormat,yyyy/M/d\n" +
-                            "holiday,2021/12/24,yet another holiday\n" +
-                            "ymdFormat,M/d/yyyy\n" +
-                            "holiday,2/1/2021,just holiday\n"
+                    """
+                            # abbreviation
+                            hours,2,sun,0-24
+                            hours,sun,1-17,18-19
+                            hours,mon,2-17
+                            hours,tue,3-17
+                            hours,wed,4-17
+                            hours,thu,5-17
+                            hours,fri,6-17
+                            hours,sat,7-17
+                            hours,sun,8-17
+                            ymdFormat,yyyy/M/d
+                            holiday,2021/12/24,yet another holiday
+                            ymdFormat,M/d/yyyy
+                            holiday,2/1/2021,just holiday
+                            """
             );
             final URI uri = path.toUri();
             System.out.println(uri.toURL());
@@ -261,7 +268,7 @@ class CSVBasedConfiguration {
             final List<BusinessHourSlot> targetSlots = testTarget.
                     getBusinessHourSlots(from);
             assertEquals(expectedSlots, targetSlots);
-            from = from.plus(1, ChronoUnit.DAYS);
+            from = from.plusDays(1);
         }
 
     }
