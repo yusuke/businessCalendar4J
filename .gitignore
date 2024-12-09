@@ -16,4 +16,7 @@ hs_err_pid*
 
 .gradle
 build
-.idea
+.idea/workspace.xml
+.idea/dataSources
+.idea/artifacts
+.idea/libraries/

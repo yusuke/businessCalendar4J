@@ -4,9 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/businessCalendar4j.iml" filepath="$PROJECT_DIR$/.idea/modules/businessCalendar4j.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/businessCalendar4j.main.iml" filepath="$PROJECT_DIR$/.idea/modules/businessCalendar4j.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/module-info/businessCalendar4j.module-info.iml" filepath="$PROJECT_DIR$/.idea/modules/module-info/businessCalendar4j.module-info.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/module-info/businessCalendar4j.module-info.main.iml" filepath="$PROJECT_DIR$/.idea/modules/module-info/businessCalendar4j.module-info.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/module-info/businessCalendar4j.module-info.test.iml" filepath="$PROJECT_DIR$/.idea/modules/module-info/businessCalendar4j.module-info.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/businessCalendar4j.test.iml" filepath="$PROJECT_DIR$/.idea/modules/businessCalendar4j.test.iml" />
     </modules>
   </component>
