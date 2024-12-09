@@ -21,14 +21,14 @@ Add a dependency declaration to pom.xml, or build.gradle as follows:
     <dependency>
         <groupId>one.cafebabe</groupId>
         <artifactId>businessCalendar4j</artifactId>
-        <version>1.3.3</version>
+        <version>17.0.0</version>
     </dependency>
 </dependencies>
 ```
 ### Gradle
 ```text
 dependencies {
-    compile 'one.cafebabe:businessCalendar4j:1.3.3'
+    compile 'one.cafebabe:businessCalendar4j:17.0.0'
 }
 ```
 

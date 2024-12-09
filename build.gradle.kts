@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "one.cafebabe"
-version = "1.3.3"
+version = "17.0.0"
 
 repositories {
     mavenCentral()

@@ -24,7 +24,7 @@ Maven Central Repositoryにリリースされているため、以下のよう�
     <dependency>
         <groupId>one.cafebabe</groupId>
         <artifactId>businessCalendar4j</artifactId>
-        <version>1.3.3</version>
+        <version>17.0.0</version>
     </dependency>
 </dependencies>
 ```
@@ -32,7 +32,7 @@ Maven Central Repositoryにリリースされているため、以下のよう�
 ### Gradleの場合
 ```text
 dependencies {
-    compile 'one.cafebabe:businessCalendar4j:1.3.3'
+    compile 'one.cafebabe:businessCalendar4j:17.0.0'
 }
 ```
 
