@@ -11,7 +11,7 @@ BusinessCalendar4J は100% pure Java、追加依存なしのビジネスカレ�
 [![@businessCal4J](https://img.shields.io/twitter/url/https/twitter.com/BusinessCal4J.svg?style=social&label=Follow%20%40BusinessCal4J)](https://twitter.com/businessCal4J)
 
 ## 動作要件
-Java 8以降
+Java 17以降
 
 ## 依存の宣言
 Maven Central Repositoryにリリースされているため、以下のように依存を指定するだけで利用出来るようになります。

@@ -8,7 +8,7 @@ With [BusinessCalenderBuilder](https://github.com/yusuke/businessCalendar4J/blob
 [![@businessCal4J](https://img.shields.io/twitter/url/https/twitter.com/BusinessCal4J.svg?style=social&label=Follow%20%40BusinessCal4J)](https://twitter.com/businessCal4J)
 
 ## Requirements
-Java 8 or later
+Java 17 or later
 
 ## Dependency declaration
 Add a dependency declaration to pom.xml, or build.gradle as follows:
