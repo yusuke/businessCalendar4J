@@ -23,7 +23,17 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /**
- * a model representing a business hour slot
+ * Represents a slot of business hours defined by a starting and ending time.
+ * This class is immutable and thread-safe, and it also implements the Serializable interface.
+ * <p>
+ * The time range is represented using LocalDateTime objects for both the from and to parameters.
+ * The BusinessHourSlot object can be constructed using either LocalDateTime or by providing
+ * a LocalDate along with LocalTime for starting and ending times.
+ * <p>
+ * The end time is adjusted to be on the next day if it represents the start of the next day (00:00).
+ *
+ * @param from start time of the business hour slot
+ * @param to end time of the business hour slot
  */
 public record BusinessHourSlot(@NotNull LocalDateTime from, @NotNull LocalDateTime to)
         implements java.io.Serializable {

@@ -21,7 +21,11 @@ import java.io.Serial;
 import java.time.LocalDate;
 
 /**
- * holiday
+ * Represents a holiday with a specific date and name.
+ * This record is used to store information about public holidays.
+ *
+ * @param date the date of the holiday
+ * @param name the name of the holiday
  */
 public record Holiday(@NotNull LocalDate date, @NotNull String name) implements Comparable<Holiday>, java.io.Serializable {
     @Serial
