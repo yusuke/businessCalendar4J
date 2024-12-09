@@ -17,58 +17,28 @@ package one.cafebabe.businesscalendar4j;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serial;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Objects;
 
 /**
  * a model representing a business hour slot
  */
-public final class BusinessHourSlot implements java.io.Serializable {
+public record BusinessHourSlot(@NotNull LocalDateTime from, @NotNull LocalDateTime to)
+        implements java.io.Serializable {
+    @Serial
     private static final long serialVersionUID = -102401732734407839L;
 
-    /**
-     * Start time of this slot
-     */
-    @NotNull
-    public final LocalDateTime from;
-    /**
-     * End time of this slot
-     */
-    @NotNull
-    public final LocalDateTime to;
 
     BusinessHourSlot(@NotNull LocalDate baseDate, @NotNull LocalTime from, @NotNull LocalTime to) {
-        this.from = LocalDateTime.of(baseDate, from);
-        this.to = to.getHour() == 0 && to.getMinute() == 0 ? LocalDateTime.of(baseDate.plus(1, ChronoUnit.DAYS), to)
-                : LocalDateTime.of(baseDate, to);
+        this(LocalDateTime.of(baseDate, from),
+                to.getHour() == 0 && to.getMinute() == 0 ? LocalDateTime.of(baseDate.plusDays(1), to)
+                : LocalDateTime.of(baseDate, to));
     }
 
     boolean isBusinessHour(@NotNull LocalDateTime time) {
         return time.isEqual(from) || (from.isBefore(time) && to.isAfter(time));
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BusinessHourSlot that = (BusinessHourSlot) o;
-        return from.equals(that.from) && to.equals(that.to);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(from, to);
-    }
-
-    @Override
-    public String toString() {
-        return "BusinessHourSlot{" +
-                "from=" + from +
-                ", to=" + to +
-                '}';
     }
 }
 

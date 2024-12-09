@@ -37,7 +37,7 @@ public class DumpUnitedStatesHolidays {
         final LocalDate start = LocalDate.of(1970, 1, 1);
         final LocalDate now = LocalDate.now();
         final LocalDate end = LocalDate.of(now.getYear() + 9, 12, 31);
-        final String utf8FileName = String.format("calculated/unitedStates-holidays%s-%s-UTF8.csv", start.format(formatter), end.format(formatter));
+        final String utf8FileName = "calculated/unitedStates-holidays%s-%s-UTF8.csv".formatted(start.format(formatter), end.format(formatter));
         try (final BufferedWriter utf8 = Files.newBufferedWriter(Paths.get(utf8FileName), StandardCharsets.UTF_8)) {
             final String header = "date,name\n";
             utf8.write(header);
@@ -53,7 +53,7 @@ public class DumpUnitedStatesHolidays {
                             BusinessCalendar.UNITED_STATES.CHRISTMAS_DAY)
                     .build()
                     .getHolidaysBetween(start, end)) {
-                final String line = String.format("%s,%s\n", holiday.date.format(dateTimeFormatter), holiday.name);
+                final String line = "%s,%s\n".formatted(holiday.date().format(dateTimeFormatter), holiday.name());
                 System.out.print(line);
                 utf8.write(line);
             }

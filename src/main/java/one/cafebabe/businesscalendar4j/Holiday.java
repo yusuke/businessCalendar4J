@@ -15,49 +15,17 @@
  */
 package one.cafebabe.businesscalendar4j;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.Serial;
 import java.time.LocalDate;
-import java.util.Objects;
 
 /**
  * holiday
  */
-public final class Holiday implements Comparable<Holiday>, java.io.Serializable {
+public record Holiday(@NotNull LocalDate date, @NotNull String name) implements Comparable<Holiday>, java.io.Serializable {
+    @Serial
     private static final long serialVersionUID = 3372083406725976821L;
-    /**
-     * The date of this holiday
-     */
-    public final LocalDate date;
-    /**
-     * The name of this holiday
-     */
-    public final String name;
-
-    Holiday(LocalDate date, String name) {
-        this.date = date;
-        this.name = name;
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Holiday Holiday = (Holiday) o;
-        return date.equals(Holiday.date) && name.equals(Holiday.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(date, name);
-    }
-
-    @Override
-    public String toString() {
-        return "Holiday{" +
-                "date=" + date +
-                ", name='" + name + '\'' +
-                '}';
-    }
 
     @Override
     public int compareTo(Holiday o) {

@@ -112,7 +112,7 @@ public class UnitedStates {
     /**
      * Public holidays in the United States
      */
-    public Function<LocalDate, String> PUBLIC_HOLIDAYS = localDate -> {
+    public final Function<LocalDate, String> PUBLIC_HOLIDAYS = localDate -> {
         for (Function<LocalDate, String> localDateStringFunction : all) {
             final String apply = localDateStringFunction.apply(localDate);
             if (apply != null) {

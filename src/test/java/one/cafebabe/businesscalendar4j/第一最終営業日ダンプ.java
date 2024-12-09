@@ -37,8 +37,8 @@ public class 第一最終営業日ダンプ {
         final LocalDate start = LocalDate.of(1955, 1, 1);
         final LocalDate now = LocalDate.now();
         final LocalDate end = LocalDate.of(now.getYear() + 9, 12, 31);
-        final String shiftJisFileName = String.format("calculated/japan-first-last-business-days%s-%s-Shift_JIS.csv", start.format(formatter), end.format(formatter));
-        final String utf8FileName = String.format("calculated/japan-first-last-business-days%s-%s-UTF8.csv", start.format(formatter), end.format(formatter));
+        final String shiftJisFileName = "calculated/japan-first-last-business-days%s-%s-Shift_JIS.csv".formatted(start.format(formatter), end.format(formatter));
+        final String utf8FileName = "calculated/japan-first-last-business-days%s-%s-UTF8.csv".formatted(start.format(formatter), end.format(formatter));
         try (final BufferedWriter shiftJIS = Files.newBufferedWriter(Paths.get(shiftJisFileName), Charset.forName("Shift_JIS"));
              final BufferedWriter utf8 = Files.newBufferedWriter(Paths.get(utf8FileName), StandardCharsets.UTF_8)        ) {
             final String header = "年月日,営業日\n";
@@ -50,7 +50,7 @@ public class 第一最終営業日ダンプ {
                 LocalDate 月末 = cursor.withDayOfMonth(cursor.lengthOfMonth());
                 LocalDate 最初営業日 = calendar.firstBusinessDay(cursor);
                 LocalDate 最終営業日 = calendar.lastBusinessDay(月末);
-                final String line = String.format("%s,%s\n%s,%s\n",最初営業日.format(dateTimeFormatter),"第一営業日",
+                final String line = "%s,%s\n%s,%s\n".formatted(最初営業日.format(dateTimeFormatter),"第一営業日",
                         最終営業日.format(dateTimeFormatter), "最終営業日");
                 System.out.print(line);
                 shiftJIS.write(line);

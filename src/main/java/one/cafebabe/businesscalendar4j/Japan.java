@@ -58,7 +58,7 @@ public final class Japan {
     /**
      * Public holidays in Japan
      */
-    public Function<LocalDate, String> PUBLIC_HOLIDAYS = new Function<LocalDate, String>() {
+    public final Function<LocalDate, String> PUBLIC_HOLIDAYS = new Function<>() {
         @Override
         public String apply(LocalDate e) {
             String apply = csv.apply(e);

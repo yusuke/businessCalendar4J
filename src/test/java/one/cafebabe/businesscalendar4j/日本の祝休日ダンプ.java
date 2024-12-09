@@ -34,15 +34,15 @@ public class 日本の祝休日ダンプ {
         final LocalDate start = LocalDate.of(1955, 1, 1);
         final LocalDate now = LocalDate.now();
         final LocalDate end = LocalDate.of(now.getYear() + 9, 12, 31);
-        final String shiftJisFileName = String.format("calculated/japan-holidays%s-%s-Shift_JIS.csv", start.format(formatter), end.format(formatter));
-        final String utf8FileName = String.format("calculated/japan-holidays%s-%s-UTF8.csv", start.format(formatter), end.format(formatter));
+        final String shiftJisFileName = "calculated/japan-holidays%s-%s-Shift_JIS.csv".formatted(start.format(formatter), end.format(formatter));
+        final String utf8FileName = "calculated/japan-holidays%s-%s-UTF8.csv".formatted(start.format(formatter), end.format(formatter));
         try (final BufferedWriter shiftJIS = Files.newBufferedWriter(Paths.get(shiftJisFileName), Charset.forName("Shift_JIS"));
-             final BufferedWriter utf8 = Files.newBufferedWriter(Paths.get(utf8FileName), StandardCharsets.UTF_8)        ) {
+             final BufferedWriter utf8 = Files.newBufferedWriter(Paths.get(utf8FileName), StandardCharsets.UTF_8)) {
             final String header = "国民の祝日・休日月日,国民の祝日・休日名称\n";
             shiftJIS.write(header);
             utf8.write(header);
             for (Holiday holiday : BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).build().getHolidaysBetween(start, end)) {
-                final String line = String.format("%s,%s\n", holiday.date.format(dateTimeFormatter), holiday.name);
+                final String line = "%s,%s\n".formatted(holiday.date().format(dateTimeFormatter), holiday.name());
                 System.out.print(line);
                 shiftJIS.write(line);
                 utf8.write(line);

@@ -161,7 +161,7 @@ public final class CsvConfiguration {
                         out.write(read);
                     }
                 }
-                String content = out.toString("UTF8");
+                String content = out.toString(StandardCharsets.UTF_8);
 
                 final List<String> lines = Arrays.asList(content.split("\n"));
                 messages.addAll(csv(lines));
@@ -248,7 +248,7 @@ public final class CsvConfiguration {
     }
 
     @SuppressWarnings("serial")
-    private static final Map<String, String> convert = new HashMap<String, String>() {{
+    private static final Map<String, String> convert = new HashMap<>() {{
         put("MON", "MONDAY");
         put("TUE", "TUESDAY");
         put("WED", "WEDNESDAY");

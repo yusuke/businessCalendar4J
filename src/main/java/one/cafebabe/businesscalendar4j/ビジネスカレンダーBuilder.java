@@ -216,8 +216,8 @@ public final class ビジネスカレンダーBuilder {
      * ビジネスカレンダーPredicate
      */
     public static class ビジネスカレンダーPredicate {
-        ビジネスカレンダーBuilder builder;
-        BusinessCalendarPredicate businessCalendarPredicate;
+        private final ビジネスカレンダーBuilder builder;
+        private final BusinessCalendarPredicate businessCalendarPredicate;
 
         /**
          * @param builder ビジネスカレンダーBuilder

@@ -163,15 +163,15 @@ public final class BusinessCalendar {
         LocalDateTime lastBusinessHourEnd = null;
         if (isBusinessDay(date)) {
             final List<BusinessHourSlot> slots = getBusinessHourSlots(date);
-            final List<BusinessHourSlot> list = slots.stream().filter(e -> e.to.isBefore(when) || e.to.isEqual(when)).toList();
+            final List<BusinessHourSlot> list = slots.stream().filter(e -> e.to().isBefore(when) || e.to().isEqual(when)).toList();
             if (!list.isEmpty()) {
-                lastBusinessHourEnd = list.get(list.size() - 1).to;
+                lastBusinessHourEnd = list.get(list.size() - 1).to();
             }
 
         }
         if (lastBusinessHourEnd == null) {
             final List<BusinessHourSlot> slots = getBusinessHourSlots(lastBusinessDay(date.minusDays(1)));
-            lastBusinessHourEnd = slots.get(slots.size() - 1).to;
+            lastBusinessHourEnd = slots.get(slots.size() - 1).to();
         }
         return lastBusinessHourEnd;
     }
@@ -180,7 +180,7 @@ public final class BusinessCalendar {
      * Returns when next business hours end
      *
      * @param when origin
-     * @return the time when when next business hours end
+     * @return the time when next business hours end
      * @since 1.8
      */
     @NotNull
@@ -189,15 +189,15 @@ public final class BusinessCalendar {
         LocalDateTime nextBusinessHourEnd = null;
         if (isBusinessDay(date)) {
             final List<BusinessHourSlot> slots = getBusinessHourSlots(date);
-            final List<BusinessHourSlot> list = slots.stream().filter(e -> e.to.isAfter(when) || e.to.isEqual(when)).toList();
+            final List<BusinessHourSlot> list = slots.stream().filter(e -> e.to().isAfter(when) || e.to().isEqual(when)).toList();
             if (!list.isEmpty()) {
-                nextBusinessHourEnd = list.get(0).to;
+                nextBusinessHourEnd = list.get(0).to();
             }
 
         }
         if (nextBusinessHourEnd == null) {
             final List<BusinessHourSlot> slots = getBusinessHourSlots(firstBusinessDay(date.plusDays(1)));
-            nextBusinessHourEnd = slots.get(0).to;
+            nextBusinessHourEnd = slots.get(0).to();
         }
 
         return nextBusinessHourEnd;
@@ -216,15 +216,15 @@ public final class BusinessCalendar {
         LocalDateTime lastBusinessHourStart = null;
         if (isBusinessDay(date)) {
             final List<BusinessHourSlot> slots = getBusinessHourSlots(date);
-            final List<BusinessHourSlot> list = slots.stream().filter(e -> e.from.isBefore(when)).toList();
+            final List<BusinessHourSlot> list = slots.stream().filter(e -> e.from().isBefore(when)).toList();
             if (!list.isEmpty()) {
-                lastBusinessHourStart = list.get(list.size() - 1).from;
+                lastBusinessHourStart = list.get(list.size() - 1).from();
             }
 
         }
         if (lastBusinessHourStart == null) {
             final List<BusinessHourSlot> slots = getBusinessHourSlots(lastBusinessDay(date.minusDays(1)));
-            lastBusinessHourStart = slots.get(slots.size() - 1).from;
+            lastBusinessHourStart = slots.get(slots.size() - 1).from();
         }
         return lastBusinessHourStart;
     }
@@ -233,7 +233,7 @@ public final class BusinessCalendar {
      * Returns when next business hours start
      *
      * @param when origin
-     * @return the time when when next business hours start
+     * @return the time when next business hours start
      * @since 1.8
      */
     @NotNull
@@ -242,15 +242,15 @@ public final class BusinessCalendar {
         LocalDateTime nextBusinessHourStart = null;
         if (isBusinessDay(date)) {
             final List<BusinessHourSlot> slots = getBusinessHourSlots(date);
-            final List<BusinessHourSlot> list = slots.stream().filter(e -> e.from.isAfter(when) || e.from.isEqual(when)).toList();
+            final List<BusinessHourSlot> list = slots.stream().filter(e -> e.from().isAfter(when) || e.from().isEqual(when)).toList();
             if (!list.isEmpty()) {
-                nextBusinessHourStart = list.get(0).from;
+                nextBusinessHourStart = list.get(0).from();
             }
 
         }
         if (nextBusinessHourStart == null) {
             final List<BusinessHourSlot> slots = getBusinessHourSlots(firstBusinessDay(date.plusDays(1)));
-            nextBusinessHourStart = slots.get(0).from;
+            nextBusinessHourStart = slots.get(0).from();
         }
 
         return nextBusinessHourStart;
@@ -478,10 +478,10 @@ public final class BusinessCalendar {
                         buf.append(", ");
                     }
                     first = false;
-                    buf.append(formatTime(slot.from)).append("-").append(formatTime(slot.to));
+                    buf.append(formatTime(slot.from())).append("-").append(formatTime(slot.to()));
                 }
             } else {
-                buf.append(String.format("%s : %s", start.format(dateFormatter), Objects.requireNonNull(getHoliday(start)).name));
+                buf.append("%s : %s".formatted(start.format(dateFormatter), Objects.requireNonNull(getHoliday(start)).name()));
             }
             buf.append("\n");
             start = start.plusDays(1);

@@ -36,7 +36,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Execution(ExecutionMode.CONCURRENT)
-class CSVBasedConfiguration {
+class CsvBasedConfiguration {
     @Test
     void invalidFormat() throws IOException {
         final Path doesnotexist = Paths.get("doesnotexist");
@@ -78,7 +78,7 @@ class CSVBasedConfiguration {
     @Test
     void classPath() {
         final BusinessCalendar cal = BusinessCalendar.newBuilder()
-                .csv(CSVBasedConfiguration.class.getResource("/csvconf.csv")).build();
+                .csv(CsvBasedConfiguration.class.getResource("/csvconf.csv")).build();
         assertTrue(cal.isHoliday(LocalDate.of(2021, 12, 20)));
         assertTrue(cal.isHoliday(LocalDate.of(2022, 11, 24)));
         assertEquals(2, (long) cal.getHolidaysBetween(LocalDate.of(2021, 1, 1), 

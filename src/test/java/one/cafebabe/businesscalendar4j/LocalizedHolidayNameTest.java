@@ -26,23 +26,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Execution(ExecutionMode.CONCURRENT)
 @SuppressWarnings({"ConstantConditions"})
-public class LocalizedHolidayName {
+public class LocalizedHolidayNameTest {
     @Test
     void localized() {
         final boolean isLocaleJapanese = Locale.getDefault().getLanguage().equals("ja");
         assertEquals("Constitution Memorial Day",
-                BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build().getHoliday(LocalDate.of(2040, 5, 3)).name);
+                BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build().getHoliday(LocalDate.of(2040, 5, 3)).name());
         assertEquals(isLocaleJapanese ? "憲法記念日" : "Constitution Memorial Day",
-                BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.FRANCE).build().getHoliday(LocalDate.of(2040, 5, 3)).name);
+                BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.FRANCE).build().getHoliday(LocalDate.of(2040, 5, 3)).name());
         assertEquals("憲法記念日",
-                BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE).build().getHoliday(LocalDate.of(2040, 5, 3)).name);
+                BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE).build().getHoliday(LocalDate.of(2040, 5, 3)).name());
 
 
         assertEquals("Constitution Memorial Day",
-                BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build().getHoliday(LocalDate.of(2021, 5, 3)).name);
+                BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.ENGLISH).build().getHoliday(LocalDate.of(2021, 5, 3)).name());
         assertEquals(isLocaleJapanese ? "憲法記念日" : "Constitution Memorial Day",
-                BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.FRANCE).build().getHoliday(LocalDate.of(2021, 5, 3)).name);
+                BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.FRANCE).build().getHoliday(LocalDate.of(2021, 5, 3)).name());
         assertEquals("憲法記念日",
-                BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE).build().getHoliday(LocalDate.of(2021, 5, 3)).name);
+                BusinessCalendar.newBuilder().holiday(BusinessCalendar.JAPAN.PUBLIC_HOLIDAYS).locale(Locale.JAPANESE).build().getHoliday(LocalDate.of(2021, 5, 3)).name());
     }
 }

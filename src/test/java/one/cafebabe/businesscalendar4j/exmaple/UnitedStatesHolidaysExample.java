@@ -48,7 +48,7 @@ public class UnitedStatesHolidaysExample {
         System.out.println("List of holidays in 2021: ");
         calendar.getHolidaysBetween(LocalDate.of(2021, 1, 1)
                 , LocalDate.of(2021, 12, 31))
-                .forEach(e -> System.out.println(e.date + ": " + e.name));
+                .forEach(e -> System.out.println(e.date() + ": " + e.name()));
 
         // sets a fixed custom Holiday
         BusinessCalendar customCalendar = BusinessCalendar.newBuilder()

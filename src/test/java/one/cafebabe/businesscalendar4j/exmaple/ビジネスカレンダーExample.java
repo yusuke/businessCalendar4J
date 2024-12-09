@@ -38,7 +38,7 @@ public class ビジネスカレンダーExample {
         // 2021-05-03:憲法記念日、2021-05-04:みどりの日、2021-05-05:こどもの日 を表示
         calendar.get指定期間内の祝休日(LocalDate.of(2021, 5, 1)
                 , LocalDate.of(2021, 5, 31))
-                .forEach(e -> System.out.println(e.date + ": " + e.name));
+                .forEach(e -> System.out.println(e.date() + ": " + e.name()));
 
         // 固定のカスタム祝休日を設定
         calendar = ビジネスカレンダー.newBuilder()

@@ -280,14 +280,14 @@ public final class BusinessCalendarBuilder {
                 checkParameter(from.isBefore(to) || to.equals(LocalTime.of(0, 0)), "from should be before to, provided: " + slot);
                 businessHourFromTos.add(new BusinessHourFromTo(from, to));
             }
-            businessHourFromTos.sort(Comparator.comparing(e -> e.from));
+            businessHourFromTos.sort(Comparator.comparing(BusinessHourFromTo::from));
         }
 
         @Override
         public List<BusinessHourSlot> apply(LocalDate localDate) {
             if (predicate.test(localDate)) {
                 return businessHourFromTos.stream()
-                        .map(e -> new BusinessHourSlot(localDate, e.from, e.to)).collect(Collectors.toList());
+                        .map(e -> new BusinessHourSlot(localDate, e.from(), e.to())).collect(Collectors.toList());
             } else {
                 return null;
             }
@@ -346,14 +346,5 @@ public final class BusinessCalendarBuilder {
     }
 }
 
-class BusinessHourFromTo {
-    @NotNull
-    LocalTime from;
-    @NotNull
-    LocalTime to;
-
-    BusinessHourFromTo(@NotNull LocalTime from, @NotNull LocalTime to) {
-        this.from = from;
-        this.to = to;
-    }
+record BusinessHourFromTo(@NotNull LocalTime from, @NotNull LocalTime to) {
 }
