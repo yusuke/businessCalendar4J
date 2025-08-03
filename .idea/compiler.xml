@@ -5,4 +5,7 @@
       <module name="businessCalendar4j.module-info.main" target="9" />
     </bytecodeTargetLevel>
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_STRING" value="--module-version 17.0.0" />
+  </component>
 </project>
